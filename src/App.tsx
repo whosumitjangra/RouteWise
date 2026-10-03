@@ -259,15 +259,15 @@ export default function App() {
           </button>
         </div>
 
-        {/* 2-Column Split: Routes List vs Map with smooth animated shift */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start relative">
+        {/* 2-Column Split: Routes List vs Map with smooth animated shift and 3D rotation */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start relative [perspective:1200px]">
           
-          {/* Routes Column: shifts to right when a card is selected */}
+          {/* Routes Column: shifts and rotates to right when a card is selected */}
           <div
-            className={`lg:col-span-6 space-y-3.5 transition-transform duration-700 ease-in-out ${
+            className={`lg:col-span-6 space-y-3.5 transition-all duration-700 ease-in-out ${
               isLayoutShifted
-                ? 'lg:translate-x-[calc(100%+1.5rem)]'
-                : 'lg:translate-x-0'
+                ? 'lg:translate-x-[calc(100%+1.5rem)] lg:[transform:rotateY(2deg)]'
+                : 'lg:translate-x-0 lg:[transform:rotateY(0deg)]'
             } ${mobileTab === 'map' ? 'hidden lg:block' : 'block'}`}
           >
             
@@ -311,12 +311,12 @@ export default function App() {
 
           </div>
 
-          {/* Map Column: shifts to left when a card is selected */}
+          {/* Map Column: rotates and shifts to left when a card is selected */}
           <div
-            className={`lg:col-span-6 lg:sticky lg:top-20 h-[400px] sm:h-[480px] lg:h-[520px] transition-transform duration-700 ease-in-out ${
+            className={`lg:col-span-6 lg:sticky lg:top-20 h-[400px] sm:h-[480px] lg:h-[520px] transition-all duration-700 ease-in-out ${
               isLayoutShifted
-                ? 'lg:-translate-x-[calc(100%+1.5rem)]'
-                : 'lg:translate-x-0'
+                ? 'lg:-translate-x-[calc(100%+1.5rem)] lg:[transform:rotateY(-3deg)_scale(1.01)] shadow-md rounded-2xl ring-1 ring-zinc-300'
+                : 'lg:translate-x-0 lg:[transform:rotateY(0deg)]'
             } ${mobileTab === 'routes' ? 'hidden lg:block' : 'block'}`}
           >
             <MapView

@@ -33,6 +33,8 @@ export interface RouteLeg {
   instruction: string;
   badge?: string;
   stopsCount?: number;
+  stationList?: string[]; // Chain of stations on this train leg
+  lineColor?: string;
   isFeeder?: boolean;
   fromCoords?: [number, number]; // [lat, lng]
   toCoords?: [number, number];   // [lat, lng]

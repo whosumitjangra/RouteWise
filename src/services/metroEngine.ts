@@ -88,6 +88,8 @@ export function buildPuneMetroOption(
 
   let leg1MetroStationsCount = 0;
   let leg2MetroStationsCount = 0;
+  let leg1StationsList: string[] = [];
+  let leg2StationsList: string[] = [];
 
   if (startStation.line === endStation.line) {
     // Direct journey on same line
@@ -103,6 +105,7 @@ export function buildPuneMetroOption(
     if (startStation.order > endStation.order) {
       segment.reverse();
     }
+    leg1StationsList = segment.map((s) => s.name);
     segment.forEach((s) => intermediateCoords.push([s.lng, s.lat]));
 
     // Waypoints for Map
@@ -148,6 +151,7 @@ export function buildPuneMetroOption(
     const maxStart = Math.max(startStation.order, startCourtOrder);
     const seg1 = startLineStations.filter((s) => s.order >= minStart && s.order <= maxStart);
     if (startStation.order > startCourtOrder) seg1.reverse();
+    leg1StationsList = seg1.map((s) => s.name);
     seg1.forEach((s) => intermediateCoords.push([s.lng, s.lat]));
 
     // Segment 2 (District Court to Destination)
@@ -156,6 +160,7 @@ export function buildPuneMetroOption(
     const maxEnd = Math.max(endCourtOrder, endStation.order);
     const seg2 = endLineStations.filter((s) => s.order >= minEnd && s.order <= maxEnd);
     if (endCourtOrder > endStation.order) seg2.reverse();
+    leg2StationsList = seg2.map((s) => s.name);
     seg2.forEach((s) => intermediateCoords.push([s.lng, s.lat]));
 
     // Waypoints for Map
@@ -288,6 +293,8 @@ export function buildPuneMetroOption(
       instruction: `Board ${startStation.line === 'purple' ? 'Purple Line' : 'Aqua Line'} at ${startStation.name}. Travel ${stationsCount} stations directly to ${endStation.name}.`,
       badge: startStation.line === 'purple' ? 'Purple Line' : 'Aqua Line',
       stopsCount: stationsCount,
+      stationList: leg1StationsList,
+      lineColor: startStation.line === 'purple' ? '#7c3aed' : '#0891b2',
     });
   } else {
     // Metro Leg 1 to District Court
@@ -303,6 +310,8 @@ export function buildPuneMetroOption(
       instruction: `Board ${startStation.line === 'purple' ? 'Purple Line' : 'Aqua Line'} at ${startStation.name} towards District Court (${leg1MetroStationsCount} stops).`,
       badge: startStation.line === 'purple' ? 'Purple Line' : 'Aqua Line',
       stopsCount: leg1MetroStationsCount,
+      stationList: leg1StationsList,
+      lineColor: startStation.line === 'purple' ? '#7c3aed' : '#0891b2',
     });
 
     // Metro Interchange Transfer Leg
@@ -334,6 +343,8 @@ export function buildPuneMetroOption(
       instruction: `Board ${endStation.line === 'purple' ? 'Purple Line' : 'Aqua Line'} at District Court and travel ${leg2MetroStationsCount} stops to ${endStation.name}.`,
       badge: endStation.line === 'purple' ? 'Purple Line' : 'Aqua Line',
       stopsCount: leg2MetroStationsCount,
+      stationList: leg2StationsList,
+      lineColor: endStation.line === 'purple' ? '#7c3aed' : '#0891b2',
     });
   }
 
