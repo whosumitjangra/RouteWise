@@ -342,4 +342,54 @@ assert.strictEqual(expandedCard, null, "All cards must reset to wrapped up state
 assert.strictEqual(layoutShifted, false, "Layout shift must reset on new search");
 console.log("✔ New search state sync & card wrap reset verified");
 
+// Test 14: Official PMPML Routes Catalog Integrity & Corridor Accuracy
+import fs from 'node:fs';
+const officialRoutes = JSON.parse(fs.readFileSync(new URL('../src/config/pmpmlOfficialRoutes.json', import.meta.url), 'utf-8'));
+
+assert.strictEqual(officialRoutes.length, 1030, "Official PMPML dataset must contain 1,030 routes");
+
+// Verify direct high-profile corridors
+const hinjawadiManapa = officialRoutes.find(r => r.routeId === '100-D');
+assert.ok(hinjawadiManapa, "Route 100-D must exist");
+assert.strictEqual(hinjawadiManapa.busNumber, '100');
+assert.strictEqual(hinjawadiManapa.km, 26.4);
+
+const hinjawadiStation = officialRoutes.find(r => r.routeId === '115P-D');
+assert.ok(hinjawadiStation, "Route 115P-D must exist");
+assert.strictEqual(hinjawadiStation.busNumber, '115P');
+assert.strictEqual(hinjawadiStation.km, 29);
+
+const kothrudKatraj = officialRoutes.find(r => r.routeId === '103-D');
+assert.ok(kothrudKatraj, "Route 103-D must exist");
+assert.strictEqual(kothrudKatraj.km, 14.3);
+
+const swargateKatraj = officialRoutes.find(r => r.routeId === '103B-D');
+assert.ok(swargateKatraj, "Route 103B-D must exist");
+assert.strictEqual(swargateKatraj.km, 6.1);
+
+const vjr1 = officialRoutes.find(r => r.routeId === 'VJR1-D');
+assert.ok(vjr1, "Route VJR1-D must exist");
+assert.strictEqual(vjr1.km, 21.7);
+
+const vimanKatraj = officialRoutes.find(r => r.routeId === '213-D');
+assert.ok(vimanKatraj, "Route 213-D must exist");
+assert.strictEqual(vimanKatraj.km, 21.9);
+
+const vimanWarje = officialRoutes.find(r => r.routeId === '161-D');
+assert.ok(vimanWarje, "Route 161-D must exist");
+assert.strictEqual(vimanWarje.km, 23);
+
+console.log("✔ Official PMPML dataset corridor verification passed (100, 115P, 103, 103B, VJR1, 213, 161)");
+
+// Test 15: Specialized Transit Fleets Verification (VJR, NGT, Ring)
+const vjrFleet = officialRoutes.filter(r => r.routeId.includes('VJR'));
+const ngtFleet = officialRoutes.filter(r => r.routeId.includes('NGT'));
+const ringRoutes = officialRoutes.filter(r => r.direction === 'R');
+
+assert.strictEqual(vjrFleet.length, 13, "Catalog must contain 13 VJR ring & express connector routes");
+assert.strictEqual(ngtFleet.length, 18, "Catalog must contain 18 NGT night service routes");
+assert.strictEqual(ringRoutes.length, 8, "Catalog must contain 8 circular ring routes");
+
+console.log("✔ Specialized fleets (13 VJR routes, 18 NGT routes, 8 Circular routes) verified");
+
 console.log("=== ALL TESTS PASSED SUCCESSFULLY! ===");

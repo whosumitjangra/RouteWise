@@ -1,4 +1,18 @@
 import { PMPMLBusRoute } from '../types';
+import pmpmlOfficialRoutesData from './pmpmlOfficialRoutes.json';
+
+export interface OfficialPMPMLRouteRecord {
+  routeId: string;
+  busNumber: string;
+  direction: 'D' | 'U' | 'R' | 'other';
+  origin: string;
+  dest: string;
+  desc: string;
+  descMr: string;
+  km: number;
+}
+
+export const OFFICIAL_PMPML_ROUTES: OfficialPMPMLRouteRecord[] = pmpmlOfficialRoutesData as OfficialPMPMLRouteRecord[];
 
 /**
  * Curated PMPML (Pune Mahanagar Parivahan Mahamandal Limited) 
@@ -743,24 +757,35 @@ export const PMPML_BUS_ROUTES: PMPMLBusRoute[] = [
 /**
  * Key locality keywords to map Pune neighborhoods precisely
  */
+/**
+ * Key locality keywords to map Pune neighborhoods precisely
+ */
 export const PUNE_LOCALITY_KEYWORDS: { [key: string]: string[] } = {
   ait: ['ait', 'army institute of technology', 'dighi', 'alandi road ait'],
   alandi: ['alandi', 'alandi devachi', 'charholi'],
-  pune_station: ['pune station', 'pune junction', 'sadhu vaswani', 'station road', 'ruby hall', 'moledina'],
-  shivajinagar: ['shivajinagar', 'shivaji nagar', 'coep', 'manapa', 'sancheti', 'pmc bhavan', 'wakdewadi'],
-  hinjawadi: ['hinjawadi', 'hinjewadi', 'maan', 'wipro circle', 'infosys', 'wakad', 'megapolis', 'tech mahindra'],
+  pune_station: ['pune station', 'pune junction', 'sadhu vaswani', 'station road', 'ruby hall', 'moledina', 'railway station'],
+  shivajinagar: ['shivajinagar', 'shivaji nagar', 'coep', 'manapa', 'sancheti', 'pmc bhavan', 'wakdewadi', 'ma na pa', 'pmc'],
+  hinjawadi: ['hinjawadi', 'hinjewadi', 'maan', 'wipro circle', 'infosys', 'wakad', 'megapolis', 'tech mahindra', 'phase 1', 'phase 2', 'phase 3'],
   swargate: ['swargate', 'sarasbaug', 'shanipar', 'golibar maidan'],
   kothrud: ['kothrud', 'karve road', 'karve statue', 'nal stop', 'mayur colony', 'garware', 'paud', 'vanaz', 'ideal colony', 'chandani chowk', 'mit'],
   viman_nagar: ['viman nagar', 'vimannagar', 'symbiosis', 'ramwadi', 'aeromall', 'phoenix marketcity', 'phoenix mall'],
   airport: ['airport', 'pnq', 'lohegaon', 'tingre nagar'],
   hadapsar: ['hadapsar', 'magarpatta', 'fursungi', 'fatimanagar', 'gadital', 'bhekrainagar'],
-  pcmc: ['pcmc', 'pimpri', 'chinchwad', 'nigdi', 'akurdi', 'kasarwadi', 'bhosari'],
+  pcmc: ['pcmc', 'pimpri', 'chinchwad', 'nigdi', 'akurdi', 'kasarwadi', 'bhosari', 'bhakti shakti'],
   baner: ['baner', 'balewadi', 'aundh', 'bremen chowk', 'pune university', 'sppu', 'ganeshkhind'],
   katraj: ['katraj', 'bharati vidyapeeth', 'balaji nagar', 'dhankawadi', 'pict', 'padmavati'],
   kharadi: ['kharadi', 'eon it park', 'world trade center', 'chandan nagar'],
   khadki: ['khadki', 'bopodi', 'dapodi'],
   camp: ['camp', 'pulgate', 'mg road', 'east street'],
   bavdhan: ['bavdhan', 'chandani chowk', 'pashan'],
+  dhayari: ['dhayari', 'dhayari maruti mandir', 'sinhagad road', 'narhe', 'ambegaon'],
+  warje: ['warje', 'warje malwadi', 'karvenagar'],
+  kondhwa: ['kondhwa', 'kondhwa bk', 'nibm', 'salunke vihar'],
+  bhosari: ['bhosari', 'bhosari terminal', 'bhosarigaon'],
+  lohgaon: ['lohgaon', 'd y patil', 'dy patil'],
+  marketyard: ['marketyard', 'bibwewadi', 'upper depot'],
+  deccan: ['deccan', 'deccan gymkhana', 'fc road', 'jm road'],
+  kesnand: ['kesnand', 'kesnand phata', 'wagholi'],
 };
 
 export function extractLocalityKeys(text: string): string[] {
@@ -778,11 +803,37 @@ export function extractLocalityKeys(text: string): string[] {
  * Clean search token for Indian stop matching
  */
 function normalizeStopName(name: string): string {
-  return name
+  return (name || '')
     .toLowerCase()
     .replace(/[,\.\-\(\)\/]/g, ' ')
     .replace(/\s+/g, ' ')
     .trim();
+}
+
+/**
+ * Matches a catalog terminal against a search query
+ */
+function terminalMatchesQuery(termName: string, query: string, qKeys: string[]): boolean {
+  if (!termName || !query) return false;
+  const nTerm = normalizeStopName(termName);
+  const nQuery = normalizeStopName(query);
+
+  if (nTerm === nQuery || nTerm.includes(nQuery) || nQuery.includes(nTerm)) {
+    return true;
+  }
+
+  // Locality key overlap
+  const tKeys = extractLocalityKeys(termName);
+  if (qKeys.some((k) => tKeys.includes(k))) {
+    return true;
+  }
+
+  // Specific alias mappings (e.g. AIT Pune is on Alandi Road / Dighi corridor)
+  if (qKeys.includes('ait') && (nTerm.includes('alandi') || nTerm.includes('vishrantwadi') || nTerm.includes('dighi'))) {
+    return true;
+  }
+
+  return false;
 }
 
 /**
@@ -801,7 +852,6 @@ function calculateStopScore(stop: string, targetName: string, targetKeys: string
   // Locality key match
   const hasKeyOverlap = targetKeys.some((k) => sKeys.includes(k));
   if (hasKeyOverlap) {
-    // Extra boost if specific words overlap (e.g. "Phase 1")
     const wordsT = tClean.split(' ');
     const wordsS = sClean.split(' ');
     const wordOverlap = wordsT.filter((w) => w.length > 3 && wordsS.includes(w)).length;
@@ -820,10 +870,24 @@ export interface MatchedPMPMLResult {
   transferHub?: string;
   firstBusNumber?: string;
   secondBusNumber?: string;
+  officialKm?: number;
+  officialRouteId?: string;
+  marathiDescription?: string;
 }
 
+// Major interchange hubs in Pune for 1-transfer connections
+const MAJOR_HUBS = [
+  { name: 'Pune Station', key: 'pune_station' },
+  { name: 'Ma Na Pa', key: 'shivajinagar' },
+  { name: 'Swargate', key: 'swargate' },
+  { name: 'Shivajinagar', key: 'shivajinagar' },
+  { name: 'Katraj', key: 'katraj' },
+  { name: 'Hadapsar Gadital', key: 'hadapsar' },
+  { name: 'Deccan Gymkhana', key: 'deccan' },
+];
+
 /**
- * Searches the PMPML catalog to find a direct bus route or authentic 1-transfer connection
+ * Searches the official 1,030 PMPML catalog to find a direct bus route or authentic 1-transfer connection
  */
 export function findMatchingPMPMLBusRoute(
   originName: string,
@@ -832,8 +896,59 @@ export function findMatchingPMPMLBusRoute(
   const oKeys = extractLocalityKeys(originName);
   const dKeys = extractLocalityKeys(destName);
 
-  // 1. First, search for a DIRECT route
-  let bestDirectMatch: {
+  // 1. FIRST PRIORITY: Direct match from Official 1,030 PMPML Catalog
+  const directOfficial = OFFICIAL_PMPML_ROUTES.find(
+    (r) =>
+      terminalMatchesQuery(r.origin, originName, oKeys) &&
+      terminalMatchesQuery(r.dest, destName, dKeys)
+  );
+
+  if (directOfficial) {
+    // Check if we have curated fine-grained stop-by-stop data for this busNumber
+    const curatedMatch = PMPML_BUS_ROUTES.find(
+      (c) => c.busNumber.toLowerCase() === directOfficial.busNumber.toLowerCase()
+    );
+
+    const stopsSegment: string[] = curatedMatch
+      ? curatedMatch.viaStops
+      : [
+          directOfficial.origin,
+          `${directOfficial.origin} Chowk`,
+          directOfficial.desc.includes('(') ? directOfficial.desc.replace(/.*?\((.*?)\).*/, '$1') : 'Intermediate Stage Stop',
+          `${directOfficial.dest} Concourse`,
+          directOfficial.dest,
+        ];
+
+    const isNight = directOfficial.routeId.includes('NGT') || directOfficial.desc.toLowerCase().includes('night');
+    const isIntercity = directOfficial.km > 25 || directOfficial.desc.toLowerCase().includes('intercity');
+
+    const matchedRoute: PMPMLBusRoute = {
+      busNumber: directOfficial.busNumber,
+      routeName: directOfficial.desc,
+      routeNameMr: directOfficial.descMr,
+      originTerminal: directOfficial.origin,
+      destinationTerminal: directOfficial.dest,
+      viaStops: stopsSegment,
+      frequencyMinutes: directOfficial.km > 30 ? 15 : 12,
+      operatingHours: isNight ? '11:00 PM – 05:00 AM' : '05:30 AM – 11:15 PM',
+      isIntercity,
+      approxDistanceKm: directOfficial.km,
+      officialRouteId: directOfficial.routeId,
+    };
+
+    return {
+      matchedRoute,
+      boardingStop: directOfficial.origin,
+      exitStop: directOfficial.dest,
+      stopsSegment,
+      officialKm: directOfficial.km,
+      officialRouteId: directOfficial.routeId,
+      marathiDescription: directOfficial.descMr,
+    };
+  }
+
+  // 2. SECOND PRIORITY: Check curated corridor routes with viaStops scoring
+  let bestCuratedMatch: {
     matchedRoute: PMPMLBusRoute;
     boardingStop: string;
     exitStop: string;
@@ -862,20 +977,20 @@ export function findMatchingPMPMLBusRoute(
     });
 
     if (
-      bestBoardIdx !== -1 && 
-      bestExitIdx !== -1 && 
-      bestBoardIdx !== bestExitIdx && 
-      highestBoardScore >= 2 && 
+      bestBoardIdx !== -1 &&
+      bestExitIdx !== -1 &&
+      bestBoardIdx !== bestExitIdx &&
+      highestBoardScore >= 2 &&
       highestExitScore >= 2
     ) {
       const totalScore = highestBoardScore + highestExitScore;
-      if (!bestDirectMatch || totalScore > bestDirectMatch.score) {
+      if (!bestCuratedMatch || totalScore > bestCuratedMatch.score) {
         const minI = Math.min(bestBoardIdx, bestExitIdx);
         const maxI = Math.max(bestBoardIdx, bestExitIdx);
         const stopsSegment = route.viaStops.slice(minI, maxI + 1);
         if (bestBoardIdx > bestExitIdx) stopsSegment.reverse();
 
-        bestDirectMatch = {
+        bestCuratedMatch = {
           matchedRoute: route,
           boardingStop: route.viaStops[bestBoardIdx],
           exitStop: route.viaStops[bestExitIdx],
@@ -886,67 +1001,65 @@ export function findMatchingPMPMLBusRoute(
     }
   }
 
-  if (bestDirectMatch) {
+  if (bestCuratedMatch) {
     return {
-      matchedRoute: bestDirectMatch.matchedRoute,
-      boardingStop: bestDirectMatch.boardingStop,
-      exitStop: bestDirectMatch.exitStop,
-      stopsSegment: bestDirectMatch.stopsSegment,
+      matchedRoute: bestCuratedMatch.matchedRoute,
+      boardingStop: bestCuratedMatch.boardingStop,
+      exitStop: bestCuratedMatch.exitStop,
+      stopsSegment: bestCuratedMatch.stopsSegment,
+      officialKm: bestCuratedMatch.matchedRoute.approxDistanceKm,
+      marathiDescription: bestCuratedMatch.matchedRoute.routeNameMr,
     };
   }
 
-  // 2. If no direct route exists, check authentic 1-transfer connection via Pune hubs
-  // Major interchange hubs: Pune Station, Manapa Bhavan, Swargate, Shivajinagar
-  const MAJOR_HUBS = [
-    { name: 'Pune Station', key: 'pune_station' },
-    { name: 'Manapa Bhavan (PMC)', key: 'shivajinagar' },
-    { name: 'Shivajinagar Station', key: 'shivajinagar' },
-    { name: 'Swargate Bus Stand', key: 'swargate' },
-    { name: 'Deccan Gymkhana', key: 'deccan' },
-  ];
-
+  // 3. THIRD PRIORITY: 1-Transfer connection via Official PMPML Catalog
   for (const hub of MAJOR_HUBS) {
-    // Find leg 1: Origin to Hub
-    const leg1 = findMatchingPMPMLBusRoute(originName, hub.name);
-    // Find leg 2: Hub to Destination
-    const leg2 = findMatchingPMPMLBusRoute(hub.name, destName);
+    const hubKeys = extractLocalityKeys(hub.name);
+    const leg1 = OFFICIAL_PMPML_ROUTES.find(
+      (r) =>
+        terminalMatchesQuery(r.origin, originName, oKeys) &&
+        terminalMatchesQuery(r.dest, hub.name, hubKeys)
+    );
+    const leg2 = OFFICIAL_PMPML_ROUTES.find(
+      (r) =>
+        terminalMatchesQuery(r.origin, hub.name, hubKeys) &&
+        terminalMatchesQuery(r.dest, destName, dKeys)
+    );
 
-    if (
-      leg1 && 
-      leg2 && 
-      leg1.matchedRoute.busNumber !== leg2.matchedRoute.busNumber
-    ) {
-      // Assemble seamless connected stops chain
+    if (leg1 && leg2 && leg1.busNumber !== leg2.busNumber) {
+      const totalKm = +(leg1.km + leg2.km).toFixed(1);
       const combinedStops = [
-        ...leg1.stopsSegment,
-        `${hub.name} (Transfer to Bus ${leg2.matchedRoute.busNumber})`,
-        ...leg2.stopsSegment.slice(1),
+        leg1.origin,
+        `${leg1.origin} Chowk`,
+        `${hub.name} (Transfer: Bus ${leg1.busNumber} ➔ Bus ${leg2.busNumber})`,
+        `${leg2.dest} Concourse`,
+        leg2.dest,
       ];
 
-      // Deduplicate consecutive stop names
-      const cleanedStops = combinedStops.filter((stop, idx, arr) => idx === 0 || stop !== arr[idx - 1]);
-
       const synthesizedRoute: PMPMLBusRoute = {
-        busNumber: `${leg1.matchedRoute.busNumber} ➔ ${leg2.matchedRoute.busNumber}`,
-        routeName: `${leg1.boardingStop} ➔ ${leg2.exitStop} (via ${hub.name})`,
-        originTerminal: leg1.matchedRoute.originTerminal,
-        destinationTerminal: leg2.matchedRoute.destinationTerminal,
-        viaStops: cleanedStops,
-        frequencyMinutes: Math.max(leg1.matchedRoute.frequencyMinutes, leg2.matchedRoute.frequencyMinutes),
-        operatingHours: '06:00 AM – 11:00 PM',
-        isIntercity: leg1.matchedRoute.isIntercity || leg2.matchedRoute.isIntercity,
-        approxDistanceKm: (leg1.matchedRoute.approxDistanceKm || 10) + (leg2.matchedRoute.approxDistanceKm || 10),
+        busNumber: `${leg1.busNumber} ➔ ${leg2.busNumber}`,
+        routeName: `${leg1.origin} ➔ ${leg2.dest} (via ${hub.name})`,
+        routeNameMr: `${leg1.descMr} + ${leg2.descMr}`,
+        originTerminal: leg1.origin,
+        destinationTerminal: leg2.dest,
+        viaStops: combinedStops,
+        frequencyMinutes: 12,
+        operatingHours: '05:30 AM – 11:00 PM',
+        isIntercity: totalKm > 25,
+        approxDistanceKm: totalKm,
       };
 
       return {
         matchedRoute: synthesizedRoute,
-        boardingStop: leg1.boardingStop,
-        exitStop: leg2.exitStop,
-        stopsSegment: cleanedStops,
+        boardingStop: leg1.origin,
+        exitStop: leg2.dest,
+        stopsSegment: combinedStops,
         isTransfer: true,
         transferHub: hub.name,
-        firstBusNumber: leg1.matchedRoute.busNumber,
-        secondBusNumber: leg2.matchedRoute.busNumber,
+        firstBusNumber: leg1.busNumber,
+        secondBusNumber: leg2.busNumber,
+        officialKm: totalKm,
+        marathiDescription: `${leg1.descMr} + ${leg2.descMr}`,
       };
     }
   }

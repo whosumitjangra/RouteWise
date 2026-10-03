@@ -242,6 +242,11 @@ export const RouteCard: React.FC<RouteCardProps> = ({
                     🚌 {route.busNumber}
                   </span>
                 )}
+                {route.officialKm && (
+                  <span className="px-1.5 py-0.2 rounded text-[10px] font-semibold bg-zinc-100 text-zinc-700 border border-zinc-200">
+                    {route.officialKm} km
+                  </span>
+                )}
                 {route.isRecommended && (
                   <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-200 flex items-center gap-1 shadow-2xs">
                     <Sparkles className="w-2.5 h-2.5 text-emerald-700" />
@@ -262,9 +267,14 @@ export const RouteCard: React.FC<RouteCardProps> = ({
                   </span>
                 )}
               </div>
-              <p className="text-[11px] text-zinc-400 mt-0.5 line-clamp-1">
+              <p className="text-[11px] text-zinc-500 mt-0.5 line-clamp-1">
                 {route.subtitle}
               </p>
+              {route.busNameMr && (
+                <p className="text-[10px] font-medium text-rose-800/90 mt-0.5 line-clamp-1">
+                  मराठी: {route.busNameMr}
+                </p>
+              )}
             </div>
           </div>
 
@@ -613,7 +623,7 @@ export const RouteCard: React.FC<RouteCardProps> = ({
                 </span>
               </div>
 
-              <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 text-[11px] pt-1">
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-[11px] pt-1">
                 <div className="bg-white p-2 rounded-lg border border-rose-100">
                   <span className="text-[10px] text-zinc-400 block">Frequency</span>
                   <span className="font-semibold text-zinc-800">{route.busFrequency || 'Every 10-15 mins'}</span>
@@ -622,7 +632,11 @@ export const RouteCard: React.FC<RouteCardProps> = ({
                   <span className="text-[10px] text-zinc-400 block">Daily Pass</span>
                   <span className="font-semibold text-emerald-700">₹50 Pass Valid</span>
                 </div>
-                <div className="bg-white p-2 rounded-lg border border-rose-100 col-span-2 sm:col-span-1">
+                <div className="bg-white p-2 rounded-lg border border-rose-100">
+                  <span className="text-[10px] text-zinc-400 block">Official Catalog</span>
+                  <span className="font-semibold text-zinc-800">{route.officialKm ? `${route.officialKm} km` : `${route.distanceKm} km`}</span>
+                </div>
+                <div className="bg-white p-2 rounded-lg border border-rose-100">
                   <span className="text-[10px] text-zinc-400 block">Operator</span>
                   <span className="font-semibold text-zinc-800">PMPML Pune</span>
                 </div>

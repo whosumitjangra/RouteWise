@@ -67,6 +67,8 @@ export function buildPMPMLBusOption(
 
   let busNumber = '';
   let routeName = '';
+  let busNameMr = '';
+  let officialKm: number | undefined;
   let boardingStop = `${origin.name.split(',')[0]} Bus Stand`;
   let exitStop = `${destination.name.split(',')[0]} Bus Stand`;
   let stopsList: string[] = [];
@@ -79,6 +81,8 @@ export function buildPMPMLBusOption(
   if (catalogMatch) {
     busNumber = catalogMatch.matchedRoute.busNumber;
     routeName = catalogMatch.matchedRoute.routeName;
+    busNameMr = catalogMatch.marathiDescription || catalogMatch.matchedRoute.routeNameMr || '';
+    officialKm = catalogMatch.officialKm || catalogMatch.matchedRoute.approxDistanceKm;
     boardingStop = catalogMatch.boardingStop;
     exitStop = catalogMatch.exitStop;
     stopsList = catalogMatch.stopsSegment;
@@ -451,13 +455,14 @@ export function buildPMPMLBusOption(
   }
 
   // 3. Bus travel duration & distance calculation
-  const busRideMinutes = Math.max(12, Math.round((distanceKm / 19.5) * 60 + stopsList.length * 0.7));
+  const effectiveDistKm = officialKm ? officialKm : distanceKm;
+  const busRideMinutes = Math.max(12, Math.round((effectiveDistKm / 19.5) * 60 + stopsList.length * 0.7));
   const walkToBusMinutes = 4;
   const walkFromBusMinutes = 4;
   const totalDurationMinutes = busRideMinutes + walkToBusMinutes + walkFromBusMinutes + (isTransfer ? 4 : 0);
 
   // 4. Official PMPML Fare
-  const totalFare = calculatePMPMLFare(distanceKm);
+  const totalFare = calculatePMPMLFare(effectiveDistKm);
 
   // 5. Construct step-by-step legs
   const legs: RouteLeg[] = [];
@@ -585,14 +590,18 @@ export function buildPMPMLBusOption(
     id: 'opt-bus',
     mode: 'bus',
     title: `PMPML Bus ${busNumber}`,
-    subtitle: `${routeName} • Every ${frequencyMinutes} min`,
+    subtitle: busNameMr
+      ? `${routeName} • ${busNameMr} • Every ${frequencyMinutes} min`
+      : `${routeName} • Every ${frequencyMinutes} min`,
     durationMinutes: totalDurationMinutes,
-    distanceKm: distanceKm,
+    distanceKm: effectiveDistKm,
     cost: {
       baseFare: 5,
       distanceFare: totalFare - 5,
       totalFare: totalFare,
-      formulaDescription: `PMPML Stage Fare ₹${totalFare} (${distanceKm} km Stage) • Daily Pass ₹50 valid`,
+      formulaDescription: officialKm
+        ? `PMPML Stage Fare ₹${totalFare} (Official Catalog: ${officialKm} km) • Daily Pass ₹50 valid`
+        : `PMPML Stage Fare ₹${totalFare} (${distanceKm} km Stage) • Daily Pass ₹50 valid`,
     },
     isOverBudget: false,
     budgetDelta: 0,
@@ -601,11 +610,13 @@ export function buildPMPMLBusOption(
     legs,
     busNumber,
     busFrequency: `Every ${frequencyMinutes} mins`,
+    busNameMr: busNameMr || undefined,
+    officialKm: officialKm || undefined,
     transferCount: isTransfer ? 1 : 0,
     transferLabel: isTransfer ? `1 Transfer (${transferHub})` : 'Direct Bus',
     modeCount: 1,
     score: 0,
     isRecommended: false,
-    carbonKg: +(distanceKm * 0.022).toFixed(2),
+    carbonKg: +(effectiveDistKm * 0.022).toFixed(2),
   };
 }

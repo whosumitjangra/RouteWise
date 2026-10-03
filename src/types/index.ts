@@ -74,6 +74,8 @@ export interface RouteOption {
   stationWaypoints?: StationWaypoint[];
   busNumber?: string;
   busFrequency?: string;
+  busNameMr?: string;
+  officialKm?: number;
   score: number; // Normalized multi-objective score
   isRecommended: boolean;
   recommendationReason?: string;
@@ -88,6 +90,7 @@ export interface RouteOption {
 export interface PMPMLBusRoute {
   busNumber: string;
   routeName: string;
+  routeNameMr?: string;
   originTerminal: string;
   destinationTerminal: string;
   viaStops: string[];
@@ -95,6 +98,7 @@ export interface PMPMLBusRoute {
   operatingHours: string;
   isIntercity?: boolean;
   approxDistanceKm?: number;
+  officialRouteId?: string;
 }
 
 export interface MetroStation {
