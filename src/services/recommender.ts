@@ -50,8 +50,6 @@ export function evaluateAndRankRoutes(
     let comfortPenalty = 0.05;
     if (route.mode === 'walking') {
       comfortPenalty = route.durationMinutes > 20 ? 0.45 : 0.15;
-    } else if (route.mode === 'bike') {
-      comfortPenalty = 0.08; // slightly less comfortable in rain/sun
     } else if (route.mode === 'metro_multimodal') {
       comfortPenalty = 0.04; // air-conditioned, zero road traffic
     } else if (route.mode === 'cab') {
@@ -130,8 +128,6 @@ export function evaluateAndRankRoutes(
         const comp = auto || cab || runnerUp;
         const diff = Math.abs(comp.cost.totalFare - winner.cost.totalFare);
         explanationText = `Recommended because it avoids road congestion, saves ₹${diff} over ${comp.title}, and takes only ${winner.durationMinutes} mins.`;
-      } else if (winner.mode === 'bike') {
-        explanationText = `Recommended for the best balance: filters through city traffic (${winner.durationMinutes} min) at just ₹${winner.cost.totalFare}.`;
       } else if (winner.mode === 'auto') {
         explanationText = `Recommended for reliable direct door-to-door transit at official Pune RTO meter fare (₹${winner.cost.totalFare}).`;
       } else {

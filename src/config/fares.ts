@@ -16,17 +16,7 @@ export const FARE_CONFIG = {
     nightSurchargeMultiplier: 1.0, // 1.25x between midnight and 5:00 AM
   },
 
-  // 2. Bike / Two-Wheeler Commute (Live Market Price Formula)
-  bike: {
-    label: 'Bike Ride (Live Market Estimate)',
-    baseFare: 22, // covers first 1.0 km
-    baseDistanceKm: 1.0,
-    perKmRate: 9.5, // dynamic distance rate
-    perMinuteRate: 0.80, // live traffic duration rate
-    platformFee: 2.0,
-  },
-
-  // 3. Economy Cab (Live City Cab Market Formula)
+  // 2. Economy Cab (Live City Cab Market Formula)
   cab: {
     label: 'Economy Cab (AC)',
     baseFare: 65, // base pickup

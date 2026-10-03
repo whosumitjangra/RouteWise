@@ -87,40 +87,7 @@ export default function App() {
           carbonKg: +(roadDriving.distanceKm * 0.08).toFixed(2),
         });
 
-        // C. BIKE TAXI (Live dynamic market rate)
-        const bikeDuration = Math.max(1, Math.round(roadDriving.durationMinutes * 0.85));
-        const bikeFare = calculateRoadFare('bike', roadDriving.distanceKm, bikeDuration);
-        evaluatedRoutes.push({
-          id: 'opt-bike',
-          mode: 'bike',
-          title: 'Bike Ride',
-          subtitle: 'Live Market Fare • Agile Urban Commute',
-          durationMinutes: bikeDuration,
-          distanceKm: roadDriving.distanceKm,
-          cost: bikeFare,
-          isOverBudget: false,
-          budgetDelta: 0,
-          isFeasible: true,
-          coordinates: roadDriving.coordinates,
-          legs: [
-            {
-              id: 'bike-direct',
-              mode: 'bike',
-              title: `Single-rider Two-Wheeler (${roadDriving.distanceKm} km)`,
-              durationMinutes: bikeDuration,
-              distanceKm: roadDriving.distanceKm,
-              cost: bikeFare.totalFare,
-              fromName: activeOrigin.name.split(',')[0],
-              toName: activeDest.name.split(',')[0],
-              instruction: 'Fast two-wheeler navigation filtering through city traffic bottlenecks',
-            },
-          ],
-          score: 0,
-          isRecommended: false,
-          carbonKg: +(roadDriving.distanceKm * 0.045).toFixed(2),
-        });
-
-        // D. CAB / CAR (Live economy AC cab market rate)
+        // C. CAB / CAR (Live economy AC cab market rate)
         const cabFare = calculateRoadFare('cab', roadDriving.distanceKm, roadDriving.durationMinutes);
         evaluatedRoutes.push({
           id: 'opt-cab',
@@ -152,7 +119,7 @@ export default function App() {
           carbonKg: +(roadDriving.distanceKm * 0.16).toFixed(2),
         });
 
-        // E. WALKING (Strictly practical for short strolls <= 1.0 km)
+        // D. WALKING (Strictly practical for short strolls <= 1.0 km)
         if (roadWalking.distanceKm <= FARE_CONFIG.walking.maxReasonableDistanceKm) {
           evaluatedRoutes.push({
             id: 'opt-walk',

@@ -23,22 +23,6 @@ export function calculateRoadFare(
     };
   }
 
-  if (mode === 'bike') {
-    const { baseFare, baseDistanceKm, perKmRate, perMinuteRate, platformFee } = FARE_CONFIG.bike;
-    const billableKm = Math.max(0, distanceKm - baseDistanceKm);
-    const distanceCost = billableKm * perKmRate;
-    const timeCost = durationMinutes * perMinuteRate;
-    const total = Math.round(baseFare + distanceCost + timeCost + platformFee);
-
-    return {
-      baseFare,
-      distanceFare: Math.round(distanceCost),
-      timeFare: Math.round(timeCost + platformFee),
-      totalFare: total,
-      formulaDescription: `Estimated Fare: ₹${baseFare} base + ₹${perKmRate}/km + ₹${perMinuteRate}/min time buffer`,
-    };
-  }
-
   if (mode === 'cab') {
     const { baseFare, perKmRate, perMinuteRate, bookingFee } = FARE_CONFIG.cab;
     const distanceCost = distanceKm * perKmRate;

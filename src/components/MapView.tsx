@@ -16,7 +16,6 @@ interface MapViewProps {
 const MODE_COLORS: Record<string, string> = {
   metro_multimodal: '#4f46e5', // Indigo
   auto: '#d97706',             // Amber
-  bike: '#059669',             // Emerald
   cab: '#18181b',              // Zinc
   walking: '#0d9488',          // Teal
 };

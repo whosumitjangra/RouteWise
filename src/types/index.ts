@@ -3,7 +3,6 @@ export type PreferenceMode = 'cheapest' | 'fastest' | 'balanced';
 export type TransportMode = 
   | 'metro_multimodal' 
   | 'auto' 
-  | 'bike' 
   | 'cab' 
   | 'walking';
 

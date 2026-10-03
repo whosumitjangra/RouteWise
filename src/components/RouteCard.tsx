@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { 
   Train, 
-  Bike, 
   Car, 
   Footprints, 
   ChevronDown, 
@@ -40,8 +39,6 @@ export const RouteCard: React.FC<RouteCardProps> = ({
             🛺
           </span>
         );
-      case 'bike':
-        return <Bike className="w-4 h-4 text-emerald-600" />;
       case 'cab':
         return <Car className="w-4 h-4 text-zinc-800" />;
       case 'walking':
