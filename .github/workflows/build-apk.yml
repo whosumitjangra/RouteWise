@@ -54,8 +54,8 @@ jobs:
         run: |
           cd android
           ./gradlew assembleDebug --no-daemon --stacktrace > ../gradle.log 2>&1 || {
-            echo "::error::Gradle build failed! Displaying output:"
-            cat ../gradle.log | tail -n 80
+            ERR=$(tail -n 20 ../gradle.log | tr -d '\r' | tr '\n' ' ')
+            echo "::error title=GradleBuildFailure::$ERR"
             exit 1
           }
 
