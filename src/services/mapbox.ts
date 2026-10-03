@@ -1,11 +1,11 @@
 import { LocationPoint } from '../types';
-import { PUNE_LANDMARKS } from '../config/puneLandmarks';
+import { PUNE_LANDMARKS, PuneLandmarkWithAliases } from '../config/puneLandmarks';
 import { PUNE_METRO_STATIONS } from '../config/metroData';
 
 export interface RoadRouteResult {
   distanceKm: number;
   durationMinutes: number;
-  coordinates: [number, number][]; // [lng, lat] for Mapbox
+  coordinates: [number, number][]; // [lng, lat]
   isEstimatedFallback: boolean;
 }
 
@@ -37,85 +37,163 @@ export function haversineDistanceKm(lat1: number, lon1: number, lat2: number, lo
 }
 
 /**
- * Search Pune addresses and landmarks with Mapbox Geocoding
- * Falls back seamlessly to local Pune landmarks directory
+ * Normalize search strings for fuzzy Indian place name matching
  */
-export async function searchPuneLocations(query: string): Promise<LocationPoint[]> {
-  const q = query.trim().toLowerCase();
+function cleanQuery(str: string): string {
+  return str
+    .toLowerCase()
+    .replace(/[,\.\-\(\)\/]/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+/**
+ * Search Pune locations with 3-tier cascade:
+ * 1. Curated Pune Landmark Catalog & Aliases (instant local matches for AIT, Pune Junction, COEP, etc.)
+ * 2. Pune Metro Stations
+ * 3. OpenStreetMap Nominatim Live Geocoder (Zero key required, finds any Pune colony/street)
+ * 4. Mapbox Geocoding API (if token provided)
+ */
+export async function searchPuneLocations(rawQuery: string): Promise<LocationPoint[]> {
+  const q = cleanQuery(rawQuery);
   if (!q || q.length < 2) return [];
 
-  const matchedLocal: LocationPoint[] = [];
+  const matchedPoints: LocationPoint[] = [];
 
-  // Search curated Pune landmarks
+  // Tier 1: Local curated Pune landmarks with fuzzy aliases
   for (const item of PUNE_LANDMARKS) {
-    if (item.name.toLowerCase().includes(q)) {
-      matchedLocal.push(item);
+    const itemName = cleanQuery(item.name);
+    const hasAliasMatch = item.aliases.some((alias) => {
+      const a = cleanQuery(alias);
+      return q.includes(a) || a.includes(q) || levenshteinDistance(q, a) <= 2;
+    });
+
+    if (itemName.includes(q) || q.includes(itemName) || hasAliasMatch) {
+      if (!matchedPoints.some((p) => p.name === item.name)) {
+        matchedPoints.push({
+          name: item.name,
+          lat: item.lat,
+          lng: item.lng,
+          landmarkType: item.landmarkType,
+        });
+      }
     }
   }
 
-  // Search Pune Metro stations
+  // Tier 2: Search Pune Metro stations
   for (const station of PUNE_METRO_STATIONS) {
-    if (
-      station.name.toLowerCase().includes(q) ||
-      station.marathiName.includes(q)
-    ) {
-      matchedLocal.push({
-        name: `${station.name} (${station.line === 'purple' ? 'Purple Line' : 'Aqua Line'})`,
-        lat: station.lat,
-        lng: station.lng,
-        landmarkType: 'metro',
-      });
+    const sName = cleanQuery(station.name);
+    if (sName.includes(q) || q.includes(sName) || station.marathiName.includes(rawQuery)) {
+      if (!matchedPoints.some((p) => p.name.includes(station.name))) {
+        matchedPoints.push({
+          name: `${station.name} (${station.line === 'purple' ? 'Purple Line' : 'Aqua Line'})`,
+          lat: station.lat,
+          lng: station.lng,
+          landmarkType: 'metro',
+        });
+      }
     }
   }
 
-  // If Mapbox token is available, query Mapbox Geocoding API bounded to Pune
+  // Tier 3: Mapbox Geocoding (if token is available)
   if (hasValidMapboxToken()) {
     try {
       const token = getMapboxToken();
-      // Pune metropolitan bounding box: [minLng, minLat, maxLng, maxLat]
       const bbox = '73.65,18.35,74.15,18.75';
       const url = `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(
-        query
+        rawQuery
       )}.json?access_token=${token}&country=IN&bbox=${bbox}&limit=5&types=poi,address,neighborhood,locality`;
 
       const res = await fetch(url);
       if (res.ok) {
         const data = await res.json();
         if (data.features && data.features.length > 0) {
-          const apiResults: LocationPoint[] = data.features.map((feat: any) => ({
-            name: feat.place_name.replace(', Maharashtra, India', '').replace(', India', ''),
-            lat: feat.center[1],
-            lng: feat.center[0],
-            landmarkType: 'commercial',
-          }));
-
-          // Merge without exact duplicates
-          const combined = [...apiResults];
-          for (const local of matchedLocal) {
-            if (!combined.some((c) => Math.abs(c.lat - local.lat) < 0.005 && Math.abs(c.lng - local.lng) < 0.005)) {
-              combined.push(local);
+          for (const feat of data.features) {
+            const cleanName = feat.place_name.replace(', Maharashtra, India', '').replace(', India', '');
+            if (!matchedPoints.some((p) => Math.abs(p.lat - feat.center[1]) < 0.005 && Math.abs(p.lng - feat.center[0]) < 0.005)) {
+              matchedPoints.push({
+                name: cleanName,
+                lat: feat.center[1],
+                lng: feat.center[0],
+                landmarkType: 'commercial',
+              });
             }
           }
-          return combined.slice(0, 7);
         }
       }
     } catch (e) {
-      // Return local matches on network error
+      // Continue to OSM Nominatim
     }
   }
 
-  return matchedLocal.slice(0, 7);
+  // Tier 4: OpenStreetMap Nominatim Live Geocoding (Zero API Key needed)
+  if (matchedPoints.length < 5) {
+    try {
+      const osmQuery = `${rawQuery}, Pune, Maharashtra`;
+      const osmUrl = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(
+        osmQuery
+      )}&limit=4&countrycodes=in&viewbox=73.65,18.75,74.15,18.35`;
+
+      const res = await fetch(osmUrl, {
+        headers: {
+          'Accept-Language': 'en',
+        },
+      });
+
+      if (res.ok) {
+        const data = await res.json();
+        for (const item of data) {
+          const lat = parseFloat(item.lat);
+          const lng = parseFloat(item.lon);
+          const shortName = item.display_name.split(',').slice(0, 3).join(', ');
+          
+          if (!matchedPoints.some((p) => Math.abs(p.lat - lat) < 0.005 && Math.abs(p.lng - lng) < 0.005)) {
+            matchedPoints.push({
+              name: shortName,
+              lat,
+              lng,
+              landmarkType: 'commercial',
+            });
+          }
+        }
+      }
+    } catch (e) {
+      // Fallback completed
+    }
+  }
+
+  return matchedPoints.slice(0, 7);
 }
 
 /**
- * Fetch road route distance, duration and geometry from Mapbox Directions API
- * Gracefully falls back to deterministic road detour calculation
+ * Resolves any raw query string into a concrete LocationPoint
+ * Used when the user submits without selecting from dropdown
+ */
+export async function resolveLocationQuery(query: string, fallbackDefault: LocationPoint): Promise<LocationPoint> {
+  if (!query || query.trim().length === 0) return fallbackDefault;
+
+  // If query already matches fallback name, return it
+  if (cleanQuery(query) === cleanQuery(fallbackDefault.name)) {
+    return fallbackDefault;
+  }
+
+  const results = await searchPuneLocations(query);
+  if (results && results.length > 0) {
+    return results[0];
+  }
+
+  return fallbackDefault;
+}
+
+/**
+ * Fetch road route distance, duration and geometry
  */
 export async function getRoadRoute(
   origin: LocationPoint,
   destination: LocationPoint,
   profile: 'driving-traffic' | 'driving' | 'cycling' | 'walking' = 'driving-traffic'
 ): Promise<RoadRouteResult> {
+  // If Mapbox token is present, try Directions API
   if (hasValidMapboxToken()) {
     try {
       const token = getMapboxToken();
@@ -135,34 +213,29 @@ export async function getRoadRoute(
         }
       }
     } catch (e) {
-      // Proceed to deterministic fallback
+      // Fall through to spatial routing
     }
   }
 
-  // Deterministic Spatial Graph Fallback for Pune road network
+  // Real-world Pune road circuity calculation
   const straightLine = haversineDistanceKm(origin.lat, origin.lng, destination.lat, destination.lng);
-  
-  // Real-world Pune road circuity factors (accounting for rivers, bridges, highway flyovers)
   const circuity = profile === 'walking' ? 1.18 : 1.28;
   const distanceKm = +(straightLine * circuity).toFixed(1);
 
-  // Speed assumptions based on mode in Pune traffic conditions
-  let avgSpeedKmh = 26; // Pune city car traffic average
-  if (profile === 'cycling') avgSpeedKmh = 28; // Bike taxi filters through traffic bottlenecks
+  // Pune traffic speeds
+  let avgSpeedKmh = 26; // Pune city arterial average
+  if (profile === 'cycling') avgSpeedKmh = 28; // Bike taxi filters traffic
   else if (profile === 'walking') avgSpeedKmh = 4.8;
-  else if (distanceKm > 15) avgSpeedKmh = 34; // Outer ring / bypass expressway
+  else if (distanceKm > 14) avgSpeedKmh = 33; // Highway bypass
 
   const durationMinutes = Math.max(1, Math.round((distanceKm / avgSpeedKmh) * 60));
 
-  // Generate smooth intermediate road geometry between origin and destination
+  // Intermediate road geometry
   const coordinates: [number, number][] = [];
-  const pointsCount = Math.min(45, Math.max(10, Math.round(distanceKm * 3)));
-  
+  const pointsCount = Math.min(40, Math.max(8, Math.round(distanceKm * 2.5)));
   const dLng = destination.lng - origin.lng;
   const dLat = destination.lat - origin.lat;
-
-  // Gentle natural curve offset
-  const deflection = Math.sin(origin.lat * 50 + destination.lng * 50) * 0.008;
+  const deflection = Math.sin(origin.lat * 40 + destination.lng * 40) * 0.007;
 
   for (let i = 0; i <= pointsCount; i++) {
     const t = i / pointsCount;
@@ -178,4 +251,28 @@ export async function getRoadRoute(
     coordinates,
     isEstimatedFallback: true,
   };
+}
+
+/**
+ * Levenshtein distance for typo tolerance (e.g. 'junctin' -> 'junction')
+ */
+function levenshteinDistance(a: string, b: string): number {
+  const matrix: number[][] = [];
+  for (let i = 0; i <= b.length; i++) matrix[i] = [i];
+  for (let j = 0; j <= a.length; j++) matrix[0][j] = j;
+
+  for (let i = 1; i <= b.length; i++) {
+    for (let j = 1; j <= a.length; j++) {
+      if (b.charAt(i - 1) === a.charAt(j - 1)) {
+        matrix[i][j] = matrix[i - 1][j - 1];
+      } else {
+        matrix[i][j] = Math.min(
+          matrix[i - 1][j - 1] + 1,
+          matrix[i][j - 1] + 1,
+          matrix[i - 1][j] + 1
+        );
+      }
+    }
+  }
+  return matrix[b.length][a.length];
 }

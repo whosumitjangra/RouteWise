@@ -20,7 +20,7 @@ export const Header: React.FC<HeaderProps> = ({ onOpenTokenModal }) => {
           </div>
           <div className="flex items-baseline gap-1.5">
             <span className="font-bold text-base tracking-tight text-zinc-950">
-              IndiaRide
+              RouteWise
             </span>
             <span className="text-[11px] font-medium text-zinc-400">
               Pune
@@ -33,15 +33,15 @@ export const Header: React.FC<HeaderProps> = ({ onOpenTokenModal }) => {
           <button
             onClick={onOpenTokenModal}
             className="flex items-center gap-1.5 text-xs text-zinc-600 hover:text-zinc-950 px-2.5 py-1 rounded-md border border-zinc-200 hover:border-zinc-300 transition-colors"
-            title="Mapbox Token Configuration"
+            title="Map & API Configuration"
           >
             <span
               className={`w-1.5 h-1.5 rounded-full ${
-                isMapboxLive ? 'bg-emerald-500' : 'bg-amber-400'
+                isMapboxLive ? 'bg-emerald-500' : 'bg-emerald-500'
               }`}
             />
             <span className="font-medium text-[11px]">
-              {isMapboxLive ? 'Mapbox Live' : 'Pune Offline Engine'}
+              {isMapboxLive ? 'Mapbox Live' : 'OpenStreet Transit Map'}
             </span>
             <Key className="w-3 h-3 text-zinc-400 ml-0.5" />
           </button>

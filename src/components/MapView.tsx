@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react';
-import mapboxgl from 'mapbox-gl';
+import L from 'leaflet';
+import 'leaflet/dist/leaflet.css';
 import { LocationPoint, RouteOption } from '../types';
-import { getMapboxToken, hasValidMapboxToken } from '../services/mapbox';
 import { PUNE_METRO_STATIONS } from '../config/metroData';
 
 interface MapViewProps {
@@ -28,265 +28,221 @@ export const MapView: React.FC<MapViewProps> = ({
   onSelectRoute,
 }) => {
   const mapContainerRef = useRef<HTMLDivElement>(null);
-  const mapInstanceRef = useRef<mapboxgl.Map | null>(null);
-  const markersRef = useRef<mapboxgl.Marker[]>([]);
-  const isMapboxAvailable = hasValidMapboxToken();
+  const mapInstanceRef = useRef<L.Map | null>(null);
+  const layersGroupRef = useRef<L.LayerGroup | null>(null);
+  const polylinesRef = useRef<Record<string, L.Polyline>>({});
 
   useEffect(() => {
-    if (!isMapboxAvailable || !mapContainerRef.current) return;
+    if (!mapContainerRef.current) return;
 
-    mapboxgl.accessToken = getMapboxToken();
+    if (!mapInstanceRef.current) {
+      // Initialize Leaflet Map centered on central Pune
+      const map = L.map(mapContainerRef.current, {
+        center: [18.5204, 73.8567],
+        zoom: 12,
+        zoomControl: true,
+        attributionControl: false,
+      });
 
-    const map = new mapboxgl.Map({
-      container: mapContainerRef.current,
-      style: 'mapbox://styles/mapbox/light-v11',
-      center: [73.8567, 18.5204], // Pune center
-      zoom: 11,
-      attributionControl: false,
-    });
+      // CartoDB Positron Light Tiles — Ultra-clean, Xeroxic minimal aesthetic, 100% free with zero API key
+      L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+        maxZoom: 19,
+        subdomains: 'abcd',
+      }).addTo(map);
 
-    map.addControl(new mapboxgl.NavigationControl({ showCompass: false }), 'top-right');
-
-    map.on('load', () => {
+      layersGroupRef.current = L.layerGroup().addTo(map);
       mapInstanceRef.current = map;
-      updateMapLayers();
-    });
-
-    return () => {
-      map.remove();
-      mapInstanceRef.current = null;
-    };
-  }, [isMapboxAvailable]);
-
-  // Update markers and layers when props change
-  useEffect(() => {
-    if (mapInstanceRef.current && mapInstanceRef.current.isStyleLoaded()) {
-      updateMapLayers();
     }
-  }, [origin, destination, routes, selectedRouteId]);
 
-  const updateMapLayers = () => {
+    renderMapData();
+  }, [origin, destination, routes]);
+
+  // Update selection styles without recreating map
+  useEffect(() => {
+    if (!mapInstanceRef.current) return;
+
+    Object.entries(polylinesRef.current).forEach(([routeId, polyline]) => {
+      const isSelected = routeId === selectedRouteId;
+      polyline.setStyle({
+        weight: isSelected ? 5.5 : 2.5,
+        opacity: isSelected ? 1.0 : 0.45,
+      });
+      if (isSelected) {
+        polyline.bringToFront();
+      }
+    });
+  }, [selectedRouteId]);
+
+  const renderMapData = () => {
     const map = mapInstanceRef.current;
-    if (!map) return;
+    const group = layersGroupRef.current;
+    if (!map || !group) return;
 
-    // Clear old markers
-    markersRef.current.forEach((m) => m.remove());
-    markersRef.current = [];
+    group.clearLayers();
+    polylinesRef.current = {};
 
-    // Add Start Marker (Green)
-    const elStart = document.createElement('div');
-    elStart.className = 'w-6 h-6 rounded-full bg-emerald-600 border-2 border-white shadow-md flex items-center justify-center text-white text-[10px] font-bold';
-    elStart.innerText = 'A';
-    const markerStart = new mapboxgl.Marker(elStart)
-      .setLngLat([origin.lng, origin.lat])
-      .addTo(map);
-    markersRef.current.push(markerStart);
+    const allLatLngs: L.LatLngExpression[] = [];
 
-    // Add Destination Marker (Red)
-    const elDest = document.createElement('div');
-    elDest.className = 'w-6 h-6 rounded-full bg-rose-600 border-2 border-white shadow-md flex items-center justify-center text-white text-[10px] font-bold';
-    elDest.innerText = 'B';
-    const markerDest = new mapboxgl.Marker(elDest)
-      .setLngLat([destination.lng, destination.lat])
-      .addTo(map);
-    markersRef.current.push(markerDest);
+    // 1. Draw Pune Metro network faintly in the background for spatial context
+    // Purple Line
+    const purpleCoords = PUNE_METRO_STATIONS.filter((s) => s.line === 'purple').map(
+      (s) => [s.lat, s.lng] as [number, number]
+    );
+    L.polyline(purpleCoords, {
+      color: '#6366f1',
+      weight: 2,
+      opacity: 0.35,
+      dashArray: '3, 4',
+    }).addTo(group);
 
-    // Remove existing route layers
-    routes.forEach((r) => {
-      const layerId = `route-layer-${r.id}`;
-      const sourceId = `route-source-${r.id}`;
-      if (map.getLayer(layerId)) map.removeLayer(layerId);
-      if (map.getSource(sourceId)) map.removeSource(sourceId);
+    // Aqua Line
+    const aquaCoords = PUNE_METRO_STATIONS.filter((s) => s.line === 'aqua').map(
+      (s) => [s.lat, s.lng] as [number, number]
+    );
+    L.polyline(aquaCoords, {
+      color: '#06b6d4',
+      weight: 2,
+      opacity: 0.35,
+      dashArray: '3, 4',
+    }).addTo(group);
+
+    // 2. Add Start Marker (Point A - Emerald)
+    const iconStart = L.divIcon({
+      className: 'custom-pin',
+      html: `
+        <div style="
+          background-color: #059669; 
+          color: white; 
+          width: 26px; 
+          height: 26px; 
+          border-radius: 50% 50% 50% 0; 
+          transform: rotate(-45deg);
+          border: 2px solid white;
+          box-shadow: 0 3px 8px rgba(0,0,0,0.25);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        ">
+          <span style="transform: rotate(45deg); font-weight: 800; font-size: 11px;">A</span>
+        </div>
+      `,
+      iconSize: [26, 26],
+      iconAnchor: [13, 26],
+      popupAnchor: [0, -26],
     });
 
-    const bounds = new mapboxgl.LngLatBounds();
-    bounds.extend([origin.lng, origin.lat]);
-    bounds.extend([destination.lng, destination.lat]);
+    const markerA = L.marker([origin.lat, origin.lng], { icon: iconStart }).addTo(group);
+    markerA.bindPopup(`<strong>Origin:</strong><br/>${origin.name}`);
+    allLatLngs.push([origin.lat, origin.lng]);
 
-    // Draw lines for feasible routes
-    routes.forEach((r) => {
-      if (!r.isFeasible || r.coordinates.length < 2) return;
-
-      const sourceId = `route-source-${r.id}`;
-      const layerId = `route-layer-${r.id}`;
-      const isSelected = r.id === selectedRouteId;
-      const color = MODE_COLORS[r.mode] || '#71717a';
-
-      map.addSource(sourceId, {
-        type: 'geojson',
-        data: {
-          type: 'Feature',
-          properties: {},
-          geometry: {
-            type: 'LineString',
-            coordinates: r.coordinates,
-          },
-        },
-      });
-
-      map.addLayer({
-        id: layerId,
-        type: 'line',
-        source: sourceId,
-        layout: {
-          'line-join': 'round',
-          'line-cap': 'round',
-        },
-        paint: {
-          'line-color': color,
-          'line-width': isSelected ? 5.5 : 2.5,
-          'line-opacity': isSelected ? 1.0 : 0.45,
-          ...(r.mode === 'metro_multimodal' ? { 'line-dasharray': [1, 1.5] } : {}),
-        },
-      });
-
-      r.coordinates.forEach((coord) => bounds.extend(coord));
+    // 3. Add Destination Marker (Point B - Rose)
+    const iconDest = L.divIcon({
+      className: 'custom-pin',
+      html: `
+        <div style="
+          background-color: #e11d48; 
+          color: white; 
+          width: 26px; 
+          height: 26px; 
+          border-radius: 50% 50% 50% 0; 
+          transform: rotate(-45deg);
+          border: 2px solid white;
+          box-shadow: 0 3px 8px rgba(0,0,0,0.25);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        ">
+          <span style="transform: rotate(45deg); font-weight: 800; font-size: 11px;">B</span>
+        </div>
+      `,
+      iconSize: [26, 26],
+      iconAnchor: [13, 26],
+      popupAnchor: [0, -26],
     });
 
-    if (!bounds.isEmpty()) {
-      map.fitBounds(bounds, { padding: 50, maxZoom: 14 });
+    const markerB = L.marker([destination.lat, destination.lng], { icon: iconDest }).addTo(group);
+    markerB.bindPopup(`<strong>Destination:</strong><br/>${destination.name}`);
+    allLatLngs.push([destination.lat, destination.lng]);
+
+    // 4. Draw Polylines for Feasible Route Alternatives
+    routes.forEach((route) => {
+      if (!route.isFeasible || route.coordinates.length < 2) return;
+
+      // Note: route.coordinates are [lng, lat] -> Leaflet requires [lat, lng]
+      const latLngs: [number, number][] = route.coordinates.map((c) => [c[1], c[0]]);
+      latLngs.forEach((pt) => allLatLngs.push(pt));
+
+      const isSelected = route.id === selectedRouteId;
+      const color = MODE_COLORS[route.mode] || '#71717a';
+
+      const polyline = L.polyline(latLngs, {
+        color: color,
+        weight: isSelected ? 5.5 : 2.5,
+        opacity: isSelected ? 1.0 : 0.45,
+        lineCap: 'round',
+        lineJoin: 'round',
+        dashArray: route.mode === 'metro_multimodal' ? '6, 6' : undefined,
+      }).addTo(group);
+
+      polyline.on('click', () => {
+        onSelectRoute(route.id);
+      });
+
+      polyline.bindTooltip(
+        `<strong>${route.title}</strong><br/>${route.durationMinutes} min • ₹${route.cost.totalFare}`,
+        { sticky: true }
+      );
+
+      polylinesRef.current[route.id] = polyline;
+    });
+
+    // 5. Fit bounds to comfortably show all routes and endpoints
+    if (allLatLngs.length > 0) {
+      const bounds = L.latLngBounds(allLatLngs);
+      map.fitBounds(bounds, { padding: [45, 45], maxZoom: 14 });
     }
   };
 
-  // If Mapbox token is not configured, show clean SVG vector map with Pune Metro alignment
-  if (!isMapboxAvailable) {
-    const selectedRoute = routes.find((r) => r.id === selectedRouteId) || routes[0];
-    
-    // Bounds normalization for SVG canvas
-    const lats = [origin.lat, destination.lat, ...PUNE_METRO_STATIONS.map((s) => s.lat)];
-    const lngs = [origin.lng, destination.lng, ...PUNE_METRO_STATIONS.map((s) => s.lng)];
-    const minLat = Math.min(...lats) - 0.02;
-    const maxLat = Math.max(...lats) + 0.02;
-    const minLng = Math.min(...lngs) - 0.02;
-    const maxLng = Math.max(...lngs) + 0.02;
-
-    const toX = (lng: number) => ((lng - minLng) / (maxLng - minLng)) * 560 + 20;
-    const toY = (lat: number) => 380 - ((lat - minLat) / (maxLat - minLat)) * 340 - 20;
-
-    return (
-      <div className="relative w-full h-[400px] sm:h-full min-h-[380px] bg-zinc-900 rounded-2xl border border-zinc-800 overflow-hidden shadow-inner flex flex-col justify-between p-4">
-        
-        {/* Vector SVG */}
-        <div className="absolute inset-0">
-          <svg className="w-full h-full" viewBox="0 0 600 400" preserveAspectRatio="xMidYMid meet">
-            
-            {/* Grid Lines */}
-            <defs>
-              <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
-                <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#27272a" strokeWidth="0.5" />
-              </pattern>
-            </defs>
-            <rect width="100%" height="100%" fill="url(#grid)" />
-
-            {/* Pune Metro Lines Background */}
-            {/* Purple Line */}
-            <polyline
-              points={PUNE_METRO_STATIONS.filter((s) => s.line === 'purple')
-                .map((s) => `${toX(s.lng)},${toY(s.lat)}`)
-                .join(' ')}
-              fill="none"
-              stroke="#6366f1"
-              strokeWidth="2.5"
-              strokeDasharray="4,4"
-              opacity="0.6"
-            />
-
-            {/* Aqua Line */}
-            <polyline
-              points={PUNE_METRO_STATIONS.filter((s) => s.line === 'aqua')
-                .map((s) => `${toX(s.lng)},${toY(s.lat)}`)
-                .join(' ')}
-              fill="none"
-              stroke="#06b6d4"
-              strokeWidth="2.5"
-              strokeDasharray="4,4"
-              opacity="0.6"
-            />
-
-            {/* Metro Station Dots */}
-            {PUNE_METRO_STATIONS.map((station) => (
-              <circle
-                key={station.id}
-                cx={toX(station.lng)}
-                cy={toY(station.lat)}
-                r={station.isInterchange ? 5 : 2.5}
-                fill={station.isInterchange ? '#f59e0b' : '#a1a1aa'}
-              />
-            ))}
-
-            {/* Selected Route Polyline */}
-            {selectedRoute && selectedRoute.coordinates.length > 1 && (
-              <polyline
-                points={selectedRoute.coordinates
-                  .map((c) => `${toX(c[0])},${toY(c[1])}`)
-                  .join(' ')}
-                fill="none"
-                stroke={MODE_COLORS[selectedRoute.mode] || '#10b981'}
-                strokeWidth="4"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            )}
-
-            {/* Origin Pin */}
-            <g transform={`translate(${toX(origin.lng)}, ${toY(origin.lat)})`}>
-              <circle r="7" fill="#059669" stroke="#ffffff" strokeWidth="2" />
-              <text y="3" textAnchor="middle" fill="#ffffff" fontSize="9" fontWeight="bold">A</text>
-            </g>
-
-            {/* Destination Pin */}
-            <g transform={`translate(${toX(destination.lng)}, ${toY(destination.lat)})`}>
-              <circle r="7" fill="#e11d48" stroke="#ffffff" strokeWidth="2" />
-              <text y="3" textAnchor="middle" fill="#ffffff" fontSize="9" fontWeight="bold">B</text>
-            </g>
-
-          </svg>
-        </div>
-
-        {/* Top Overlay Notice */}
-        <div className="relative z-10 flex items-center justify-between text-[11px] text-zinc-400">
-          <div className="bg-zinc-950/80 backdrop-blur-md px-3 py-1.5 rounded-lg border border-zinc-800 flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-            <span className="font-medium text-zinc-200">Pune Spatial Transit Canvas</span>
-          </div>
-
-          <div className="text-[10px] text-zinc-500 hidden sm:block">
-            {origin.name.split(',')[0]} ➔ {destination.name.split(',')[0]}
-          </div>
-        </div>
-
-        {/* Bottom Legend */}
-        <div className="relative z-10 bg-zinc-950/90 backdrop-blur-md px-3 py-2 rounded-xl border border-zinc-800 text-[11px] text-zinc-300 flex items-center justify-between flex-wrap gap-2">
-          <div className="flex items-center gap-3">
-            <div className="flex items-center gap-1.5">
-              <span className="w-2.5 h-0.5 bg-[#4f46e5]" />
-              <span className="text-[10px]">Metro</span>
-            </div>
-            <div className="flex items-center gap-1.5">
-              <span className="w-2.5 h-0.5 bg-[#d97706]" />
-              <span className="text-[10px]">Auto</span>
-            </div>
-            <div className="flex items-center gap-1.5">
-              <span className="w-2.5 h-0.5 bg-[#059669]" />
-              <span className="text-[10px]">Bike</span>
-            </div>
-            <div className="flex items-center gap-1.5">
-              <span className="w-2.5 h-0.5 bg-[#18181b] border-t border-zinc-500" />
-              <span className="text-[10px]">Cab</span>
-            </div>
-          </div>
-          <span className="text-[10px] text-zinc-500">
-            Add <code className="text-zinc-300">VITE_MAPBOX_TOKEN</code> in .env for live tiles
-          </span>
-        </div>
-
-      </div>
-    );
-  }
-
   return (
-    <div className="relative w-full h-[400px] sm:h-full min-h-[380px] bg-zinc-100 rounded-2xl border border-zinc-200 overflow-hidden shadow-xs">
-      <div ref={mapContainerRef} className="w-full h-full" />
+    <div className="relative w-full h-[380px] sm:h-full min-h-[380px] bg-zinc-100 rounded-2xl border border-zinc-200 overflow-hidden shadow-xs flex flex-col justify-between">
+      
+      {/* Real Interactive Leaflet Street Tile Container */}
+      <div ref={mapContainerRef} className="absolute inset-0 z-0" />
+
+      {/* Top Street Map Indicator */}
+      <div className="relative z-10 p-3 pointer-events-none flex items-center justify-between">
+        <div className="bg-white/95 backdrop-blur-md px-2.5 py-1 rounded-lg border border-zinc-200/90 shadow-2xs text-[11px] font-semibold text-zinc-800 flex items-center gap-1.5 pointer-events-auto">
+          <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+          <span>Pune Street & Transit Map</span>
+        </div>
+      </div>
+
+      {/* Bottom Mode Legend */}
+      <div className="relative z-10 m-3 bg-white/95 backdrop-blur-md px-3 py-2 rounded-xl border border-zinc-200/90 shadow-2xs text-xs text-zinc-700 pointer-events-auto flex items-center justify-between flex-wrap gap-2">
+        <div className="flex items-center gap-3">
+          <div className="flex items-center gap-1.5">
+            <span className="w-2.5 h-1 rounded bg-[#4f46e5]" />
+            <span className="text-[11px]">Metro</span>
+          </div>
+          <div className="flex items-center gap-1.5">
+            <span className="w-2.5 h-1 rounded bg-[#d97706]" />
+            <span className="text-[11px]">Auto</span>
+          </div>
+          <div className="flex items-center gap-1.5">
+            <span className="w-2.5 h-1 rounded bg-[#059669]" />
+            <span className="text-[11px]">Bike</span>
+          </div>
+          <div className="flex items-center gap-1.5">
+            <span className="w-2.5 h-1 rounded bg-[#18181b]" />
+            <span className="text-[11px]">Cab</span>
+          </div>
+        </div>
+
+        <span className="text-[10px] text-zinc-400">
+          Click lines or cards to focus
+        </span>
+      </div>
+
     </div>
   );
 };

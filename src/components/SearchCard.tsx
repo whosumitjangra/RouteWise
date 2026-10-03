@@ -1,7 +1,19 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { MapPin, ArrowDownUp, IndianRupee, Zap, PiggyBank, Scale, Search, Loader2 } from 'lucide-react';
+import { 
+  MapPin, 
+  ArrowDownUp, 
+  Zap, 
+  PiggyBank, 
+  Scale, 
+  Search, 
+  Loader2, 
+  Train, 
+  GraduationCap, 
+  Building2, 
+  X 
+} from 'lucide-react';
 import { LocationPoint, PreferenceMode } from '../types';
-import { searchPuneLocations } from '../services/mapbox';
+import { searchPuneLocations, resolveLocationQuery } from '../services/mapbox';
 import { PUNE_PRESET_TRIPS } from '../config/puneLandmarks';
 
 interface SearchCardProps {
@@ -14,7 +26,7 @@ interface SearchCardProps {
   onDestinationChange: (loc: LocationPoint) => void;
   onBudgetChange: (val: number) => void;
   onPreferenceChange: (pref: PreferenceMode) => void;
-  onSubmit: () => void;
+  onSubmit: (resolvedOrigin?: LocationPoint, resolvedDestination?: LocationPoint) => void;
 }
 
 export const SearchCard: React.FC<SearchCardProps> = ({
@@ -35,9 +47,12 @@ export const SearchCard: React.FC<SearchCardProps> = ({
   const [toSuggestions, setToSuggestions] = useState<LocationPoint[]>([]);
   const [isFromOpen, setIsFromOpen] = useState(false);
   const [isToOpen, setIsToOpen] = useState(false);
+  const [isResolving, setIsResolving] = useState(false);
 
   const fromRef = useRef<HTMLDivElement>(null);
   const toRef = useRef<HTMLDivElement>(null);
+  const fromDebounceRef = useRef<any>(null);
+  const toDebounceRef = useRef<any>(null);
 
   // Sync state if props change (e.g. from presets)
   useEffect(() => {
@@ -62,25 +77,33 @@ export const SearchCard: React.FC<SearchCardProps> = ({
     return () => document.removeEventListener('mousedown', handleOutside);
   }, []);
 
-  // Debounced search
-  const handleSearchFrom = async (val: string) => {
+  // Fast debounced predictive search
+  const handleSearchFrom = (val: string) => {
     setFromQuery(val);
-    if (val.trim().length >= 2) {
-      const results = await searchPuneLocations(val);
-      setFromSuggestions(results);
-      setIsFromOpen(true);
+    clearTimeout(fromDebounceRef.current);
+    
+    if (val.trim().length >= 1) {
+      fromDebounceRef.current = setTimeout(async () => {
+        const results = await searchPuneLocations(val);
+        setFromSuggestions(results);
+        setIsFromOpen(true);
+      }, 100);
     } else {
       setFromSuggestions([]);
       setIsFromOpen(false);
     }
   };
 
-  const handleSearchTo = async (val: string) => {
+  const handleSearchTo = (val: string) => {
     setToQuery(val);
-    if (val.trim().length >= 2) {
-      const results = await searchPuneLocations(val);
-      setToSuggestions(results);
-      setIsToOpen(true);
+    clearTimeout(toDebounceRef.current);
+
+    if (val.trim().length >= 1) {
+      toDebounceRef.current = setTimeout(async () => {
+        const results = await searchPuneLocations(val);
+        setToSuggestions(results);
+        setIsToOpen(true);
+      }, 100);
     } else {
       setToSuggestions([]);
       setIsToOpen(false);
@@ -88,9 +111,72 @@ export const SearchCard: React.FC<SearchCardProps> = ({
   };
 
   const handleSwap = () => {
-    const temp = origin;
-    onOriginChange(destination);
-    onDestinationChange(temp);
+    const tempOrigin = origin;
+    const tempDest = destination;
+    onOriginChange(tempDest);
+    onDestinationChange(tempOrigin);
+    setFromQuery(tempDest.name);
+    setToQuery(tempOrigin.name);
+  };
+
+  // Handle Form Submit with automatic query resolution
+  const handleFormSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsResolving(true);
+    setIsFromOpen(false);
+    setIsToOpen(false);
+
+    try {
+      // Resolve "From" query if user typed something custom
+      let resolvedFrom = origin;
+      if (fromQuery.trim() && fromQuery.trim().toLowerCase() !== origin.name.toLowerCase()) {
+        resolvedFrom = await resolveLocationQuery(fromQuery, origin);
+        onOriginChange(resolvedFrom);
+        setFromQuery(resolvedFrom.name);
+      }
+
+      // Resolve "To" query if user typed something custom
+      let resolvedTo = destination;
+      if (toQuery.trim() && toQuery.trim().toLowerCase() !== destination.name.toLowerCase()) {
+        resolvedTo = await resolveLocationQuery(toQuery, destination);
+        onDestinationChange(resolvedTo);
+        setToQuery(resolvedTo.name);
+      }
+
+      // Execute calculation with resolved coordinates
+      onSubmit(resolvedFrom, resolvedTo);
+    } finally {
+      setIsResolving(false);
+    }
+  };
+
+  const renderBadge = (item: LocationPoint) => {
+    if (item.landmarkType === 'metro') {
+      return (
+        <span className="inline-flex items-center gap-0.5 px-1.5 py-0.2 rounded text-[10px] font-semibold bg-indigo-50 text-indigo-700 border border-indigo-200">
+          <Train className="w-2.5 h-2.5" /> Metro
+        </span>
+      );
+    }
+    if (item.name.toLowerCase().includes('ait') || item.name.toLowerCase().includes('college') || item.name.toLowerCase().includes('university') || item.name.toLowerCase().includes('institute')) {
+      return (
+        <span className="inline-flex items-center gap-0.5 px-1.5 py-0.2 rounded text-[10px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
+          <GraduationCap className="w-2.5 h-2.5" /> Institute
+        </span>
+      );
+    }
+    if (item.name.toLowerCase().includes('station') || item.name.toLowerCase().includes('junction') || item.name.toLowerCase().includes('terminal')) {
+      return (
+        <span className="inline-flex items-center gap-0.5 px-1.5 py-0.2 rounded text-[10px] font-semibold bg-amber-50 text-amber-700 border border-amber-200">
+          Transit Hub
+        </span>
+      );
+    }
+    return (
+      <span className="inline-flex items-center gap-0.5 px-1.5 py-0.2 rounded text-[10px] font-semibold bg-zinc-100 text-zinc-600">
+        <Building2 className="w-2.5 h-2.5" /> Pune
+      </span>
+    );
   };
 
   return (
@@ -99,7 +185,7 @@ export const SearchCard: React.FC<SearchCardProps> = ({
       {/* Preset pills for instant testing */}
       <div className="flex items-center gap-1.5 overflow-x-auto pb-1 scrollbar-none text-xs">
         <span className="text-[11px] font-medium text-zinc-400 uppercase tracking-wider shrink-0 mr-1">
-          Popular:
+          Quick Demo:
         </span>
         {PUNE_PRESET_TRIPS.map((preset) => (
           <button
@@ -109,6 +195,9 @@ export const SearchCard: React.FC<SearchCardProps> = ({
               onOriginChange(preset.origin);
               onDestinationChange(preset.destination);
               onBudgetChange(preset.budget);
+              setFromQuery(preset.origin.name);
+              setToQuery(preset.destination.name);
+              onSubmit(preset.origin, preset.destination);
             }}
             className="px-2.5 py-1 rounded-md bg-zinc-50 hover:bg-zinc-100 text-zinc-700 hover:text-zinc-950 border border-zinc-200/70 text-[11px] font-medium shrink-0 transition-colors"
           >
@@ -117,13 +206,8 @@ export const SearchCard: React.FC<SearchCardProps> = ({
         ))}
       </div>
 
-      <form
-        onSubmit={(e) => {
-          e.preventDefault();
-          onSubmit();
-        }}
-        className="space-y-3.5"
-      >
+      <form onSubmit={handleFormSubmit} className="space-y-3.5">
+        
         {/* Origin & Destination Inputs */}
         <div className="space-y-2">
           
@@ -139,15 +223,28 @@ export const SearchCard: React.FC<SearchCardProps> = ({
                 onChange={(e) => handleSearchFrom(e.target.value)}
                 onFocus={() => {
                   if (fromSuggestions.length > 0) setIsFromOpen(true);
+                  else if (fromQuery.length >= 1) handleSearchFrom(fromQuery);
                 }}
-                placeholder="Starting location in Pune (e.g. Hinjewadi, Kothrud)..."
-                className="w-full pl-9 pr-3 py-2.5 rounded-xl border border-zinc-200 bg-zinc-50/50 hover:bg-white focus:bg-white text-zinc-900 placeholder:text-zinc-400 text-xs sm:text-sm font-medium focus:outline-none focus:ring-2 focus:ring-zinc-900 focus:border-transparent transition-all"
+                placeholder="Starting location (e.g. AIT Pune, Hinjewadi, Kothrud)..."
+                className="w-full pl-9 pr-8 py-2.5 rounded-xl border border-zinc-200 bg-zinc-50/50 hover:bg-white focus:bg-white text-zinc-900 placeholder:text-zinc-400 text-xs sm:text-sm font-medium focus:outline-none focus:ring-2 focus:ring-zinc-900 focus:border-transparent transition-all"
               />
+              {fromQuery && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setFromQuery('');
+                    setFromSuggestions([]);
+                  }}
+                  className="absolute right-2.5 text-zinc-400 hover:text-zinc-600 p-0.5"
+                >
+                  <X className="w-3.5 h-3.5" />
+                </button>
+              )}
             </div>
 
-            {/* Suggestions Dropdown */}
+            {/* Predictive Suggestions Dropdown */}
             {isFromOpen && fromSuggestions.length > 0 && (
-              <div className="absolute z-40 left-0 right-0 mt-1 bg-white rounded-xl shadow-lg border border-zinc-200 max-h-48 overflow-y-auto divide-y divide-zinc-100">
+              <div className="absolute z-50 left-0 right-0 mt-1 bg-white rounded-xl shadow-xl border border-zinc-200 max-h-56 overflow-y-auto divide-y divide-zinc-100 animate-in fade-in">
                 {fromSuggestions.map((item, i) => (
                   <button
                     key={i}
@@ -157,10 +254,13 @@ export const SearchCard: React.FC<SearchCardProps> = ({
                       setFromQuery(item.name);
                       setIsFromOpen(false);
                     }}
-                    className="w-full text-left px-3.5 py-2 text-xs text-zinc-800 hover:bg-zinc-50 transition-colors flex items-center gap-2"
+                    className="w-full text-left px-3.5 py-2.5 text-xs text-zinc-800 hover:bg-emerald-50/60 transition-colors flex items-center justify-between gap-2"
                   >
-                    <MapPin className="w-3.5 h-3.5 text-zinc-400 shrink-0" />
-                    <span className="truncate">{item.name}</span>
+                    <div className="flex items-center gap-2 min-w-0">
+                      <MapPin className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+                      <span className="truncate font-medium text-zinc-900">{item.name}</span>
+                    </div>
+                    {renderBadge(item)}
                   </button>
                 ))}
               </div>
@@ -191,15 +291,28 @@ export const SearchCard: React.FC<SearchCardProps> = ({
                 onChange={(e) => handleSearchTo(e.target.value)}
                 onFocus={() => {
                   if (toSuggestions.length > 0) setIsToOpen(true);
+                  else if (toQuery.length >= 1) handleSearchTo(toQuery);
                 }}
-                placeholder="Destination in Pune (e.g. Shivajinagar, Swargate)..."
-                className="w-full pl-9 pr-3 py-2.5 rounded-xl border border-zinc-200 bg-zinc-50/50 hover:bg-white focus:bg-white text-zinc-900 placeholder:text-zinc-400 text-xs sm:text-sm font-medium focus:outline-none focus:ring-2 focus:ring-zinc-900 focus:border-transparent transition-all"
+                placeholder="Destination (e.g. Pune Junction, Shivajinagar, Swargate)..."
+                className="w-full pl-9 pr-8 py-2.5 rounded-xl border border-zinc-200 bg-zinc-50/50 hover:bg-white focus:bg-white text-zinc-900 placeholder:text-zinc-400 text-xs sm:text-sm font-medium focus:outline-none focus:ring-2 focus:ring-zinc-900 focus:border-transparent transition-all"
               />
+              {toQuery && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setToQuery('');
+                    setToSuggestions([]);
+                  }}
+                  className="absolute right-2.5 text-zinc-400 hover:text-zinc-600 p-0.5"
+                >
+                  <X className="w-3.5 h-3.5" />
+                </button>
+              )}
             </div>
 
-            {/* Suggestions Dropdown */}
+            {/* Predictive Suggestions Dropdown */}
             {isToOpen && toSuggestions.length > 0 && (
-              <div className="absolute z-40 left-0 right-0 mt-1 bg-white rounded-xl shadow-lg border border-zinc-200 max-h-48 overflow-y-auto divide-y divide-zinc-100">
+              <div className="absolute z-50 left-0 right-0 mt-1 bg-white rounded-xl shadow-xl border border-zinc-200 max-h-56 overflow-y-auto divide-y divide-zinc-100 animate-in fade-in">
                 {toSuggestions.map((item, i) => (
                   <button
                     key={i}
@@ -209,10 +322,13 @@ export const SearchCard: React.FC<SearchCardProps> = ({
                       setToQuery(item.name);
                       setIsToOpen(false);
                     }}
-                    className="w-full text-left px-3.5 py-2 text-xs text-zinc-800 hover:bg-zinc-50 transition-colors flex items-center gap-2"
+                    className="w-full text-left px-3.5 py-2.5 text-xs text-zinc-800 hover:bg-rose-50/60 transition-colors flex items-center justify-between gap-2"
                   >
-                    <MapPin className="w-3.5 h-3.5 text-zinc-400 shrink-0" />
-                    <span className="truncate">{item.name}</span>
+                    <div className="flex items-center gap-2 min-w-0">
+                      <MapPin className="w-3.5 h-3.5 text-rose-500 shrink-0" />
+                      <span className="truncate font-medium text-zinc-900">{item.name}</span>
+                    </div>
+                    {renderBadge(item)}
                   </button>
                 ))}
               </div>
@@ -296,13 +412,13 @@ export const SearchCard: React.FC<SearchCardProps> = ({
         {/* Action Button */}
         <button
           type="submit"
-          disabled={isLoading}
+          disabled={isLoading || isResolving}
           className="w-full py-2.5 rounded-xl bg-zinc-950 hover:bg-zinc-800 text-white font-semibold text-xs sm:text-sm flex items-center justify-center gap-2 transition-all disabled:opacity-50 active:scale-[0.99]"
         >
-          {isLoading ? (
+          {isLoading || isResolving ? (
             <>
               <Loader2 className="w-4 h-4 animate-spin text-zinc-400" />
-              <span>Comparing Pune Transit Options...</span>
+              <span>Predicting & Routing Pune Transit...</span>
             </>
           ) : (
             <>

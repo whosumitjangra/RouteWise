@@ -16,7 +16,8 @@ import { evaluateAndRankRoutes } from './services/recommender';
 import { ListFilter, Map as MapIcon } from 'lucide-react';
 
 export default function App() {
-  const defaultPreset = PUNE_PRESET_TRIPS[0]; // Hinjewadi -> Shivajinagar (Budget ₹150)
+  // Default to AIT Pune -> Pune Junction as requested
+  const defaultPreset = PUNE_PRESET_TRIPS[0];
 
   const [origin, setOrigin] = useState<LocationPoint>(defaultPreset.origin);
   const [destination, setDestination] = useState<LocationPoint>(defaultPreset.destination);
@@ -36,182 +37,184 @@ export default function App() {
   // Mobile layout tab
   const [mobileTab, setMobileTab] = useState<'routes' | 'map'>('routes');
 
-  const calculateTransitOptions = useCallback(async () => {
-    setIsLoading(true);
-    try {
-      // 1. Parallel execution: Fetch road routing for Driving, Cycling, Walking
-      const [roadDriving, roadBike, roadWalking] = await Promise.all([
-        getRoadRoute(origin, destination, 'driving-traffic'),
-        getRoadRoute(origin, destination, 'cycling'),
-        getRoadRoute(origin, destination, 'walking'),
-      ]);
+  const calculateTransitOptions = useCallback(
+    async (customOrigin?: LocationPoint, customDest?: LocationPoint) => {
+      const activeOrigin = customOrigin || origin;
+      const activeDest = customDest || destination;
 
-      const evaluatedRoutes: RouteOption[] = [];
+      setIsLoading(true);
+      try {
+        // 1. Parallel execution: Fetch road routing for Driving, Cycling, Walking
+        const [roadDriving, roadBike, roadWalking] = await Promise.all([
+          getRoadRoute(activeOrigin, activeDest, 'driving-traffic'),
+          getRoadRoute(activeOrigin, activeDest, 'cycling'),
+          getRoadRoute(activeOrigin, activeDest, 'walking'),
+        ]);
 
-      // A. PUNE METRO + WALKING / FEEDER
-      const metroOption = buildPuneMetroOption(origin, destination);
-      evaluatedRoutes.push(metroOption);
+        const evaluatedRoutes: RouteOption[] = [];
 
-      // B. AUTO RICKSHAW (Pune RTO Meter Tariff)
-      const autoFare = calculateRoadFare('auto', roadDriving.distanceKm, roadDriving.durationMinutes);
-      evaluatedRoutes.push({
-        id: 'opt-auto',
-        mode: 'auto',
-        title: 'Auto Rickshaw',
-        subtitle: 'Pune RTO Regulated Meter Tariff',
-        durationMinutes: roadDriving.durationMinutes,
-        distanceKm: roadDriving.distanceKm,
-        cost: autoFare,
-        isOverBudget: false,
-        budgetDelta: 0,
-        isFeasible: true,
-        coordinates: roadDriving.coordinates,
-        legs: [
-          {
-            id: 'auto-direct',
-            mode: 'auto',
-            title: `Direct Auto Ride (${roadDriving.distanceKm} km)`,
-            durationMinutes: roadDriving.durationMinutes,
-            distanceKm: roadDriving.distanceKm,
-            cost: autoFare.totalFare,
-            fromName: origin.name.split(',')[0],
-            toName: destination.name.split(',')[0],
-            instruction: 'Direct meter auto via city arterial corridor',
-          },
-        ],
-        score: 0,
-        isRecommended: false,
-        carbonKg: +(roadDriving.distanceKm * 0.08).toFixed(2),
-      });
+        // A. PUNE METRO + WALKING / FEEDER
+        const metroOption = buildPuneMetroOption(activeOrigin, activeDest);
+        evaluatedRoutes.push(metroOption);
 
-      // C. BIKE TAXI (Rapido-style estimated fare)
-      // Bikes filter through bottlenecks ~15% faster
-      const bikeDuration = Math.max(
-        1,
-        Math.round(roadDriving.durationMinutes * 0.85)
-      );
-      const bikeFare = calculateRoadFare('bike', roadDriving.distanceKm, bikeDuration);
-      evaluatedRoutes.push({
-        id: 'opt-bike',
-        mode: 'bike',
-        title: 'Bike Taxi',
-        subtitle: 'Rapido / Fast Urban Commute',
-        durationMinutes: bikeDuration,
-        distanceKm: roadDriving.distanceKm,
-        cost: bikeFare,
-        isOverBudget: false,
-        budgetDelta: 0,
-        isFeasible: true,
-        coordinates: roadDriving.coordinates,
-        legs: [
-          {
-            id: 'bike-direct',
-            mode: 'bike',
-            title: `Single-rider Bike Taxi (${roadDriving.distanceKm} km)`,
-            durationMinutes: bikeDuration,
-            distanceKm: roadDriving.distanceKm,
-            cost: bikeFare.totalFare,
-            fromName: origin.name.split(',')[0],
-            toName: destination.name.split(',')[0],
-            instruction: 'Two-wheeler agile corridor navigation',
-          },
-        ],
-        score: 0,
-        isRecommended: false,
-        carbonKg: +(roadDriving.distanceKm * 0.045).toFixed(2),
-      });
-
-      // D. CAB / CAR (Uber Go / Ola Mini estimated fare)
-      const cabFare = calculateRoadFare('cab', roadDriving.distanceKm, roadDriving.durationMinutes);
-      evaluatedRoutes.push({
-        id: 'opt-cab',
-        mode: 'cab',
-        title: 'Cab / Car',
-        subtitle: 'Uber Go / Ola Mini AC Ride',
-        durationMinutes: roadDriving.durationMinutes,
-        distanceKm: roadDriving.distanceKm,
-        cost: cabFare,
-        isOverBudget: false,
-        budgetDelta: 0,
-        isFeasible: true,
-        coordinates: roadDriving.coordinates,
-        legs: [
-          {
-            id: 'cab-direct',
-            mode: 'cab',
-            title: `Private AC Cab (${roadDriving.distanceKm} km)`,
-            durationMinutes: roadDriving.durationMinutes,
-            distanceKm: roadDriving.distanceKm,
-            cost: cabFare.totalFare,
-            fromName: origin.name.split(',')[0],
-            toName: destination.name.split(',')[0],
-            instruction: 'Air-conditioned door-to-door cab',
-          },
-        ],
-        score: 0,
-        isRecommended: false,
-        carbonKg: +(roadDriving.distanceKm * 0.16).toFixed(2),
-      });
-
-      // E. WALKING (For trips under 4.0 km)
-      if (roadWalking.distanceKm <= 4.0) {
+        // B. AUTO RICKSHAW (Pune RTO Regulated Meter Tariff)
+        const autoFare = calculateRoadFare('auto', roadDriving.distanceKm, roadDriving.durationMinutes);
         evaluatedRoutes.push({
-          id: 'opt-walk',
-          mode: 'walking',
-          title: 'Walking',
-          subtitle: 'Active Pedestrian Route (Zero Cost)',
-          durationMinutes: roadWalking.durationMinutes,
-          distanceKm: roadWalking.distanceKm,
-          cost: calculateRoadFare('walking', roadWalking.distanceKm, roadWalking.durationMinutes),
+          id: 'opt-auto',
+          mode: 'auto',
+          title: 'Auto Rickshaw',
+          subtitle: 'Pune RTO Regulated Meter Tariff',
+          durationMinutes: roadDriving.durationMinutes,
+          distanceKm: roadDriving.distanceKm,
+          cost: autoFare,
           isOverBudget: false,
-          budgetDelta: -budget,
+          budgetDelta: 0,
           isFeasible: true,
-          coordinates: roadWalking.coordinates,
+          coordinates: roadDriving.coordinates,
           legs: [
             {
-              id: 'walk-direct',
-              mode: 'walking',
-              title: `Direct Walk (${roadWalking.distanceKm} km)`,
-              durationMinutes: roadWalking.durationMinutes,
-              distanceKm: roadWalking.distanceKm,
-              cost: 0,
-              fromName: origin.name.split(',')[0],
-              toName: destination.name.split(',')[0],
-              instruction: 'Pedestrian pathways and sidewalk connections',
+              id: 'auto-direct',
+              mode: 'auto',
+              title: `Direct Meter Auto (${roadDriving.distanceKm} km)`,
+              durationMinutes: roadDriving.durationMinutes,
+              distanceKm: roadDriving.distanceKm,
+              cost: autoFare.totalFare,
+              fromName: activeOrigin.name.split(',')[0],
+              toName: activeDest.name.split(',')[0],
+              instruction: 'Direct meter auto via city arterial corridor',
             },
           ],
           score: 0,
           isRecommended: false,
-          carbonKg: 0,
+          carbonKg: +(roadDriving.distanceKm * 0.08).toFixed(2),
         });
+
+        // C. BIKE TAXI (Rapido-style estimated fare)
+        const bikeDuration = Math.max(1, Math.round(roadDriving.durationMinutes * 0.85));
+        const bikeFare = calculateRoadFare('bike', roadDriving.distanceKm, bikeDuration);
+        evaluatedRoutes.push({
+          id: 'opt-bike',
+          mode: 'bike',
+          title: 'Bike Taxi',
+          subtitle: 'Rapido / Fast Urban Commute',
+          durationMinutes: bikeDuration,
+          distanceKm: roadDriving.distanceKm,
+          cost: bikeFare,
+          isOverBudget: false,
+          budgetDelta: 0,
+          isFeasible: true,
+          coordinates: roadDriving.coordinates,
+          legs: [
+            {
+              id: 'bike-direct',
+              mode: 'bike',
+              title: `Single-rider Bike Taxi (${roadDriving.distanceKm} km)`,
+              durationMinutes: bikeDuration,
+              distanceKm: roadDriving.distanceKm,
+              cost: bikeFare.totalFare,
+              fromName: activeOrigin.name.split(',')[0],
+              toName: activeDest.name.split(',')[0],
+              instruction: 'Agile two-wheeler city transit',
+            },
+          ],
+          score: 0,
+          isRecommended: false,
+          carbonKg: +(roadDriving.distanceKm * 0.045).toFixed(2),
+        });
+
+        // D. CAB / CAR (Uber Go / Ola Mini estimated fare)
+        const cabFare = calculateRoadFare('cab', roadDriving.distanceKm, roadDriving.durationMinutes);
+        evaluatedRoutes.push({
+          id: 'opt-cab',
+          mode: 'cab',
+          title: 'Cab / Car',
+          subtitle: 'Uber Go / Ola Mini AC Ride',
+          durationMinutes: roadDriving.durationMinutes,
+          distanceKm: roadDriving.distanceKm,
+          cost: cabFare,
+          isOverBudget: false,
+          budgetDelta: 0,
+          isFeasible: true,
+          coordinates: roadDriving.coordinates,
+          legs: [
+            {
+              id: 'cab-direct',
+              mode: 'cab',
+              title: `Private AC Cab (${roadDriving.distanceKm} km)`,
+              durationMinutes: roadDriving.durationMinutes,
+              distanceKm: roadDriving.distanceKm,
+              cost: cabFare.totalFare,
+              fromName: activeOrigin.name.split(',')[0],
+              toName: activeDest.name.split(',')[0],
+              instruction: 'Air-conditioned door-to-door cab',
+            },
+          ],
+          score: 0,
+          isRecommended: false,
+          carbonKg: +(roadDriving.distanceKm * 0.16).toFixed(2),
+        });
+
+        // E. WALKING (For trips under 4.0 km)
+        if (roadWalking.distanceKm <= 4.0) {
+          evaluatedRoutes.push({
+            id: 'opt-walk',
+            mode: 'walking',
+            title: 'Walking',
+            subtitle: 'Active Pedestrian Route (Zero Cost)',
+            durationMinutes: roadWalking.durationMinutes,
+            distanceKm: roadWalking.distanceKm,
+            cost: calculateRoadFare('walking', roadWalking.distanceKm, roadWalking.durationMinutes),
+            isOverBudget: false,
+            budgetDelta: -budget,
+            isFeasible: true,
+            coordinates: roadWalking.coordinates,
+            legs: [
+              {
+                id: 'walk-direct',
+                mode: 'walking',
+                title: `Direct Walk (${roadWalking.distanceKm} km)`,
+                durationMinutes: roadWalking.durationMinutes,
+                distanceKm: roadWalking.distanceKm,
+                cost: 0,
+                fromName: activeOrigin.name.split(',')[0],
+                toName: activeDest.name.split(',')[0],
+                instruction: 'Pedestrian pathways and sidewalk connections',
+              },
+            ],
+            score: 0,
+            isRecommended: false,
+            carbonKg: 0,
+          });
+        }
+
+        // 2. Deterministic Ranking & Plain-English Explanation
+        const { rankedRoutes, recommendedRoute: winner, explanationText } = evaluateAndRankRoutes(
+          evaluatedRoutes,
+          budget,
+          preference
+        );
+
+        setRoutes(rankedRoutes);
+        setRecommendedRoute(winner);
+        setExplanation(explanationText);
+
+        // Default selected route on map to recommended route
+        if (winner) {
+          setSelectedRouteId(winner.id);
+        }
+      } catch (err) {
+        console.error('Transit calculation error:', err);
+      } finally {
+        setIsLoading(false);
       }
-
-      // 2. Deterministic Ranking & Plain-English Explanation
-      const { rankedRoutes, recommendedRoute: winner, explanationText } = evaluateAndRankRoutes(
-        evaluatedRoutes,
-        budget,
-        preference
-      );
-
-      setRoutes(rankedRoutes);
-      setRecommendedRoute(winner);
-      setExplanation(explanationText);
-
-      // Default selected route on map to recommended route
-      if (winner) {
-        setSelectedRouteId(winner.id);
-      }
-    } catch (err) {
-      console.error('Transit calculation error:', err);
-    } finally {
-      setIsLoading(false);
-    }
-  }, [origin, destination, budget, preference]);
+    },
+    [origin, destination, budget, preference]
+  );
 
   // Initial calculation on load
   useEffect(() => {
     calculateTransitOptions();
-  }, [calculateTransitOptions]);
+  }, []);
 
   return (
     <div className="min-h-screen bg-[#fcfcfd] text-zinc-900 flex flex-col font-sans">
@@ -233,7 +236,9 @@ export default function App() {
           onDestinationChange={setDestination}
           onBudgetChange={setBudget}
           onPreferenceChange={setPreference}
-          onSubmit={calculateTransitOptions}
+          onSubmit={(resolvedOrigin, resolvedDest) => {
+            calculateTransitOptions(resolvedOrigin, resolvedDest);
+          }}
         />
 
         {/* Mobile View Toggle Bar */}
@@ -305,7 +310,7 @@ export default function App() {
           </div>
 
           {/* Right Column: Sticky Map */}
-          <div className={`lg:col-span-6 lg:sticky lg:top-20 h-[420px] sm:h-[480px] lg:h-[520px] ${mobileTab === 'routes' ? 'hidden lg:block' : 'block'}`}>
+          <div className={`lg:col-span-6 lg:sticky lg:top-20 h-[400px] sm:h-[480px] lg:h-[520px] ${mobileTab === 'routes' ? 'hidden lg:block' : 'block'}`}>
             <MapView
               origin={origin}
               destination={destination}
@@ -334,7 +339,7 @@ export default function App() {
       <footer className="border-t border-zinc-200/80 bg-white py-5 text-center text-xs text-zinc-400">
         <div className="max-w-5xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-2">
           <div className="flex items-center gap-1.5 font-medium text-zinc-600">
-            <span>IndiaRide</span>
+            <span>RouteWise</span>
             <span>•</span>
             <span>Pune Multimodal Transit Engine</span>
           </div>
