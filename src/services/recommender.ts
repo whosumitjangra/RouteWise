@@ -7,7 +7,68 @@ export interface RecommendationResult {
 }
 
 /**
- * Deterministic Recommendation Engine & Natural English Explainer
+ * Calculates transfer friction, mode counts, and user-facing clarity labels
+ */
+export function enrichRouteTransferMetadata(route: RouteOption): void {
+  if (route.mode === 'cab') {
+    route.modeCount = 1;
+    route.transferCount = 0;
+    route.transferLabel = '0 Transfers • Direct AC Cab';
+    route.aiTag = 'Direct AC Door-to-Door';
+  } else if (route.mode === 'auto') {
+    route.modeCount = 1;
+    route.transferCount = 0;
+    route.transferLabel = '0 Transfers • Direct Auto Meter';
+    route.aiTag = 'Direct Door-to-Door';
+  } else if (route.mode === 'walking') {
+    route.modeCount = 1;
+    route.transferCount = 0;
+    route.transferLabel = '0 Transfers • Pedestrian Walk';
+    route.aiTag = 'Zero Cost Walk';
+  } else if (route.mode === 'bus') {
+    route.modeCount = 1;
+    route.transferCount = 0;
+    route.transferLabel = 'Single Bus • No Transfers';
+    route.aiTag = 'Direct City Transit';
+  } else if (route.mode === 'metro_multimodal') {
+    const feederLegs = route.legs.filter(
+      (l) => l.isFeeder || l.badge === 'Feeder Auto' || l.title.toLowerCase().includes('feeder')
+    );
+    const hasInterchange = route.legs.some(
+      (l) =>
+        l.badge?.includes('Transfer') ||
+        l.title.includes('District Court') ||
+        l.title.toLowerCase().includes('interchange')
+    );
+
+    // Calculate total distinct vehicular modes
+    // e.g. Feeder Auto (1) + Metro Train (2) + Feeder Auto (3)
+    const feederCount = feederLegs.length;
+    const modeCount = 1 + feederCount;
+    const transferCount = Math.max(0, modeCount - 1 + (hasInterchange ? 1 : 0));
+
+    route.modeCount = modeCount;
+    route.transferCount = transferCount;
+
+    if (modeCount >= 3 || transferCount >= 2) {
+      route.transferLabel = `3 Modes • ${transferCount} Switches (Auto + Metro + Auto)`;
+      route.aiTag = '3-Mode Multi-Transit';
+    } else if (modeCount === 2 || transferCount === 1) {
+      route.transferLabel = '2 Modes • 1 Switch (Feeder + Metro)';
+      route.aiTag = '2-Mode Transit';
+    } else {
+      route.transferLabel = 'Direct Metro • Walkable Stations';
+      route.aiTag = 'Direct Rail Transit';
+    }
+  }
+}
+
+/**
+ * AI Commute Recommendation Engine & Plain-English Explainer
+ * Dynamically prioritizes:
+ * 1. Customer Budget & Willingness to Pay (Cabs/Autos preferred when budget allows)
+ * 2. Mode Switching Friction (Penalizes changing 3 modes when direct single bus/cab/auto exists)
+ * 3. Travel Time & Directness
  */
 export function evaluateAndRankRoutes(
   routes: RouteOption[],
@@ -26,13 +87,28 @@ export function evaluateAndRankRoutes(
     };
   }
 
-  // Calculate budget deltas
+  // 1. Enrich all routes with transfer friction metadata
+  feasible.forEach(enrichRouteTransferMetadata);
+  unfeasible.forEach(enrichRouteTransferMetadata);
+
+  // 2. Calculate budget deltas
   feasible.forEach((route) => {
     route.isOverBudget = route.cost.totalFare > budget;
     route.budgetDelta = route.cost.totalFare - budget;
   });
 
-  // Normalization for Balanced Pareto score
+  // Find candidate options
+  const cabRoute = feasible.find((r) => r.mode === 'cab');
+  const autoRoute = feasible.find((r) => r.mode === 'auto');
+  const busRoute = feasible.find((r) => r.mode === 'bus');
+  const metroRoute = feasible.find((r) => r.mode === 'metro_multimodal');
+  const walkRoute = feasible.find((r) => r.mode === 'walking');
+
+  // Customer budget affordability signals
+  const canAffordCab = Boolean(cabRoute && !cabRoute.isOverBudget);
+  const canAffordAuto = Boolean(autoRoute && !autoRoute.isOverBudget);
+
+  // 3. Normalization for duration and costs
   const costs = feasible.map((r) => r.cost.totalFare);
   const durations = feasible.map((r) => r.durationMinutes);
 
@@ -41,27 +117,88 @@ export function evaluateAndRankRoutes(
   const minDuration = Math.min(...durations);
   const maxDuration = Math.max(...durations, minDuration + 1);
 
+  // 4. Compute AI Commute Utility Score for each route
   feasible.forEach((route) => {
     const normCost = (route.cost.totalFare - minCost) / (maxCost - minCost);
     const normDuration = (route.durationMinutes - minDuration) / (maxDuration - minDuration);
 
-    let comfortPenalty = 0.05;
-    if (route.mode === 'walking') {
-      comfortPenalty = route.durationMinutes > 20 ? 0.45 : 0.15;
-    } else if (route.mode === 'metro_multimodal') {
-      comfortPenalty = 0.04; // air-conditioned, zero road traffic
-    } else if (route.mode === 'cab') {
-      comfortPenalty = 0.02; // door-to-door AC
-    } else if (route.mode === 'bus') {
-      comfortPenalty = 0.06; // public city bus
+    // Transfer friction penalty:
+    // Changing 3 modes is exhausting (waiting for auto, security check at metro, waiting for train, deboarding, hailing another auto).
+    // Direct single bus or private car/auto has 0 transfer fatigue.
+    let transferPenalty = 0.0;
+    if ((route.transferCount ?? 0) >= 2 || (route.modeCount ?? 1) >= 3) {
+      transferPenalty = 0.55; // Heavy friction penalty for changing 3 modes
+    } else if ((route.transferCount ?? 0) === 1) {
+      transferPenalty = 0.20;
     }
 
-    route.score = +(normCost * 0.45 + normDuration * 0.45 + comfortPenalty * 0.10).toFixed(4);
+    // Budget willingness factor:
+    // If the customer entered a higher budget and can afford a Cab or Auto,
+    // they deliberately chose to pay more for speed & 0-transfer comfort!
+    let budgetAffordabilityBonus = 0.0;
+    if (canAffordCab && route.mode === 'cab') {
+      budgetAffordabilityBonus = -0.45; // Strongly reward Cab when customer budget allows it
+    } else if (canAffordAuto && route.mode === 'auto') {
+      budgetAffordabilityBonus = canAffordCab ? -0.30 : -0.45; // Strongly reward Auto
+    } else if (!canAffordAuto && route.mode === 'bus') {
+      budgetAffordabilityBonus = -0.40; // Strongly reward single Bus for budget-conscious commuters
+    }
+
+    // Walking penalty if walking is excessive
+    let walkPenalty = 0.0;
+    if (route.mode === 'walking') {
+      walkPenalty = route.distanceKm > 0.8 ? 0.40 : 0.05;
+    }
+
+    // Congestion bypass reward for Metro if road traffic is severe
+    let trafficBypassBonus = 0.0;
+    if (route.mode === 'metro_multimodal' && cabRoute) {
+      const timeSaved = cabRoute.durationMinutes - route.durationMinutes;
+      if (timeSaved >= 15) {
+        trafficBypassBonus = -0.25;
+      }
+    }
+
+    // Over-budget penalty
+    const overBudgetPenalty = route.isOverBudget
+      ? 2.0 + (route.cost.totalFare - budget) * 0.01
+      : 0.0;
+
+    // AI Commute Score (lower is better)
+    if (preference === 'cheapest') {
+      // Prioritize low cost, but penalize high transfer friction
+      route.score = +(
+        normCost * 0.65 +
+        transferPenalty * 0.25 +
+        normDuration * 0.10 +
+        overBudgetPenalty
+      ).toFixed(4);
+    } else if (preference === 'fastest') {
+      // Prioritize speed, but reward 0 transfers
+      route.score = +(
+        normDuration * 0.70 +
+        transferPenalty * 0.20 +
+        normCost * 0.10 +
+        overBudgetPenalty
+      ).toFixed(4);
+    } else {
+      // 'balanced' AI recommendation:
+      // Dynamically balances customer budget willingness, transfer friction, time, and cost
+      route.score = +(
+        normCost * 0.25 +
+        normDuration * 0.30 +
+        transferPenalty * 0.35 +
+        budgetAffordabilityBonus +
+        walkPenalty +
+        trafficBypassBonus +
+        overBudgetPenalty
+      ).toFixed(4);
+    }
   });
 
-  // Sort feasible options based on selected preference
+  // 5. Sort feasible options according to AI priority
   feasible.sort((a, b) => {
-    // Under-budget options always precede over-budget options
+    // Under-budget routes always precede over-budget routes
     if (a.isOverBudget && !b.isOverBudget) return 1;
     if (!a.isOverBudget && b.isOverBudget) return -1;
 
@@ -69,21 +206,21 @@ export function evaluateAndRankRoutes(
       if (a.cost.totalFare !== b.cost.totalFare) {
         return a.cost.totalFare - b.cost.totalFare;
       }
-      return a.durationMinutes - b.durationMinutes;
+      return a.score - b.score;
     }
 
     if (preference === 'fastest') {
       if (a.durationMinutes !== b.durationMinutes) {
         return a.durationMinutes - b.durationMinutes;
       }
-      return a.cost.totalFare - b.cost.totalFare;
+      return a.score - b.score;
     }
 
-    // 'balanced'
+    // 'balanced' AI Priority
     return a.score - b.score;
   });
 
-  // Pick winner
+  // 6. Pick AI Recommended Winner
   const winner = feasible[0];
   const runnerUp = feasible.length > 1 ? feasible[1] : null;
 
@@ -91,56 +228,40 @@ export function evaluateAndRankRoutes(
   routes.forEach((r) => {
     r.isRecommended = false;
     r.recommendationReason = undefined;
+    r.aiExplanation = undefined;
   });
 
   winner.isRecommended = true;
 
-  // Generate plain-English explanation
+  // 7. Generate Plain-English AI Explanation
   let explanationText = '';
 
   if (winner.isOverBudget) {
-    explanationText = `All viable options exceed your ₹${budget} budget. ${winner.title} (₹${winner.cost.totalFare}) is the most economical choice.`;
+    explanationText = `All viable routes exceed your ₹${budget} budget. ${winner.title} (₹${winner.cost.totalFare}) is the most economical choice.`;
   } else if (winner.mode === 'walking') {
-    explanationText = `Recommended because it is completely free (₹0) and only a ${winner.durationMinutes}-minute walk (${winner.distanceKm} km).`;
-  } else if (runnerUp) {
-    const costDiff = Math.abs(runnerUp.cost.totalFare - winner.cost.totalFare);
-    const timeDiff = Math.abs(runnerUp.durationMinutes - winner.durationMinutes);
-
-    if (preference === 'cheapest') {
-      if (costDiff > 0) {
-        explanationText = `Recommended because it is ₹${costDiff} cheaper than ${runnerUp.title}${
-          timeDiff > 0 ? ` and only ${timeDiff} min slower` : ''
-        }.`;
-      } else {
-        explanationText = `Recommended as the lowest cost option (₹${winner.cost.totalFare}) within your ₹${budget} budget.`;
-      }
-    } else if (preference === 'fastest') {
-      if (timeDiff > 0) {
-        explanationText = `Recommended because it is ${timeDiff} minutes faster than ${runnerUp.title} (${winner.durationMinutes} min total).`;
-      } else {
-        explanationText = `Recommended as the fastest option (${winner.durationMinutes} min) within your ₹${budget} budget.`;
-      }
+    explanationText = `Recommended by AI: Completely free (₹0) and only a ${winner.durationMinutes}-minute walk (${winner.distanceKm} km).`;
+  } else if (winner.mode === 'cab') {
+    explanationText = `Recommended by AI: With your ₹${budget} budget, Economy Cab is the ideal choice (₹${winner.cost.totalFare}). You get 100% door-to-door AC comfort with 0 mode transfers, skipping the hassle of changing 3 transit vehicles.`;
+  } else if (winner.mode === 'auto') {
+    explanationText = `Recommended by AI: Direct Auto Rickshaw (₹${winner.cost.totalFare}) takes you straight to your destination with 0 transfers, avoiding a tiring 3-mode transit route while fitting your ₹${budget} budget.`;
+  } else if (winner.mode === 'bus') {
+    const metroDiff = metroRoute ? metroRoute.cost.totalFare - winner.cost.totalFare : 0;
+    explanationText = `Recommended by AI: Direct PMPML Bus ${winner.busNumber || ''} is the smartest choice (₹${winner.cost.totalFare}). A single bus ride gets you there directly, saving you from the hassle of changing 3 different transit modes${
+      metroDiff > 0 ? ` while saving ₹${metroDiff}` : ''
+    }.`;
+  } else if (winner.mode === 'metro_multimodal') {
+    if (cabRoute && cabRoute.durationMinutes - winner.durationMinutes >= 15) {
+      const timeSaved = cabRoute.durationMinutes - winner.durationMinutes;
+      explanationText = `Recommended by AI: Pune Metro + Feeder cuts travel time by ${timeSaved} minutes by bypassing heavy road congestion across the city arterial corridor.`;
     } else {
-      // 'balanced'
-      if (winner.mode === 'metro_multimodal') {
-        const cab = feasible.find((r) => r.mode === 'cab');
-        const auto = feasible.find((r) => r.mode === 'auto');
-        const comp = auto || cab || runnerUp;
-        const diff = Math.abs(comp.cost.totalFare - winner.cost.totalFare);
-        explanationText = `Recommended because it avoids road congestion, saves ₹${diff} over ${comp.title}, and takes only ${winner.durationMinutes} mins.`;
-      } else if (winner.mode === 'auto') {
-        explanationText = `Recommended for reliable direct door-to-door transit at official Pune RTO meter fare (₹${winner.cost.totalFare}).`;
-      } else if (winner.mode === 'bus') {
-        explanationText = `Recommended as the most economical city transit option via ${winner.title} (₹${winner.cost.totalFare}) across this corridor.`;
-      } else {
-        explanationText = `Recommended as the best balance of cost (₹${winner.cost.totalFare}) and travel time (${winner.durationMinutes} min).`;
-      }
+      explanationText = `Recommended by AI: Pune Metro + Feeder provides reliable, traffic-free rail transit across this long-distance corridor.`;
     }
   } else {
-    explanationText = `Recommended: Best route fitting your ₹${budget} budget.`;
+    explanationText = `Recommended by AI as the best balance of travel time (${winner.durationMinutes} min), zero transfer friction, and cost (₹${winner.cost.totalFare}).`;
   }
 
   winner.recommendationReason = explanationText;
+  winner.aiExplanation = explanationText;
 
   return {
     rankedRoutes: [...feasible, ...unfeasible],

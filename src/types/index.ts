@@ -76,6 +76,11 @@ export interface RouteOption {
   isRecommended: boolean;
   recommendationReason?: string;
   carbonKg: number;
+  transferCount?: number;
+  modeCount?: number;
+  transferLabel?: string;
+  aiTag?: string;
+  aiExplanation?: string;
 }
 
 export interface PMPMLBusRoute {

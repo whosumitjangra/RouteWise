@@ -13,7 +13,8 @@ import {
   ExternalLink,
   MapPin,
   CheckCircle2,
-  ChevronRight
+  ChevronRight,
+  Sparkles
 } from 'lucide-react';
 import { RouteOption } from '../types';
 import { 
@@ -216,7 +217,7 @@ export const RouteCard: React.FC<RouteCardProps> = ({
   return (
     <div
       onClick={handleCardClick}
-      className={`rounded-xl border transition-all cursor-pointer select-none ${
+      className={`rounded-xl border transition-colors duration-150 cursor-pointer select-none ${
         isSelected
           ? 'bg-white border-zinc-950 ring-1 ring-zinc-950 shadow-sm'
           : 'bg-white border-zinc-200/90 hover:border-zinc-300 shadow-2xs'
@@ -244,8 +245,22 @@ export const RouteCard: React.FC<RouteCardProps> = ({
                   </span>
                 )}
                 {route.isRecommended && (
-                  <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-200">
-                    ★ Best Choice
+                  <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-200 flex items-center gap-1 shadow-2xs">
+                    <Sparkles className="w-2.5 h-2.5 text-emerald-700" />
+                    <span>AI Best Choice</span>
+                  </span>
+                )}
+                {route.transferLabel && (
+                  <span
+                    className={`px-1.5 py-0.2 rounded text-[10px] font-semibold border ${
+                      (route.transferCount ?? 0) === 0
+                        ? 'bg-emerald-50/70 text-emerald-800 border-emerald-200'
+                        : (route.transferCount ?? 0) >= 2
+                        ? 'bg-amber-50/80 text-amber-900 border-amber-200'
+                        : 'bg-indigo-50/70 text-indigo-800 border-indigo-200'
+                    }`}
+                  >
+                    {route.transferLabel}
                   </span>
                 )}
               </div>
@@ -299,6 +314,17 @@ export const RouteCard: React.FC<RouteCardProps> = ({
           </div>
 
         </div>
+
+        {/* AI Commute Reasoning Insight */}
+        {route.isRecommended && (route.aiExplanation || route.recommendationReason) && (
+          <div className="mt-2.5 p-2 sm:p-2.5 rounded-lg bg-emerald-50/80 border border-emerald-200/80 text-[11px] text-emerald-950 flex items-start gap-1.5 leading-snug">
+            <Sparkles className="w-3.5 h-3.5 text-emerald-600 shrink-0 mt-0.5" />
+            <div>
+              <span className="font-bold text-emerald-800 mr-1">AI Intelligence:</span>
+              <span className="text-zinc-700">{route.aiExplanation || route.recommendationReason}</span>
+            </div>
+          </div>
+        )}
 
         {/* Quick Path Indicator & Tap instruction */}
         <div className="mt-2.5 pt-2 border-t border-zinc-50 flex items-center justify-between text-[11px] text-zinc-400">

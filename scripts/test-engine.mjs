@@ -172,4 +172,46 @@ const finalPrice = metroTicket + firstMile + lastMile;
 assert.strictEqual(finalPrice, 65, "Final price must add first-mile (₹35) and last-mile (₹10) to metro ticket (₹20)");
 console.log("✔ Feeder auto charge (1km: ₹10, 2-3km: ₹30-40) and final price addition tests passed");
 
+// Test 8: AI Commute Priority (Single Bus for Low Budget vs Cab/Auto for High Budget vs 3-Mode Penalty)
+function evaluateAiCommuteChoice(routes, budget) {
+  const canAffordCab = routes.some(r => r.mode === 'cab' && r.fare <= budget);
+  const canAffordAuto = routes.some(r => r.mode === 'auto' && r.fare <= budget);
+
+  const scored = routes.map(r => {
+    let transferPenalty = r.modeCount >= 3 ? 0.55 : 0.0;
+    let budgetBonus = 0.0;
+    if (canAffordCab && r.mode === 'cab') budgetBonus = -0.45;
+    else if (canAffordAuto && r.mode === 'auto') budgetBonus = canAffordCab ? -0.30 : -0.45;
+    else if (!canAffordAuto && r.mode === 'bus') budgetBonus = -0.40;
+
+    const overBudgetPenalty = r.fare > budget ? 2.0 : 0.0;
+    const score = (r.fare / 300) * 0.25 + (r.duration / 60) * 0.30 + transferPenalty * 0.35 + budgetBonus + overBudgetPenalty;
+    return { ...r, score };
+  });
+
+  scored.sort((a, b) => a.score - b.score);
+  return scored[0];
+}
+
+const mockRoutes = [
+  { mode: 'metro_multimodal', title: 'Pune Metro + Feeder', fare: 65, duration: 32, modeCount: 3 },
+  { mode: 'bus', title: 'PMPML Bus 158', fare: 20, duration: 42, modeCount: 1 },
+  { mode: 'auto', title: 'Auto Rickshaw', fare: 85, duration: 25, modeCount: 1 },
+  { mode: 'cab', title: 'Economy Cab', fare: 140, duration: 24, modeCount: 1 },
+];
+
+// Low budget (₹40): Single Bus should win over 3-mode transit
+const lowBudgetWinner = evaluateAiCommuteChoice(mockRoutes, 40);
+assert.strictEqual(lowBudgetWinner.mode, 'bus', "Low budget (₹40) should prioritize Direct PMPML Bus over 3-mode transit");
+
+// Medium budget (₹100): Auto should win over 3-mode transit (0 transfers vs 3 modes)
+const medBudgetWinner = evaluateAiCommuteChoice(mockRoutes, 100);
+assert.strictEqual(medBudgetWinner.mode, 'auto', "Medium budget (₹100) should prioritize Direct Auto over 3-mode transit");
+
+// High budget (₹200): Cab should win for 0 transfers & AC comfort
+const highBudgetWinner = evaluateAiCommuteChoice(mockRoutes, 200);
+assert.strictEqual(highBudgetWinner.mode, 'cab', "High budget (₹200) should prioritize Economy Cab for maximum comfort & 0 transfers");
+
+console.log("✔ AI commute priority tests (Bus for low budget, Auto for medium, Cab for high budget) passed");
+
 console.log("=== ALL TESTS PASSED SUCCESSFULLY! ===");

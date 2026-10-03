@@ -25,7 +25,7 @@ export const RecommendationBanner: React.FC<RecommendationBannerProps> = ({
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 flex-wrap">
             <span className="font-semibold text-xs tracking-wider uppercase text-emerald-800">
-              Recommendation
+              AI Commute Intelligence
             </span>
             <span className="text-zinc-300">•</span>
             <span className="font-bold text-xs sm:text-sm text-zinc-900 truncate">
