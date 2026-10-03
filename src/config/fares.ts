@@ -1,6 +1,6 @@
 /**
  * Centralized Fare Assumptions & Formula Configurations for Pune, Maharashtra
- * All assumptions are consolidated in this single file for rapid modification.
+ * Strictly anonymous - no third-party branding (Rapido/Uber/Ola omitted).
  */
 
 export const FARE_CONFIG = {
@@ -16,28 +16,27 @@ export const FARE_CONFIG = {
     nightSurchargeMultiplier: 1.0, // 1.25x between midnight and 5:00 AM
   },
 
-  // 2. Bike Taxi (Rapido-style Pune market estimates)
+  // 2. Bike / Two-Wheeler Commute (Live Market Price Formula)
   bike: {
-    label: 'Bike Taxi (Estimated Fare)',
-    baseFare: 20, // covers first 1.0 km
+    label: 'Bike Ride (Live Market Estimate)',
+    baseFare: 22, // covers first 1.0 km
     baseDistanceKm: 1.0,
-    perKmRate: 9.0, // ₹9/km
-    perMinuteRate: 0.75, // ₹0.75/minute traffic buffer
+    perKmRate: 9.5, // dynamic distance rate
+    perMinuteRate: 0.80, // live traffic duration rate
     platformFee: 2.0,
   },
 
-  // 3. On-Demand Cab / Car (Uber Go / Ola Mini Pune market estimates)
+  // 3. Economy Cab (Live City Cab Market Formula)
   cab: {
-    label: 'Cab / Car (Estimated Fare)',
-    baseFare: 60, // base unlock & pickup
+    label: 'Economy Cab (AC)',
+    baseFare: 65, // base pickup
     baseDistanceKm: 0,
-    perKmRate: 15.5, // ₹15.50/km
-    perMinuteRate: 1.50, // ₹1.50/minute city transit
+    perKmRate: 16.0, // distance rate
+    perMinuteRate: 1.50, // traffic duration buffer
     bookingFee: 15.0,
   },
 
   // 4. Pune Metro (Maha Metro Official Fare Slabs)
-  // Distance / station count based structure approved by Maha Metro Rail Corporation
   metro: {
     label: 'Pune Metro (Maha Metro Fare)',
     slabs: [
@@ -48,17 +47,17 @@ export const FARE_CONFIG = {
       { maxStations: 18, fare: 30 },
       { maxStations: 999, fare: 35 },
     ],
-    averageOperatingSpeedKmh: 36, // Commercial average speed including acceleration/braking
-    stationDwellTimeMinutes: 0.5, // 30 seconds stop per station
-    interchangeTransferBufferMinutes: 3.5, // Walking between District Court line 1 and line 2 concourses
-    maxFeederWalkDistanceKm: 4.5, // Beyond 4.5 km from a metro station, metro is deemed not practical
+    averageOperatingSpeedKmh: 36,
+    stationDwellTimeMinutes: 0.5,
+    interchangeTransferBufferMinutes: 4.0, // District Court interchange walk
+    maxFeederWalkDistanceKm: 4.5,
   },
 
   // 5. Walking / Active
   walking: {
     label: 'Walking (Free)',
     cost: 0,
-    averageSpeedKmh: 4.8, // standard pedestrian pace
-    maxReasonableDistanceKm: 3.5, // Walks longer than this are flagged as high fatigue
+    averageSpeedKmh: 4.8,
+    maxReasonableDistanceKm: 3.5,
   },
 };

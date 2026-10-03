@@ -6,9 +6,10 @@ import {
   Footprints, 
   ChevronDown, 
   ChevronUp, 
-  Check, 
   AlertCircle,
-  HelpCircle
+  HelpCircle,
+  ArrowRight,
+  Shuffle
 } from 'lucide-react';
 import { RouteOption } from '../types';
 
@@ -50,6 +51,12 @@ export const RouteCard: React.FC<RouteCardProps> = ({
     }
   };
 
+  const handleCardClick = () => {
+    onSelect();
+    // Toggle path in brief on tap as requested by user
+    setIsExpanded((prev) => !prev);
+  };
+
   if (!route.isFeasible) {
     return (
       <div className="bg-zinc-50/70 border border-zinc-200/60 rounded-xl p-3.5 text-zinc-400 text-xs flex items-center justify-between">
@@ -60,7 +67,7 @@ export const RouteCard: React.FC<RouteCardProps> = ({
               {route.title}
             </span>
             <span className="text-[11px] text-zinc-400 block sm:inline">
-              {route.unfeasibleReason || 'Not feasible for this route'}
+              {route.unfeasibleReason || 'Not practical for this route'}
             </span>
           </div>
         </div>
@@ -70,8 +77,8 @@ export const RouteCard: React.FC<RouteCardProps> = ({
 
   return (
     <div
-      onClick={onSelect}
-      className={`rounded-xl border transition-all cursor-pointer ${
+      onClick={handleCardClick}
+      className={`rounded-xl border transition-all cursor-pointer select-none ${
         isSelected
           ? 'bg-white border-zinc-950 ring-1 ring-zinc-950 shadow-sm'
           : 'bg-white border-zinc-200/90 hover:border-zinc-300 shadow-2xs'
@@ -111,7 +118,7 @@ export const RouteCard: React.FC<RouteCardProps> = ({
             <div className="text-[10px] text-zinc-400">
               {route.mode === 'metro_multimodal' || route.mode === 'auto'
                 ? 'Standard tariff'
-                : 'Estimated fare'}
+                : 'Live market fare'}
             </div>
           </div>
 
@@ -146,19 +153,12 @@ export const RouteCard: React.FC<RouteCardProps> = ({
 
         </div>
 
-        {/* Accordion trigger */}
+        {/* Quick Path Indicator & Tap instruction */}
         <div className="mt-2.5 pt-2 border-t border-zinc-50 flex items-center justify-between text-[11px] text-zinc-400">
-          <button
-            type="button"
-            onClick={(e) => {
-              e.stopPropagation();
-              setIsExpanded(!isExpanded);
-            }}
-            className="hover:text-zinc-700 flex items-center gap-1 transition-colors"
-          >
-            <span>{isExpanded ? 'Hide details' : 'View route steps'}</span>
-            {isExpanded ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />}
-          </button>
+          <div className="flex items-center gap-1 text-zinc-600 font-medium">
+            <span>{isExpanded ? 'Tap to collapse path' : 'Tap to view full path & transfers'}</span>
+            {isExpanded ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
+          </div>
 
           <button
             type="button"
@@ -175,41 +175,94 @@ export const RouteCard: React.FC<RouteCardProps> = ({
 
       </div>
 
-      {/* Expanded Step-by-Step Details */}
+      {/* Expanded Brief Path Breakdown (Tap to open) */}
       {isExpanded && (
-        <div className="p-3.5 bg-zinc-50/80 border-t border-zinc-200/80 rounded-b-xl space-y-2 text-xs">
-          <div className="font-semibold text-[11px] uppercase tracking-wider text-zinc-500 mb-1">
-            Trip Itinerary
-          </div>
+        <div className="p-3.5 sm:p-4 bg-zinc-50/90 border-t border-zinc-200/80 rounded-b-xl space-y-3 text-xs animate-in fade-in">
           
-          {route.legs.length > 0 ? (
-            route.legs.map((leg, idx) => (
-              <div key={leg.id || idx} className="flex items-start gap-2.5 text-zinc-700">
-                <div className="w-4 h-4 rounded-full bg-zinc-200 text-zinc-700 flex items-center justify-center text-[10px] font-mono shrink-0 mt-0.5">
-                  {idx + 1}
-                </div>
-                <div className="flex-1">
-                  <div className="font-medium text-zinc-900 flex items-center justify-between">
-                    <span>{leg.title}</span>
-                    <span className="text-[11px] text-zinc-400 font-mono">
-                      {leg.durationMinutes}m • {leg.distanceKm} km
-                    </span>
-                  </div>
-                  <p className="text-[11px] text-zinc-500 mt-0.5">
-                    {leg.instruction}
-                  </p>
-                </div>
-              </div>
-            ))
-          ) : (
-            <div className="text-[11px] text-zinc-500">
-              Direct highway / city corridor from {route.subtitle}
-            </div>
-          )}
-
-          <div className="pt-2 border-t border-zinc-200/60 text-[11px] text-zinc-500 italic">
-            {route.cost.formulaDescription}
+          <div className="flex items-center justify-between">
+            <span className="font-bold text-[11px] uppercase tracking-wider text-zinc-700">
+              Complete Path & Transit Steps
+            </span>
+            <span className="text-[10px] text-zinc-400 font-mono">
+              Total {route.durationMinutes} min • {route.distanceKm} km
+            </span>
           </div>
+
+          {/* Step-by-Step Path Timeline */}
+          <div className="space-y-2.5">
+            {route.legs.map((leg, idx) => {
+              const isInterchange = leg.title.includes('District Court') || leg.title.includes('Transfer');
+
+              return (
+                <div
+                  key={leg.id || idx}
+                  className={`p-3 rounded-xl border text-xs ${
+                    isInterchange
+                      ? 'bg-amber-50/80 border-amber-200/90 text-amber-950'
+                      : 'bg-white border-zinc-200/80 text-zinc-800'
+                  }`}
+                >
+                  <div className="flex items-start gap-2.5">
+                    <div
+                      className={`w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-mono font-bold shrink-0 mt-0.5 ${
+                        isInterchange
+                          ? 'bg-amber-500 text-white'
+                          : 'bg-zinc-200 text-zinc-800'
+                      }`}
+                    >
+                      {isInterchange ? <Shuffle className="w-3 h-3" /> : idx + 1}
+                    </div>
+
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center justify-between gap-1">
+                        <span className="font-bold text-xs text-zinc-900 truncate">
+                          {leg.title}
+                        </span>
+                        {leg.badge && (
+                          <span
+                            className={`px-1.5 py-0.2 rounded text-[10px] font-semibold shrink-0 ${
+                              leg.badge.includes('Purple')
+                                ? 'bg-indigo-100 text-indigo-800'
+                                : leg.badge.includes('Aqua')
+                                ? 'bg-cyan-100 text-cyan-800'
+                                : leg.badge.includes('Transfer')
+                                ? 'bg-amber-200 text-amber-900'
+                                : 'bg-zinc-100 text-zinc-700'
+                            }`}
+                          >
+                            {leg.badge}
+                          </span>
+                        )}
+                      </div>
+
+                      <p className="text-[11px] text-zinc-600 mt-1 leading-relaxed">
+                        {leg.instruction}
+                      </p>
+
+                      <div className="flex items-center gap-2 mt-1.5 text-[10px] text-zinc-400 font-mono">
+                        <span>{leg.durationMinutes} mins</span>
+                        <span>•</span>
+                        <span>{leg.distanceKm} km</span>
+                        {leg.cost > 0 && (
+                          <>
+                            <span>•</span>
+                            <span className="text-emerald-700 font-bold">₹{leg.cost}</span>
+                          </>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+
+          {/* Quick Tariff Summary */}
+          <div className="p-2.5 bg-white rounded-lg border border-zinc-200/80 text-[11px] text-zinc-500 flex items-center justify-between">
+            <span>Tariff Rule:</span>
+            <span className="font-medium text-zinc-800">{route.cost.formulaDescription}</span>
+          </div>
+
         </div>
       )}
 

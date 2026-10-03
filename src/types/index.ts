@@ -32,6 +32,17 @@ export interface RouteLeg {
   fromName: string;
   toName: string;
   instruction: string;
+  badge?: string;
+  stopsCount?: number;
+}
+
+export interface StationWaypoint {
+  name: string;
+  lat: number;
+  lng: number;
+  type: 'board' | 'interchange' | 'deboard';
+  line?: 'purple' | 'aqua';
+  instruction: string;
 }
 
 export interface RouteOption {
@@ -46,8 +57,9 @@ export interface RouteOption {
   budgetDelta: number; // positive = over budget, negative/0 = within budget
   isFeasible: boolean;
   unfeasibleReason?: string;
-  coordinates: [number, number][]; // [lng, lat] for Mapbox
+  coordinates: [number, number][]; // [lng, lat] for map
   legs: RouteLeg[];
+  stationWaypoints?: StationWaypoint[];
   score: number; // Normalized multi-objective score
   isRecommended: boolean;
   recommendationReason?: string;

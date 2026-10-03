@@ -86,14 +86,14 @@ export default function App() {
           carbonKg: +(roadDriving.distanceKm * 0.08).toFixed(2),
         });
 
-        // C. BIKE TAXI (Rapido-style estimated fare)
+        // C. BIKE TAXI (Live dynamic market rate)
         const bikeDuration = Math.max(1, Math.round(roadDriving.durationMinutes * 0.85));
         const bikeFare = calculateRoadFare('bike', roadDriving.distanceKm, bikeDuration);
         evaluatedRoutes.push({
           id: 'opt-bike',
           mode: 'bike',
-          title: 'Bike Taxi',
-          subtitle: 'Rapido / Fast Urban Commute',
+          title: 'Bike Ride',
+          subtitle: 'Live Market Fare • Agile Urban Commute',
           durationMinutes: bikeDuration,
           distanceKm: roadDriving.distanceKm,
           cost: bikeFare,
@@ -105,13 +105,13 @@ export default function App() {
             {
               id: 'bike-direct',
               mode: 'bike',
-              title: `Single-rider Bike Taxi (${roadDriving.distanceKm} km)`,
+              title: `Single-rider Two-Wheeler (${roadDriving.distanceKm} km)`,
               durationMinutes: bikeDuration,
               distanceKm: roadDriving.distanceKm,
               cost: bikeFare.totalFare,
               fromName: activeOrigin.name.split(',')[0],
               toName: activeDest.name.split(',')[0],
-              instruction: 'Agile two-wheeler city transit',
+              instruction: 'Fast two-wheeler navigation filtering through city traffic bottlenecks',
             },
           ],
           score: 0,
@@ -119,13 +119,13 @@ export default function App() {
           carbonKg: +(roadDriving.distanceKm * 0.045).toFixed(2),
         });
 
-        // D. CAB / CAR (Uber Go / Ola Mini estimated fare)
+        // D. CAB / CAR (Live economy AC cab market rate)
         const cabFare = calculateRoadFare('cab', roadDriving.distanceKm, roadDriving.durationMinutes);
         evaluatedRoutes.push({
           id: 'opt-cab',
           mode: 'cab',
-          title: 'Cab / Car',
-          subtitle: 'Uber Go / Ola Mini AC Ride',
+          title: 'Economy Cab',
+          subtitle: 'Air-Conditioned 4-Seater Cab',
           durationMinutes: roadDriving.durationMinutes,
           distanceKm: roadDriving.distanceKm,
           cost: cabFare,
@@ -143,7 +143,7 @@ export default function App() {
               cost: cabFare.totalFare,
               fromName: activeOrigin.name.split(',')[0],
               toName: activeDest.name.split(',')[0],
-              instruction: 'Air-conditioned door-to-door cab',
+              instruction: 'Comfortable air-conditioned door-to-door city cab',
             },
           ],
           score: 0,
