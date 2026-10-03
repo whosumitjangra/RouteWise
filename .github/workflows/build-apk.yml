@@ -53,7 +53,18 @@ jobs:
       - name: Build Debug APK
         run: |
           cd android
-          ./gradlew assembleDebug --no-daemon --stacktrace
+          ./gradlew assembleDebug --no-daemon --stacktrace > ../gradle.log 2>&1 || {
+            echo "::error::Gradle build failed! Displaying output:"
+            cat ../gradle.log | tail -n 80
+            exit 1
+          }
+
+      - name: Upload Gradle Failure Log
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: gradle-log
+          path: gradle.log
 
       - name: Prepare APK Artifact
         run: |
