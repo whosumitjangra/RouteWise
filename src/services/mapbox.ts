@@ -118,8 +118,8 @@ export async function searchPuneLocations(rawQuery: string): Promise<LocationPoi
     }
   }
 
-  // Tier 3: Mapbox Geocoding (if token is available)
-  if (hasValidMapboxToken()) {
+  // Tier 3: Mapbox Geocoding (if token is available and no local matches found)
+  if (matchedPoints.length === 0 && hasValidMapboxToken()) {
     try {
       const token = getMapboxToken();
       const bbox = '73.65,18.35,74.15,18.75';
@@ -127,7 +127,11 @@ export async function searchPuneLocations(rawQuery: string): Promise<LocationPoi
         rawQuery
       )}.json?access_token=${token}&country=IN&bbox=${bbox}&limit=5&types=poi,address,neighborhood,locality`;
 
-      const res = await fetch(url);
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 1800);
+      const res = await fetch(url, { signal: controller.signal });
+      clearTimeout(timeoutId);
+
       if (res.ok) {
         const data = await res.json();
         if (data.features && data.features.length > 0) {
@@ -149,19 +153,23 @@ export async function searchPuneLocations(rawQuery: string): Promise<LocationPoi
     }
   }
 
-  // Tier 4: OpenStreetMap Nominatim Live Geocoding (Zero API Key needed)
-  if (matchedPoints.length < 5) {
+  // Tier 4: OpenStreetMap Nominatim Live Geocoding (Only if zero local matches found, with strict 1.5s timeout)
+  if (matchedPoints.length === 0) {
     try {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 1500);
       const osmQuery = `${rawQuery}, Pune, Maharashtra`;
       const osmUrl = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(
         osmQuery
       )}&limit=4&countrycodes=in&viewbox=73.65,18.75,74.15,18.35`;
 
       const res = await fetch(osmUrl, {
+        signal: controller.signal,
         headers: {
           'Accept-Language': 'en',
         },
       });
+      clearTimeout(timeoutId);
 
       if (res.ok) {
         const data = await res.json();
@@ -213,6 +221,44 @@ export async function resolveLocationQuery(query: string, fallbackDefault: Locat
     };
   }
 
+  const qClean = cleanQuery(query);
+
+  // Instant local landmark resolution
+  const landmarkMatch = PUNE_LANDMARKS.find((p) => {
+    const pClean = cleanQuery(p.name);
+    return (
+      pClean === qClean ||
+      pClean.includes(qClean) ||
+      qClean.includes(pClean) ||
+      p.aliases.some((a) => {
+        const aClean = cleanQuery(a);
+        return aClean === qClean || qClean.includes(aClean) || aClean.includes(qClean);
+      })
+    );
+  });
+  if (landmarkMatch) {
+    return {
+      name: landmarkMatch.name,
+      lat: landmarkMatch.lat,
+      lng: landmarkMatch.lng,
+      landmarkType: landmarkMatch.landmarkType,
+    };
+  }
+
+  // Instant metro station resolution
+  const metroMatch = PUNE_METRO_STATIONS.find((s) => {
+    const sClean = cleanQuery(s.name);
+    return sClean === qClean || sClean.includes(qClean) || qClean.includes(sClean);
+  });
+  if (metroMatch) {
+    return {
+      name: `${metroMatch.name} (${metroMatch.line === 'purple' ? 'Purple Line' : 'Aqua Line'})`,
+      lat: metroMatch.lat,
+      lng: metroMatch.lng,
+      landmarkType: 'metro',
+    };
+  }
+
   const results = await searchPuneLocations(query);
   if (results && results.length > 0) {
     return results[0];
@@ -235,7 +281,11 @@ export async function getRoadRoute(
       const token = getMapboxToken();
       const url = `https://api.mapbox.com/directions/v5/mapbox/${profile}/${origin.lng},${origin.lat};${destination.lng},${destination.lat}?geometries=geojson&overview=full&access_token=${token}`;
 
-      const res = await fetch(url);
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 2000);
+      const res = await fetch(url, { signal: controller.signal });
+      clearTimeout(timeoutId);
+
       if (res.ok) {
         const data = await res.json();
         if (data.routes && data.routes.length > 0) {

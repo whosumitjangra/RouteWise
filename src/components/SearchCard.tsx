@@ -29,7 +29,7 @@ interface SearchCardProps {
   onDestinationChange: (loc: LocationPoint) => void;
   onBudgetChange: (val: number) => void;
   onPreferenceChange: (pref: PreferenceMode) => void;
-  onSubmit: (resolvedOrigin?: LocationPoint, resolvedDestination?: LocationPoint) => void;
+  onSubmit: (resolvedOrigin?: LocationPoint, resolvedDestination?: LocationPoint) => Promise<void> | void;
 }
 
 export const SearchCard: React.FC<SearchCardProps> = ({
@@ -51,6 +51,10 @@ export const SearchCard: React.FC<SearchCardProps> = ({
   const [isFromOpen, setIsFromOpen] = useState(false);
   const [isToOpen, setIsToOpen] = useState(false);
   const [isResolving, setIsResolving] = useState(false);
+
+  // Direct reference cache for chosen points to avoid redundant network resolving
+  const selectedFromPointRef = useRef<LocationPoint | null>(origin);
+  const selectedToPointRef = useRef<LocationPoint | null>(destination);
 
   // Corridor distance calculator state
   const [feasibleDistanceKm, setFeasibleDistanceKm] = useState<number | null>(null);
@@ -160,25 +164,39 @@ export const SearchCard: React.FC<SearchCardProps> = ({
     setIsToOpen(false);
 
     try {
-      // Resolve "From" query if user typed something custom
+      // 1. Resolve "From" query
       let resolvedFrom = origin;
-      if (fromQuery.trim() && fromQuery.trim().toLowerCase() !== origin.name.toLowerCase()) {
+      if (
+        selectedFromPointRef.current &&
+        selectedFromPointRef.current.name.toLowerCase().trim() === fromQuery.toLowerCase().trim()
+      ) {
+        resolvedFrom = selectedFromPointRef.current;
+      } else if (fromQuery.trim() && fromQuery.trim().toLowerCase() !== origin.name.toLowerCase()) {
         resolvedFrom = await resolveLocationQuery(fromQuery, origin);
       }
 
-      // Resolve "To" query if user typed something custom
+      // 2. Resolve "To" query
       let resolvedTo = destination;
-      if (toQuery.trim() && toQuery.trim().toLowerCase() !== destination.name.toLowerCase()) {
+      if (
+        selectedToPointRef.current &&
+        selectedToPointRef.current.name.toLowerCase().trim() === toQuery.toLowerCase().trim()
+      ) {
+        resolvedTo = selectedToPointRef.current;
+      } else if (toQuery.trim() && toQuery.trim().toLowerCase() !== destination.name.toLowerCase()) {
         resolvedTo = await resolveLocationQuery(toQuery, destination);
       }
 
+      selectedFromPointRef.current = resolvedFrom;
+      selectedToPointRef.current = resolvedTo;
       onOriginChange(resolvedFrom);
       onDestinationChange(resolvedTo);
       setFromQuery(resolvedFrom.name);
       setToQuery(resolvedTo.name);
 
       // Execute calculation with resolved coordinates
-      onSubmit(resolvedFrom, resolvedTo);
+      await onSubmit(resolvedFrom, resolvedTo);
+    } catch (err) {
+      console.error('Submit transit calculation error:', err);
     } finally {
       setIsResolving(false);
     }
@@ -238,6 +256,8 @@ export const SearchCard: React.FC<SearchCardProps> = ({
             key={preset.id}
             type="button"
             onClick={() => {
+              selectedFromPointRef.current = preset.origin;
+              selectedToPointRef.current = preset.destination;
               onOriginChange(preset.origin);
               onDestinationChange(preset.destination);
               onBudgetChange(preset.budget);
@@ -262,6 +282,7 @@ export const SearchCard: React.FC<SearchCardProps> = ({
               isOutOfTown: true,
               cityName: 'Lonavala',
             };
+            selectedToPointRef.current = lonavalaLoc;
             onDestinationChange(lonavalaLoc);
             setToQuery('Lonavala, Maharashtra');
             onSubmit(origin, lonavalaLoc);
@@ -317,6 +338,7 @@ export const SearchCard: React.FC<SearchCardProps> = ({
                     key={i}
                     type="button"
                     onClick={() => {
+                      selectedFromPointRef.current = item;
                       onOriginChange(item);
                       setFromQuery(item.name);
                       setIsFromOpen(false);
@@ -385,6 +407,7 @@ export const SearchCard: React.FC<SearchCardProps> = ({
                     key={i}
                     type="button"
                     onClick={() => {
+                      selectedToPointRef.current = item;
                       onDestinationChange(item);
                       setToQuery(item.name);
                       setIsToOpen(false);

@@ -404,7 +404,79 @@ export function buildPMPMLBusOption(
       ];
       frequencyMinutes = 15;
     } 
-    // Corridor 9: Pune Station
+    // Corridor 9: FC Road, Fergusson College & Deccan Gymkhana
+    else if (dKeys.includes('deccan') || dName.includes('deccan') || dName.includes('fc road') || dName.includes('fergusson') || dName.includes('jm road')) {
+      if (oKeys.includes('ait') || oName.includes('ait') || oName.includes('dighi') || oName.includes('alandi')) {
+        busNumber = '119';
+        routeName = 'AIT Pune / Alandi ➔ FC Road / Deccan (via Manapa PMC)';
+        busNameMr = 'आळंदी ते डेक्कन जिमखाना (मार्गे मनपा)';
+        officialKm = 14.5;
+        boardingStop = 'AIT Pune (Dighi Camp)';
+        exitStop = 'FC Road (Fergusson College) / Deccan';
+        stopsList = [
+          'AIT Pune (Dighi Camp)',
+          'Vishrantwadi Chowk',
+          'RTO Pune',
+          'COEP Hostel',
+          'Manapa Bhavan (PMC)',
+          'Chhatrapati Sambhaji Udyan',
+          'FC Road (Fergusson College)',
+          'Deccan Gymkhana',
+        ];
+        frequencyMinutes = 12;
+      } else if (oKeys.includes('kothrud') || oName.includes('kothrud')) {
+        busNumber = '79C';
+        routeName = 'Kothrud Depot ➔ Deccan Gymkhana (FC Road)';
+        busNameMr = 'कोथरुड डेपो ते डेक्कन जिमखाना';
+        officialKm = 6.0;
+        boardingStop = 'Kothrud Depot';
+        exitStop = 'Deccan Gymkhana / FC Road';
+        stopsList = [
+          'Kothrud Depot',
+          'Vanaz',
+          'Ideal Colony',
+          'Nal Stop',
+          'Garware College',
+          'Deccan Gymkhana',
+          'FC Road',
+        ];
+        frequencyMinutes = 10;
+      } else if (oKeys.includes('hadapsar') || oName.includes('hadapsar')) {
+        busNumber = '170';
+        routeName = 'Hadapsar ➔ Deccan Gymkhana (via Swargate)';
+        busNameMr = 'हडपसर गाडीतळ ते डेक्कन जिमखाना';
+        officialKm = 12.0;
+        boardingStop = 'Hadapsar Gadital';
+        exitStop = 'Deccan Gymkhana / FC Road';
+        stopsList = [
+          'Hadapsar Gadital',
+          'Fatimanagar',
+          'Pulgate (Camp)',
+          'Swargate Bus Stand',
+          'Tilak Road',
+          'Alka Talkies',
+          'Deccan Gymkhana',
+          'FC Road',
+        ];
+        frequencyMinutes = 15;
+      } else {
+        busNumber = '105';
+        routeName = `${origin.name.split(',')[0]} ➔ Deccan Gymkhana / FC Road`;
+        busNameMr = 'डेक्कन जिमखाना एफ सी रोड';
+        officialKm = 16.8;
+        boardingStop = `${origin.name.split(',')[0]} Stand`;
+        exitStop = 'Deccan Gymkhana / FC Road';
+        stopsList = [
+          boardingStop,
+          'Shivajinagar Station',
+          'Manapa Bhavan',
+          'FC Road (Fergusson College)',
+          'Deccan Gymkhana',
+        ];
+        frequencyMinutes = 12;
+      }
+    }
+    // Corridor 10: Pune Station
     else if (dKeys.includes('pune_station') || dName.includes('pune station') || dName.includes('pune junction')) {
       if (oKeys.includes('kothrud') || oName.includes('kothrud')) {
         busNumber = '94';

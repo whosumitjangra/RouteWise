@@ -224,12 +224,12 @@ export default function App() {
           onDestinationChange={setDestination}
           onBudgetChange={setBudget}
           onPreferenceChange={setPreference}
-          onSubmit={(resolvedOrigin, resolvedDest) => {
+          onSubmit={async (resolvedOrigin, resolvedDest) => {
             const finalOrigin = resolvedOrigin || origin;
             const finalDest = resolvedDest || destination;
             setOrigin(finalOrigin);
             setDestination(finalDest);
-            calculateTransitOptions(finalOrigin, finalDest);
+            await calculateTransitOptions(finalOrigin, finalDest);
           }}
         />
 
