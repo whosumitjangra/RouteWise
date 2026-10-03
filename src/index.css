@@ -18,6 +18,11 @@
   scrollbar-width: none;
 }
 
+/* Hide any Leaflet watermark/attribution overlay */
+.leaflet-control-attribution {
+  display: none !important;
+}
+
 /* Mapbox GL styling adjustments */
 .mapboxgl-ctrl-top-right {
   top: 10px;

@@ -5,8 +5,6 @@ import { RecommendationBanner } from './components/RecommendationBanner';
 import { RouteCard } from './components/RouteCard';
 import { MapView } from './components/MapView';
 import { FareModal } from './components/FareModal';
-import { TokenModal } from './components/TokenModal';
-
 import { LocationPoint, PreferenceMode, RouteOption } from './types';
 import { PUNE_PRESET_TRIPS } from './config/puneLandmarks';
 import { getRoadRoute } from './services/mapbox';
@@ -32,7 +30,6 @@ export default function App() {
 
   // Modals
   const [fareModalRoute, setFareModalRoute] = useState<RouteOption | null>(null);
-  const [isTokenModalOpen, setIsTokenModalOpen] = useState<boolean>(false);
 
   // Mobile layout tab
   const [mobileTab, setMobileTab] = useState<'routes' | 'map'>('routes');
@@ -220,7 +217,7 @@ export default function App() {
     <div className="min-h-screen bg-[#fcfcfd] text-zinc-900 flex flex-col font-sans">
       
       {/* Minimal Header */}
-      <Header onOpenTokenModal={() => setIsTokenModalOpen(true)} />
+      <Header />
 
       {/* Main Content Area */}
       <main className="flex-1 max-w-5xl w-full mx-auto px-4 sm:px-6 py-6 sm:py-8 space-y-6">
@@ -328,11 +325,6 @@ export default function App() {
       <FareModal
         route={fareModalRoute}
         onClose={() => setFareModalRoute(null)}
-      />
-
-      <TokenModal
-        isOpen={isTokenModalOpen}
-        onClose={() => setIsTokenModalOpen(false)}
       />
 
       {/* Minimal Footer */}

@@ -1,14 +1,7 @@
 import React from 'react';
-import { Compass, Key } from 'lucide-react';
-import { hasValidMapboxToken } from '../services/mapbox';
+import { Compass } from 'lucide-react';
 
-interface HeaderProps {
-  onOpenTokenModal: () => void;
-}
-
-export const Header: React.FC<HeaderProps> = ({ onOpenTokenModal }) => {
-  const isMapboxLive = hasValidMapboxToken();
-
+export const Header: React.FC = () => {
   return (
     <header className="border-b border-zinc-200/80 bg-white/90 backdrop-blur-sm sticky top-0 z-30">
       <div className="max-w-5xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
@@ -28,23 +21,12 @@ export const Header: React.FC<HeaderProps> = ({ onOpenTokenModal }) => {
           </div>
         </div>
 
-        {/* Status indicator & Settings */}
+        {/* Clean City Live Status Badge (Zero API Key Logos) */}
         <div className="flex items-center gap-2">
-          <button
-            onClick={onOpenTokenModal}
-            className="flex items-center gap-1.5 text-xs text-zinc-600 hover:text-zinc-950 px-2.5 py-1 rounded-md border border-zinc-200 hover:border-zinc-300 transition-colors"
-            title="Map & API Configuration"
-          >
-            <span
-              className={`w-1.5 h-1.5 rounded-full ${
-                isMapboxLive ? 'bg-emerald-500' : 'bg-emerald-500'
-              }`}
-            />
-            <span className="font-medium text-[11px]">
-              {isMapboxLive ? 'Mapbox Live' : 'OpenStreet Transit Map'}
-            </span>
-            <Key className="w-3 h-3 text-zinc-400 ml-0.5" />
-          </button>
+          <div className="flex items-center gap-1.5 text-xs text-zinc-600 px-2.5 py-1 rounded-md border border-zinc-200/80 bg-zinc-50/80">
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+            <span className="font-medium text-[11px]">Pune Transit Live</span>
+          </div>
         </div>
 
       </div>
