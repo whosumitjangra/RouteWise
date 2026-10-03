@@ -11,7 +11,6 @@ interface MapViewProps {
   routes: RouteOption[];
   selectedRouteId: string | null;
   onSelectRoute: (id: string) => void;
-  isLayoutShifted?: boolean;
 }
 
 const MODE_COLORS: Record<string, string> = {
@@ -28,14 +27,13 @@ export const MapView: React.FC<MapViewProps> = ({
   routes,
   selectedRouteId,
   onSelectRoute,
-  isLayoutShifted,
 }) => {
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const mapInstanceRef = useRef<L.Map | null>(null);
   const layersGroupRef = useRef<L.LayerGroup | null>(null);
   const polylinesRef = useRef<Record<string, L.Polyline>>({});
 
-  // Auto-recalibrate Leaflet on resize or layout shift
+  // Auto-recalibrate Leaflet on resize
   useEffect(() => {
     if (!mapContainerRef.current) return;
     const observer = new ResizeObserver(() => {
@@ -52,7 +50,7 @@ export const MapView: React.FC<MapViewProps> = ({
       mapInstanceRef.current?.invalidateSize();
     }, 150);
     return () => clearTimeout(timer);
-  }, [isLayoutShifted, selectedRouteId]);
+  }, [selectedRouteId]);
 
   useEffect(() => {
     if (!mapContainerRef.current) return;

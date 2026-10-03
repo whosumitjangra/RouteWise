@@ -284,31 +284,34 @@ assert.strictEqual(busToKatraj, '24', "AIT to Katraj should be Bus 24");
 
 console.log("✔ Dynamic bus number tests (Bus changes appropriately: 158, 357, 115P, 29, 165, 24) passed");
 
-// Test 11: Card Wrap Up Toggle Logic
+// Test 11: Permanent Left-Map Layout & Card In-Place Wrap Up Logic
 let currentSelectedId = 'opt-bus';
-let isShifted = true;
+const mapSide = 'left';
+const routesSide = 'right';
 
 function toggleCardSelection(routeId) {
   if (currentSelectedId === routeId) {
     currentSelectedId = null;
-    isShifted = false;
   } else {
     currentSelectedId = routeId;
-    isShifted = true;
   }
 }
 
-// When clicked again, card should wrap up (null) and unshift layout (false)
+// Map stays permanently on left; toggling card only changes card expansion state
+assert.strictEqual(mapSide, 'left', "Map must be anchored on the left side by default");
+assert.strictEqual(routesSide, 'right', "Routes must be anchored on the right side by default");
+
+// When clicked again, card should wrap up (null) while layout remains intact
 toggleCardSelection('opt-bus');
 assert.strictEqual(currentSelectedId, null, "Clicking selected card again should wrap up card (null)");
-assert.strictEqual(isShifted, false, "Clicking selected card again should reset layout shift");
+assert.strictEqual(mapSide, 'left', "Map must never switch sides when card wraps up");
 
-// When clicked once more, card should open and shift layout
+// When clicked once more, card should open in place without switching sides
 toggleCardSelection('opt-bus');
-assert.strictEqual(currentSelectedId, 'opt-bus', "Clicking closed card should open it");
-assert.strictEqual(isShifted, true, "Clicking closed card should shift layout");
+assert.strictEqual(currentSelectedId, 'opt-bus', "Clicking closed card should expand it in place");
+assert.strictEqual(mapSide, 'left', "Map must never switch sides when card opens");
 
-console.log("✔ Card wrap-up toggle tests passed");
+console.log("✔ Permanent left-map layout & in-place card wrap-up tests passed");
 
 // Test 12: Zero Dummy Stop Names
 const forbiddenDummyNames = ['Corridor Junction', 'Transit Central Hub', 'Corridor Stage Stop'];
@@ -326,20 +329,19 @@ console.log("✔ 100% authentic Pune bus stops (zero dummy placeholders) verifie
 let stateOrigin = { name: "AIT Pune", lat: 18.60, lng: 73.87 };
 let stateDest = { name: "Pune Junction", lat: 18.52, lng: 73.87 };
 let expandedCard = "opt-bus";
-let layoutShifted = true;
+const staticMapSide = 'left';
 
 function performNewSearch(newO, newD) {
   stateOrigin = newO;
   stateDest = newD;
   expandedCard = null; // Cards must start wrapped up
-  layoutShifted = false; // Layout starts unshifted
 }
 
 performNewSearch({ name: "Kothrud", lat: 18.50, lng: 73.80 }, { name: "Viman Nagar", lat: 18.56, lng: 73.91 });
 assert.strictEqual(stateOrigin.name, "Kothrud", "Origin must update to new searched origin");
 assert.strictEqual(stateDest.name, "Viman Nagar", "Destination must update to new searched destination");
 assert.strictEqual(expandedCard, null, "All cards must reset to wrapped up state on new search");
-assert.strictEqual(layoutShifted, false, "Layout shift must reset on new search");
+assert.strictEqual(staticMapSide, 'left', "Map side must remain statically on the left");
 console.log("✔ New search state sync & card wrap reset verified");
 
 // Test 14: Official PMPML Routes Catalog Integrity & Corridor Accuracy

@@ -14,7 +14,7 @@ import { buildPMPMLBusOption } from './services/busEngine';
 import { calculateRoadFare } from './services/fareEngine';
 import { evaluateAndRankRoutes } from './services/recommender';
 import { FARE_CONFIG } from './config/fares';
-import { ListFilter, Map as MapIcon, ArrowLeftRight } from 'lucide-react';
+import { ListFilter, Map as MapIcon } from 'lucide-react';
 
 export default function App() {
   // Default to AIT Pune -> Pune Junction as requested
@@ -31,9 +31,6 @@ export default function App() {
   const [selectedRouteId, setSelectedRouteId] = useState<string | null>(null); // For map route highlight
   const [expandedCardId, setExpandedCardId] = useState<string | null>(null);   // For card accordion open state
   const [isLoading, setIsLoading] = useState<boolean>(false);
-
-  // Smooth layout shift state: map on left (order-1), details on right (order-2) when route is selected
-  const [isLayoutShifted, setIsLayoutShifted] = useState<boolean>(false);
 
   // Modals
   const [fareModalRoute, setFareModalRoute] = useState<RouteOption | null>(null);
@@ -56,9 +53,8 @@ export default function App() {
       if (customOrigin) setOrigin(customOrigin);
       if (customDest) setDestination(customDest);
 
-      // Reset card expansion and layout shift on new search
+      // Reset card expansion on new search
       setExpandedCardId(null);
-      setIsLayoutShifted(false);
 
       setIsLoading(true);
       try {
@@ -259,38 +255,52 @@ export default function App() {
           </button>
         </div>
 
-        {/* Dynamic Layout Bar */}
+        {/* Transit Options Header */}
         <div className="flex items-center justify-between px-1">
           <div className="flex items-center gap-2">
             <span className="text-xs font-bold text-zinc-900">
               Transit Options ({routes.filter((r) => r.isFeasible).length})
             </span>
-            {isLayoutShifted && (
-              <span className="text-[11px] font-semibold text-emerald-800 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-full flex items-center gap-1 animate-in fade-in">
-                <span>Map shifted to Left • Route details on Right</span>
-              </span>
-            )}
+            <span className="hidden sm:inline-flex text-[11px] font-semibold text-zinc-600 bg-zinc-100 border border-zinc-200 px-2.5 py-0.5 rounded-full items-center gap-1.5">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+              <span>Map on Left • Transit Options on Right</span>
+            </span>
           </div>
-
-          <button
-            type="button"
-            onClick={() => setIsLayoutShifted((prev) => !prev)}
-            className="hidden lg:flex items-center gap-1.5 px-2.5 py-1 rounded-lg border border-zinc-200 hover:border-zinc-300 bg-white text-zinc-700 hover:text-zinc-950 text-xs font-semibold shadow-2xs transition-all"
-            title="Switch Map and Details sides"
-          >
-            <ArrowLeftRight className="w-3.5 h-3.5 text-zinc-500" />
-            <span>{isLayoutShifted ? 'Reset View (Cards on Left)' : 'Shift Map to Left'}</span>
-          </button>
+          <span className="text-[11px] text-zinc-400 hidden sm:inline">
+            Click cards to explore stops & feeder legs
+          </span>
         </div>
 
-        {/* 2-Column Split: Clean CSS flex/order layout shift without GPU matrix locks */}
+        {/* 2-Column Split: Map permanently on Left (lg:order-1), Routes permanently on Right (lg:order-2) */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
           
-          {/* Routes Column: Order 1 by default, Order 2 when map is shifted to left */}
+          {/* Map Column: Statically on Left by default (lg:col-span-6 lg:order-1) */}
           <div
-            className={`lg:col-span-6 space-y-3.5 transition-all duration-300 ${
-              isLayoutShifted ? 'lg:order-2' : 'lg:order-1'
-            } ${mobileTab === 'map' ? 'hidden lg:block' : 'block'}`}
+            className={`lg:col-span-6 lg:order-1 lg:sticky lg:top-20 h-[480px] sm:h-[580px] lg:h-[calc(100vh-130px)] lg:min-h-[660px] lg:max-h-[880px] ring-1 ring-zinc-200/90 shadow-xs rounded-2xl ${
+              mobileTab === 'routes' ? 'hidden lg:block' : 'block'
+            }`}
+          >
+            <MapView
+              origin={origin}
+              destination={destination}
+              routes={routes}
+              selectedRouteId={selectedRouteId}
+              onSelectRoute={(id) => {
+                setSelectedRouteId(id);
+                if (expandedCardId === id) {
+                  setExpandedCardId(null);
+                } else {
+                  setExpandedCardId(id);
+                }
+              }}
+            />
+          </div>
+
+          {/* Routes Column: Statically on Right by default (lg:col-span-6 lg:order-2) */}
+          <div
+            className={`lg:col-span-6 lg:order-2 space-y-3.5 ${
+              mobileTab === 'map' ? 'hidden lg:block' : 'block'
+            }`}
           >
             {/* Out of Town City Banner: Reaching Soon */}
             {isOutOfTownActive && (
@@ -369,7 +379,6 @@ export default function App() {
               onSelectRoute={(id) => {
                 setSelectedRouteId(id);
                 setExpandedCardId(id);
-                setIsLayoutShifted(true);
                 setMobileTab('map');
               }}
             />
@@ -395,11 +404,9 @@ export default function App() {
                   onSelect={() => {
                     if (expandedCardId === route.id) {
                       setExpandedCardId(null);
-                      setIsLayoutShifted(false);
                     } else {
                       setExpandedCardId(route.id);
                       setSelectedRouteId(route.id);
-                      setIsLayoutShifted(true);
                     }
                   }}
                   onOpenFareDetails={(r) => setFareModalRoute(r)}
@@ -407,33 +414,6 @@ export default function App() {
               ))}
             </div>
 
-          </div>
-
-          {/* Map Column: Order 2 by default, Order 1 (on left) when card is expanded! */}
-          <div
-            className={`lg:col-span-6 lg:sticky lg:top-20 h-[480px] sm:h-[580px] lg:h-[calc(100vh-130px)] lg:min-h-[660px] lg:max-h-[880px] transition-all duration-300 ${
-              isLayoutShifted
-                ? 'lg:order-1 ring-1 ring-zinc-300 shadow-md rounded-2xl'
-                : 'lg:order-2'
-            } ${mobileTab === 'routes' ? 'hidden lg:block' : 'block'}`}
-          >
-            <MapView
-              origin={origin}
-              destination={destination}
-              routes={routes}
-              selectedRouteId={selectedRouteId}
-              onSelectRoute={(id) => {
-                setSelectedRouteId(id);
-                if (expandedCardId === id) {
-                  setExpandedCardId(null);
-                  setIsLayoutShifted(false);
-                } else {
-                  setExpandedCardId(id);
-                  setIsLayoutShifted(true);
-                }
-              }}
-              isLayoutShifted={isLayoutShifted}
-            />
           </div>
 
         </div>
