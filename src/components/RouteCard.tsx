@@ -545,7 +545,7 @@ export const RouteCard: React.FC<RouteCardProps> = ({
                           lng: leg.toCoords?.[1] || 73.86,
                           name: leg.toName,
                         }}
-                        title="Feeder Auto to Metro Connection"
+                        title={`Feeder Auto to Metro Connection (Feeder Fare: ₹${leg.cost} included in final price)`}
                       />
                     )}
 

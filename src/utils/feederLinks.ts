@@ -56,9 +56,23 @@ export function calculateAutoProviderPricing(
   // 3. Manually Offline Booking (Pune Shared / Local Street Auto)
   // Distance strictly <= 10 km; for > 10 km, only show Uber and Rapido
   const isOfflineAvailable = distanceKm <= 10;
-  const offlineFare = isOfflineAvailable
-    ? Math.max(15, Math.round(baseMeterFare / 3.5))
-    : undefined;
+  let offlineFare: number | undefined;
+
+  if (isOfflineAvailable) {
+    if (distanceKm <= 1.0) {
+      // For 1 km: fixed to 10
+      offlineFare = 10;
+    } else if (distanceKm >= 2.0 && distanceKm <= 3.0) {
+      // For anywhere between 2 to 3 km: fixed to 30 - 40
+      offlineFare = Math.round(30 + (distanceKm - 2.0) * 10);
+    } else if (distanceKm > 1.0 && distanceKm < 2.0) {
+      // Between 1 and 2 km: smooth scale from 10 to 30
+      offlineFare = Math.round(10 + (distanceKm - 1.0) * 20);
+    } else {
+      // Short distance 4 to 5 km: divided by 3.5
+      offlineFare = Math.max(15, Math.round(baseMeterFare / 3.5));
+    }
+  }
 
   return {
     uberFare,

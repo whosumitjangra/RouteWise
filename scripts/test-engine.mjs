@@ -143,4 +143,33 @@ assert.strictEqual(calculateBusFare(18.5), 30, "Stage 6 bus fare should be ₹30
 assert.strictEqual(calculateBusFare(24.0), 35, "Stage 7 bus fare should be ₹35");
 console.log("✔ PMPML bus stage fare tests passed");
 
+// Test 7: Feeder Auto Charge (1 km = 10, 2-3 km = 30-40) and Final Price Addition
+function calculateFeederCharge(distKm) {
+  if (distKm <= 1.0) return 10;
+  if (distKm <= 2.0) return Math.round(10 + (distKm - 1.0) * 20);
+  if (distKm <= 3.0) return Math.round(30 + (distKm - 2.0) * 10);
+  return Math.round(40 + (distKm - 3.0) * 10);
+}
+
+// 1 km feeder: charge must be 10
+assert.strictEqual(calculateFeederCharge(1.0), 10, "1 km feeder auto charge must be exactly ₹10");
+assert.strictEqual(calculateFeederCharge(0.8), 10, "0.8 km feeder auto charge must be ₹10");
+
+// 2 to 3 km feeder: charge must be between 30 and 40
+const fee2Km = calculateFeederCharge(2.0);
+const fee2_5Km = calculateFeederCharge(2.5);
+const fee3Km = calculateFeederCharge(3.0);
+assert.strictEqual(fee2Km, 30, "2.0 km feeder auto charge should be ₹30");
+assert.ok(fee2_5Km >= 30 && fee2_5Km <= 40, "2.5 km feeder auto charge must be between ₹30 and ₹40");
+assert.strictEqual(fee2_5Km, 35, "2.5 km feeder auto charge should be ₹35");
+assert.strictEqual(fee3Km, 40, "3.0 km feeder auto charge should be ₹40");
+
+// Final Price Addition verification
+const metroTicket = 20;
+const firstMile = calculateFeederCharge(2.5); // ₹35
+const lastMile = calculateFeederCharge(1.0);  // ₹10
+const finalPrice = metroTicket + firstMile + lastMile;
+assert.strictEqual(finalPrice, 65, "Final price must add first-mile (₹35) and last-mile (₹10) to metro ticket (₹20)");
+console.log("✔ Feeder auto charge (1km: ₹10, 2-3km: ₹30-40) and final price addition tests passed");
+
 console.log("=== ALL TESTS PASSED SUCCESSFULLY! ===");

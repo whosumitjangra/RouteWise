@@ -53,6 +53,27 @@ function generateRoadCurveFallback(
 }
 
 /**
+ * Calculates official Pune feeder auto charge based on distance:
+ * - For ~1 km (or <= 1.0 km): ₹10
+ * - Between 1 km and 2 km: smooth scale ₹10 to ₹30
+ * - Between 2 km and 3 km: fixed to ₹30 - ₹40 (e.g. 2.0 km = ₹30, 2.5 km = ₹35, 3.0 km = ₹40)
+ * - Above 3 km: ₹40 + ₹10/km
+ */
+export function calculateFeederAutoCharge(distanceKm: number): number {
+  if (distanceKm <= 1.0) {
+    return 10;
+  }
+  if (distanceKm <= 2.0) {
+    return Math.round(10 + (distanceKm - 1.0) * 20);
+  }
+  if (distanceKm <= 3.0) {
+    // 2 to 3 km: strictly between ₹30 and ₹40
+    return Math.round(30 + (distanceKm - 2.0) * 10);
+  }
+  return Math.round(40 + (distanceKm - 3.0) * 10);
+}
+
+/**
  * Deterministic Pune Metro Multi-Modal Route Generator
  * Generates exact First-Mile, Metro Line boarding, District Court transfer, and Last-Mile path
  * with real street geometries for feeder connections
@@ -251,7 +272,7 @@ export function buildPuneMetroOption(
   let firstMileTitle = '';
   let firstMileInstruction = '';
 
-  if (originToStationKm <= 1.0) {
+  if (originToStationKm <= 0.8) {
     firstMileMode = 'walking';
     if (!firstMileMinutes) firstMileMinutes = Math.max(3, Math.round((originToStationKm / 4.8) * 60));
     firstMileCost = 0;
@@ -260,10 +281,10 @@ export function buildPuneMetroOption(
   } else {
     firstMileMode = 'auto';
     if (!firstMileMinutes) firstMileMinutes = Math.max(4, Math.round((originToStationKm / 24) * 60));
-    // Shared auto / e-rickshaw feeder in Pune: ₹15-20 per seat
-    firstMileCost = 15;
-    firstMileTitle = `Feeder Auto to ${startStation.name}`;
-    firstMileInstruction = `Take a feeder / shared auto (${originToStationKm} km) via streets to ${startStation.name}`;
+    // Feeder auto charge: for 1 km: ₹10, between 2 to 3 km: ₹30-40, etc.
+    firstMileCost = calculateFeederAutoCharge(originToStationKm);
+    firstMileTitle = `Feeder Auto to ${startStation.name} (₹${firstMileCost})`;
+    firstMileInstruction = `Take a feeder auto (${originToStationKm} km, ₹${firstMileCost}) via streets to ${startStation.name}`;
   }
 
   // Last-Mile Leg: Feeder follows real streets
@@ -273,7 +294,7 @@ export function buildPuneMetroOption(
   let lastMileTitle = '';
   let lastMileInstruction = '';
 
-  if (destToStationKm <= 1.0) {
+  if (destToStationKm <= 0.8) {
     lastMileMode = 'walking';
     if (!lastMileMinutes) lastMileMinutes = Math.max(3, Math.round((destToStationKm / 4.8) * 60));
     lastMileCost = 0;
@@ -282,9 +303,10 @@ export function buildPuneMetroOption(
   } else {
     lastMileMode = 'auto';
     if (!lastMileMinutes) lastMileMinutes = Math.max(4, Math.round((destToStationKm / 24) * 60));
-    lastMileCost = 15;
-    lastMileTitle = `Feeder Auto to Destination`;
-    lastMileInstruction = `Exit ${endStation.name} and take a feeder / shared auto (${destToStationKm} km) via streets to ${destination.name.split(',')[0]}`;
+    // Feeder auto charge: for 1 km: ₹10, between 2 to 3 km: ₹30-40, etc.
+    lastMileCost = calculateFeederAutoCharge(destToStationKm);
+    lastMileTitle = `Feeder Auto to Destination (₹${lastMileCost})`;
+    lastMileInstruction = `Exit ${endStation.name} and take a feeder auto (${destToStationKm} km, ₹${lastMileCost}) via streets to ${destination.name.split(',')[0]}`;
   }
 
   // Boarding & entry buffer
@@ -444,8 +466,8 @@ export function buildPuneMetroOption(
       timeFare: firstMileCost + lastMileCost,
       totalFare: totalFare,
       formulaDescription: `Maha Metro Fare ₹${metroTicketFare} (${stationsCount} stations)${
-        firstMileCost > 0 ? ` + ₹${firstMileCost} first-mile` : ''
-      }${lastMileCost > 0 ? ` + ₹${lastMileCost} last-mile` : ''}`,
+        firstMileCost > 0 ? ` + ₹${firstMileCost} Feeder Auto (${originToStationKm} km)` : ''
+      }${lastMileCost > 0 ? ` + ₹${lastMileCost} Feeder Auto (${destToStationKm} km)` : ''}`,
     },
     isOverBudget: false,
     budgetDelta: 0,
