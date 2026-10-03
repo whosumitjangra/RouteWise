@@ -6,7 +6,8 @@ import { RouteCard } from './components/RouteCard';
 import { MapView } from './components/MapView';
 import { FareModal } from './components/FareModal';
 import { LocationPoint, PreferenceMode, RouteOption } from './types';
-import { PUNE_PRESET_TRIPS } from './config/puneLandmarks';
+import { PUNE_PRESET_TRIPS, PUNE_LANDMARKS } from './config/puneLandmarks';
+import { isLocationOutOfTown } from './config/outOfTownCities';
 import { getRoadRoute } from './services/mapbox';
 import { buildPuneMetroOptionAsync } from './services/metroEngine';
 import { buildPMPMLBusOption } from './services/busEngine';
@@ -38,6 +39,12 @@ export default function App() {
 
   // Mobile layout tab
   const [mobileTab, setMobileTab] = useState<'routes' | 'map'>('routes');
+
+  // Out of town status (e.g. Lonavala, Khandala, Mumbai, etc.)
+  const originOutOfTown = isLocationOutOfTown(origin);
+  const destOutOfTown = isLocationOutOfTown(destination);
+  const isOutOfTownActive = originOutOfTown.isOutOfTown || destOutOfTown.isOutOfTown;
+  const activeOutOfTownCity = destOutOfTown.isOutOfTown ? destOutOfTown.cityName : originOutOfTown.cityName;
 
   const calculateTransitOptions = useCallback(
     async (customOrigin?: LocationPoint, customDest?: LocationPoint) => {
@@ -274,6 +281,75 @@ export default function App() {
                 : 'lg:translate-x-0'
             } ${mobileTab === 'map' ? 'hidden lg:block' : 'block'}`}
           >
+            {/* Out of Town City Banner: Reaching Soon */}
+            {isOutOfTownActive && (
+              <div className="bg-gradient-to-br from-amber-50 via-orange-50 to-amber-100/70 border border-amber-300 rounded-2xl p-4 sm:p-5 shadow-xs space-y-3.5 animate-in fade-in">
+                <div className="flex items-start gap-3">
+                  <div className="w-10 h-10 rounded-xl bg-amber-600 text-white flex items-center justify-center shrink-0 shadow-xs text-xl">
+                    🚀
+                  </div>
+                  <div>
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <span className="px-2 py-0.5 rounded-full text-[10px] font-extrabold uppercase tracking-wider bg-amber-200 text-amber-950 border border-amber-300">
+                        Out of Town
+                      </span>
+                      <span className="text-xs text-amber-800 font-semibold">•</span>
+                      <span className="text-xs font-bold text-amber-900">
+                        Expansion Corridor
+                      </span>
+                    </div>
+                    <h3 className="text-sm sm:text-base font-bold text-zinc-950 mt-1">
+                      RouteWise is Reaching {activeOutOfTownCity} Soon!
+                    </h3>
+                  </div>
+                </div>
+
+                <p className="text-xs text-amber-950/90 leading-relaxed">
+                  Our unified multimodal transit engine (Metro, City Buses, RTO Autos, and Cabs) is currently active across the <strong>Pune Metropolitan Region</strong>. We are actively expanding to <strong>{activeOutOfTownCity}</strong> and surrounding getaway corridors!
+                </p>
+
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 text-xs">
+                  <div className="p-2.5 bg-white/90 rounded-xl border border-amber-200/90 space-y-0.5">
+                    <span className="font-bold text-zinc-950 flex items-center gap-1.5">
+                      <span>🚆</span> Suburban Rail
+                    </span>
+                    <p className="text-[11px] text-zinc-600">
+                      Pune–Lonavala local EMU timetable & express connections.
+                    </p>
+                  </div>
+                  <div className="p-2.5 bg-white/90 rounded-xl border border-amber-200/90 space-y-0.5">
+                    <span className="font-bold text-zinc-950 flex items-center gap-1.5">
+                      <span>🚌</span> Intercity Buses
+                    </span>
+                    <p className="text-[11px] text-zinc-600">
+                      MSRTC Shivneri & expressway state transport schedules.
+                    </p>
+                  </div>
+                  <div className="p-2.5 bg-white/90 rounded-xl border border-amber-200/90 space-y-0.5">
+                    <span className="font-bold text-zinc-950 flex items-center gap-1.5">
+                      <span>🛺</span> Local Feeder
+                    </span>
+                    <p className="text-[11px] text-zinc-600">
+                      Ghat taxi tariffs & station pickup price transparency.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="pt-1 flex items-center gap-2 flex-wrap">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setOrigin(PUNE_LANDMARKS[0]);
+                      setDestination(PUNE_LANDMARKS[7]);
+                      calculateTransitOptions(PUNE_LANDMARKS[0], PUNE_LANDMARKS[7]);
+                    }}
+                    className="px-3 py-1.5 rounded-lg bg-zinc-950 hover:bg-zinc-800 text-white text-xs font-semibold flex items-center gap-1 transition-colors shadow-2xs"
+                  >
+                    <span>← Explore Live Pune Transit (AIT ➔ Pune Junction)</span>
+                  </button>
+                </div>
+              </div>
+            )}
             
             {/* Recommendation Banner */}
             <RecommendationBanner

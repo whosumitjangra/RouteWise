@@ -11,7 +11,9 @@ export interface LocationPoint {
   name: string;
   lat: number;
   lng: number;
-  landmarkType?: 'it_park' | 'station' | 'commercial' | 'suburb' | 'metro';
+  landmarkType?: 'it_park' | 'station' | 'commercial' | 'suburb' | 'metro' | 'out_of_town';
+  isOutOfTown?: boolean;
+  cityName?: string;
 }
 
 export interface FareBreakdown {

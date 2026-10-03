@@ -1,6 +1,7 @@
 import { LocationPoint } from '../types';
 import { PUNE_LANDMARKS, PuneLandmarkWithAliases } from '../config/puneLandmarks';
 import { PUNE_METRO_STATIONS } from '../config/metroData';
+import { OUT_OF_TOWN_CITIES, matchOutOfTownCity } from '../config/outOfTownCities';
 
 export interface RoadRouteResult {
   distanceKm: number;
@@ -59,6 +60,28 @@ export async function searchPuneLocations(rawQuery: string): Promise<LocationPoi
   if (!q || q.length < 2) return [];
 
   const matchedPoints: LocationPoint[] = [];
+
+  // Tier 0: Out-of-Town Cities & Getaways (Lonavala, Khandala, Mumbai, etc.)
+  for (const city of OUT_OF_TOWN_CITIES) {
+    const cityName = cleanQuery(city.name);
+    const hasAliasMatch = city.aliases.some((alias) => {
+      const a = cleanQuery(alias);
+      return q.includes(a) || a.includes(q) || levenshteinDistance(q, a) <= 1;
+    });
+
+    if (cityName.includes(q) || q.includes(cityName) || hasAliasMatch) {
+      if (!matchedPoints.some((p) => p.name.includes(city.name))) {
+        matchedPoints.push({
+          name: `${city.name}, ${city.state}`,
+          lat: city.lat,
+          lng: city.lng,
+          landmarkType: 'out_of_town',
+          isOutOfTown: true,
+          cityName: city.name,
+        });
+      }
+    }
+  }
 
   // Tier 1: Local curated Pune landmarks with fuzzy aliases
   for (const item of PUNE_LANDMARKS) {
@@ -175,6 +198,19 @@ export async function resolveLocationQuery(query: string, fallbackDefault: Locat
   // If query already matches fallback name, return it
   if (cleanQuery(query) === cleanQuery(fallbackDefault.name)) {
     return fallbackDefault;
+  }
+
+  // Check if query is an out-of-town city (e.g. Lonavala, Mumbai)
+  const outOfTownCity = matchOutOfTownCity(query);
+  if (outOfTownCity) {
+    return {
+      name: `${outOfTownCity.name}, ${outOfTownCity.state}`,
+      lat: outOfTownCity.lat,
+      lng: outOfTownCity.lng,
+      landmarkType: 'out_of_town',
+      isOutOfTown: true,
+      cityName: outOfTownCity.name,
+    };
   }
 
   const results = await searchPuneLocations(query);

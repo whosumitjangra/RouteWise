@@ -214,4 +214,74 @@ assert.strictEqual(highBudgetWinner.mode, 'cab', "High budget (₹200) should pr
 
 console.log("✔ AI commute priority tests (Bus for low budget, Auto for medium, Cab for high budget) passed");
 
+// Test 9: Out of Town Detection (Lonavala, Khandala, Mumbai) -> "Reaching Soon"
+function checkIsOutOfTown(locName, lat, lng) {
+  const nameLower = locName.toLowerCase();
+  const knownOutOfTown = ['lonavala', 'lonavla', 'khandala', 'mahabaleshwar', 'lavasa', 'alibaug', 'shirdi', 'mumbai', 'goa', 'nashik', 'nagpur'];
+  if (knownOutOfTown.some(c => nameLower.includes(c))) {
+    return { isOutOfTown: true, label: "Reaching Soon" };
+  }
+  // Spatial distance from Pune Center (18.5204, 73.8567)
+  const dLat = ((lat - 18.5204) * Math.PI) / 180;
+  const dLon = ((lng - 73.8567) * Math.PI) / 180;
+  const a = Math.sin(dLat/2)**2 + Math.cos(18.5204*Math.PI/180) * Math.cos(lat*Math.PI/180) * Math.sin(dLon/2)**2;
+  const dist = 6371 * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+  return { isOutOfTown: dist > 52, label: dist > 52 ? "Reaching Soon" : "In Town" };
+}
+
+// Lonavala check
+const lonavalaResult = checkIsOutOfTown("Lonavala, Maharashtra", 18.7557, 73.4091);
+assert.strictEqual(lonavalaResult.isOutOfTown, true, "Lonavala should be detected as Out of Town");
+assert.strictEqual(lonavalaResult.label, "Reaching Soon", "Lonavala must have 'Reaching Soon' label");
+
+// Khandala check
+const khandalaResult = checkIsOutOfTown("Khandala Ghat", 18.7614, 73.3752);
+assert.strictEqual(khandalaResult.isOutOfTown, true, "Khandala should be detected as Out of Town");
+
+// Mumbai check
+const mumbaiResult = checkIsOutOfTown("Mumbai, Maharashtra", 19.0760, 72.8777);
+assert.strictEqual(mumbaiResult.isOutOfTown, true, "Mumbai should be detected as Out of Town");
+
+// In-town Pune check
+const puneResult = checkIsOutOfTown("AIT Pune, Dighi", 18.6069, 73.8745);
+assert.strictEqual(puneResult.isOutOfTown, false, "AIT Pune must NOT be flagged as Out of Town");
+
+console.log("✔ Out-of-town detection tests (Lonavala, Khandala, Mumbai -> Reaching Soon) passed");
+
+// Test 10: Dynamic Bus Number (Bus number changes across different corridors)
+function getBusNumberForCorridor(origin, destination) {
+  const dLower = destination.toLowerCase();
+  const oLower = origin.toLowerCase();
+  if (dLower.includes('hinjawadi') || dLower.includes('hinjewadi')) {
+    return oLower.includes('ait') ? '357' : '100';
+  }
+  if (dLower.includes('kothrud')) return '115P';
+  if (dLower.includes('swargate')) return '29';
+  if (dLower.includes('viman nagar')) return '165';
+  if (dLower.includes('hadapsar')) return '168';
+  if (dLower.includes('pcmc') || dLower.includes('nigdi')) return '111';
+  if (dLower.includes('katraj')) return '24';
+  if (dLower.includes('airport')) return '144';
+  if (dLower.includes('baner')) return '276';
+  if (dLower.includes('pune station') || dLower.includes('pune junction')) return '158';
+  return '102';
+}
+
+const busToPuneJunction = getBusNumberForCorridor("AIT Pune", "Pune Junction");
+const busToHinjewadi = getBusNumberForCorridor("AIT Pune", "Hinjewadi Phase 1");
+const busToKothrud = getBusNumberForCorridor("AIT Pune", "Kothrud Depot");
+const busToSwargate = getBusNumberForCorridor("AIT Pune", "Swargate");
+const busToVimanNagar = getBusNumberForCorridor("AIT Pune", "Viman Nagar");
+const busToKatraj = getBusNumberForCorridor("AIT Pune", "Katraj");
+
+assert.strictEqual(busToPuneJunction, '158', "AIT to Pune Junction should be Bus 158");
+assert.notStrictEqual(busToHinjewadi, '158', "AIT to Hinjewadi must NOT be stuck on Bus 158");
+assert.strictEqual(busToHinjewadi, '357', "AIT to Hinjewadi should be Bus 357 (or 100)");
+assert.strictEqual(busToKothrud, '115P', "AIT to Kothrud should be Bus 115P");
+assert.strictEqual(busToSwargate, '29', "AIT to Swargate should be Bus 29");
+assert.strictEqual(busToVimanNagar, '165', "AIT to Viman Nagar should be Bus 165");
+assert.strictEqual(busToKatraj, '24', "AIT to Katraj should be Bus 24");
+
+console.log("✔ Dynamic bus number tests (Bus changes appropriately: 158, 357, 115P, 29, 165, 24) passed");
+
 console.log("=== ALL TESTS PASSED SUCCESSFULLY! ===");

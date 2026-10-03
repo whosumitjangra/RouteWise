@@ -17,6 +17,7 @@ import {
 import { LocationPoint, PreferenceMode } from '../types';
 import { searchPuneLocations, resolveLocationQuery, getRoadRoute, haversineDistanceKm } from '../services/mapbox';
 import { PUNE_PRESET_TRIPS } from '../config/puneLandmarks';
+import { isLocationOutOfTown } from '../config/outOfTownCities';
 
 interface SearchCardProps {
   origin: LocationPoint;
@@ -183,6 +184,13 @@ export const SearchCard: React.FC<SearchCardProps> = ({
   };
 
   const renderBadge = (item: LocationPoint) => {
+    if (item.landmarkType === 'out_of_town' || item.isOutOfTown) {
+      return (
+        <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-bold bg-amber-100 text-amber-900 border border-amber-300 shadow-2xs">
+          <span>🚀</span> Reaching Soon
+        </span>
+      );
+    }
     if (item.landmarkType === 'metro') {
       return (
         <span className="inline-flex items-center gap-0.5 px-1.5 py-0.2 rounded text-[10px] font-semibold bg-indigo-50 text-indigo-700 border border-indigo-200">
@@ -211,6 +219,11 @@ export const SearchCard: React.FC<SearchCardProps> = ({
     );
   };
 
+  const originOutOfTown = isLocationOutOfTown(origin);
+  const destOutOfTown = isLocationOutOfTown(destination);
+  const isOutOfTownActive = originOutOfTown.isOutOfTown || destOutOfTown.isOutOfTown;
+  const activeOutOfTownCity = destOutOfTown.isOutOfTown ? destOutOfTown.cityName : originOutOfTown.cityName;
+
   return (
     <div className="bg-white rounded-2xl border border-zinc-200/90 p-4 sm:p-5 shadow-sm space-y-4">
       
@@ -236,6 +249,27 @@ export const SearchCard: React.FC<SearchCardProps> = ({
             {preset.label}
           </button>
         ))}
+        {/* Out of Town Preset Demo: Lonavala */}
+        <button
+          type="button"
+          onClick={() => {
+            const lonavalaLoc: LocationPoint = {
+              name: 'Lonavala, Maharashtra',
+              lat: 18.7557,
+              lng: 73.4091,
+              landmarkType: 'out_of_town',
+              isOutOfTown: true,
+              cityName: 'Lonavala',
+            };
+            onDestinationChange(lonavalaLoc);
+            setToQuery('Lonavala, Maharashtra');
+            onSubmit(origin, lonavalaLoc);
+          }}
+          className="px-2.5 py-1 rounded-md bg-amber-50 hover:bg-amber-100 text-amber-950 border border-amber-300 text-[11px] font-bold shrink-0 transition-colors flex items-center gap-1"
+        >
+          <span>🚀</span>
+          <span>Lonavala (Reaching Soon)</span>
+        </button>
       </div>
 
       <form onSubmit={handleFormSubmit} className="space-y-3.5">
@@ -369,28 +403,61 @@ export const SearchCard: React.FC<SearchCardProps> = ({
 
         </div>
 
+        {/* Out of Town City Alert Banner: Reaching Soon */}
+        {isOutOfTownActive && (
+          <div className="p-3.5 bg-gradient-to-r from-amber-50 via-orange-50 to-amber-50 border border-amber-300 rounded-xl space-y-1.5 animate-in fade-in">
+            <div className="flex items-center justify-between">
+              <span className="font-bold text-xs text-amber-950 flex items-center gap-1.5">
+                <span className="text-base">🚀</span>
+                <span>Reaching Soon to {activeOutOfTownCity}!</span>
+              </span>
+              <span className="text-[10px] font-bold text-amber-800 bg-amber-100/90 px-2 py-0.5 rounded-full border border-amber-300 uppercase tracking-wider">
+                Out of Town
+              </span>
+            </div>
+            <p className="text-xs text-amber-900/90 leading-relaxed">
+              RouteWise multimodal transit is currently operational across the <strong>Pune Metropolitan Region</strong>. We are reaching <strong>{activeOutOfTownCity}</strong> soon!
+            </p>
+          </div>
+        )}
+
         {/* Distance Calculator: Corridor Minimum Feasible Path */}
         {feasibleDistanceKm !== null && (
           <div className="p-3 bg-zinc-50 border border-zinc-200/90 rounded-xl flex items-center justify-between animate-in fade-in slide-in-from-top-1 duration-300">
             <div className="flex items-center gap-2.5">
-              <div className="w-7 h-7 rounded-lg bg-emerald-600 text-white flex items-center justify-center shrink-0 shadow-2xs">
+              <div className={`w-7 h-7 rounded-lg text-white flex items-center justify-center shrink-0 shadow-2xs ${
+                isOutOfTownActive ? 'bg-amber-600' : 'bg-emerald-600'
+              }`}>
                 <Navigation className="w-3.5 h-3.5" />
               </div>
               <div>
-                <div className="text-xs font-bold text-zinc-900 flex items-center gap-1.5">
+                <div className="text-xs font-bold text-zinc-900 flex items-center gap-1.5 flex-wrap">
                   <span>Minimum Feasible Path:</span>
-                  <span className="font-mono text-emerald-700 font-extrabold text-sm">
+                  <span className={`font-mono font-extrabold text-sm ${
+                    isOutOfTownActive ? 'text-amber-700' : 'text-emerald-700'
+                  }`}>
                     ~{feasibleDistanceKm} km
                   </span>
+                  {isOutOfTownActive && (
+                    <span className="text-[10px] font-bold text-amber-900 bg-amber-100 px-1.5 py-0.2 rounded border border-amber-300">
+                      Out of Town • Reaching Soon 🚀
+                    </span>
+                  )}
                 </div>
                 <p className="text-[11px] text-zinc-500">
-                  Estimated shortest corridor road connection: ~{feasibleDurationMin} mins
+                  {isOutOfTownActive
+                    ? `Intercity road corridor connection: ~${feasibleDurationMin} mins • RouteWise reaching soon!`
+                    : `Estimated shortest corridor road connection: ~${feasibleDurationMin} mins`}
                 </p>
               </div>
             </div>
-            <div className="hidden sm:flex items-center gap-1 text-[11px] font-semibold text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-200">
-              <CheckCircle2 className="w-3 h-3 text-emerald-600" />
-              <span>Corridor Calculated</span>
+            <div className={`hidden sm:flex items-center gap-1 text-[11px] font-semibold px-2 py-0.5 rounded-md border ${
+              isOutOfTownActive
+                ? 'text-amber-900 bg-amber-50 border-amber-300'
+                : 'text-emerald-800 bg-emerald-50 border-emerald-200'
+            }`}>
+              <CheckCircle2 className={`w-3 h-3 ${isOutOfTownActive ? 'text-amber-600' : 'text-emerald-600'}`} />
+              <span>{isOutOfTownActive ? 'Intercity Corridor' : 'Corridor Calculated'}</span>
             </div>
           </div>
         )}
