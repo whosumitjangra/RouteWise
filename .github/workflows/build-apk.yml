@@ -54,7 +54,10 @@ jobs:
         run: |
           cd android
           ./gradlew assembleDebug --no-daemon --stacktrace > ../gradle.log 2>&1 || {
-            ERR=$(tail -n 20 ../gradle.log | tr -d '\r' | tr '\n' ' ')
+            ERR=$(grep -A 12 "What went wrong:" ../gradle.log | tr -d '\r' | tr '\n' ' ')
+            if [ -z "$ERR" ]; then
+              ERR=$(grep -A 12 "FAILURE:" ../gradle.log | tr -d '\r' | tr '\n' ' ')
+            fi
             echo "::error title=GradleBuildFailure::$ERR"
             exit 1
           }
