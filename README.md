@@ -1,143 +1,105 @@
-# RouteWise 🧭
-### Multi-Modal Travel & Budget Comparison Engine
+# IndiaRide 🧭
+### Smart Multimodal Transit & Budget Navigator for Pune, Maharashtra
 
-RouteWise is a deterministic multi-modal travel engine built with **Next.js 14 (App Router)**, **TypeScript**, **Tailwind CSS**, and **Supabase (PostgreSQL)**, designed for instant deployment on **Vercel**. 
+IndiaRide is an ultra-clean, deterministic multimodal transit navigation web application designed specifically for Indian urban commuters. 
 
-It accepts an **origin**, **destination**, a **maximum budget** ($ or local currency), and an **optimization priority** (*Fastest* vs. *Cheapest* vs. *Balanced*) to calculate, compare, and rank all available modes of transport side-by-side in a single dashboard:
-- 🚗 **Personal Driving** (Highway routing via OSRM, fuel economy, and toll estimation)
-- 🚕 **Rideshare & On-Demand** (Uber / Taxi with dynamic surge multiplier $S_{\text{surge}}$)
-- 🛵 **Micro-Mobility / Auto / Rapido** (Two-wheelers and auto-rickshaws for short urban runs)
-- 🚆 **Intercity & Regional Rail** (Deterministic GTFS headways and tiered fare matrices)
-- 🚌 **Intercity Bus & Coach** (Long-distance coach highway routing and budget fares)
-- 🚊 **Urban Metro & Subway** (Rapid transit urban grid routing)
-- ✈️ **Commercial Flight** (Direct airport hub detection, flight physics, and door-to-door ground connections)
-- 🚶 **Active Walking & Bicycling** (Zero-emission pedestrian and bike paths)
+For the MVP, IndiaRide targets **Pune, Maharashtra**, integrating the **Pune Metro** (Maha Metro Purple Line & Aqua Line + District Court interchange) alongside **Auto Rickshaws**, **Bike Taxis**, **Cabs**, and **Walking**.
 
 ---
 
-## 1. Key Differentiators over LLM Travel Prompts
-- **Zero LLM Hallucinations**: All costs, travel times, and schedules are calculated via deterministic spatial graph algorithms and GTFS timetable feeds.
-- **Interactive Visual Mapping**: Dynamic vector map using OpenStreetMap and Leaflet with mode-colored polylines, start/end markers, and route inspection.
-- **Sub-50ms Algorithmic Execution**: High-throughput parallel routing without slow prompt friction or token generation latencies.
-- **Pareto-Frontier Tradeoff Analysis**: Interactive 2D scatter plot revealing the sweet-spot between monetary cost and travel time.
+## 1. Core Value Proposition
+A commuter inputs:
+1. **Starting Location** (e.g. *Hinjewadi Phase 1*)
+2. **Destination** (e.g. *Shivajinagar*)
+3. **Budget** (e.g. *₹150*)
+4. **Preference** (*Cheapest* vs. *Fastest* vs. *Balanced*)
+
+IndiaRide immediately compares all options side-by-side with:
+- **Estimated Travel Time**
+- **Distance**
+- **Exact Fare / Tariff Breakdown**
+- **Pune Metro Route with First/Last Mile Connection**
+- **Plain-English Recommendation Explanation** (e.g., *"Recommended because it is ₹60 cheaper and only 7 minutes slower."*)
 
 ---
 
-## 2. Core Engine Mathematical Formulations
-
-### A. Unified Generalized Cost & Fare Engine
-Deterministic generalized cost formulation:
-$$C_{\text{total}} = C_{\text{base}} + (D \times R_{\text{distance}}) + (T \times R_{\text{time}}) + C_{\text{tolls/surge}}$$
-
-#### Mode Formulas:
-1. **Driving**:
-   $$C_{\text{drive}} = \left(\frac{D}{\text{Fuel Efficiency}} \times \text{Fuel Price}\right) + C_{\text{tolls}}$$
-2. **Rideshare / Uber / Rapido**:
-   $$C_{\text{rideshare}} = \left(C_{\text{base}} + (D \times R_{\text{dist}}) + (T \times R_{\text{time}})\right) \times S_{\text{surge}} + C_{\text{booking}}$$
-3. **Transit / Rail / Metro**:
-   Tiered fare matrix based on GTFS station distance $D_{\text{station}}$:
-   $$C_{\text{transit}} = C_{\text{base}} + \sum \left(D_i \times R_i\right)$$
-4. **Flight**:
-   $$C_{\text{flight}} = C_{\text{airport tax}} + (D_{\text{air}} \times R_{\text{km}}) + C_{\text{ground transfers}}$$
+## 2. Minimalist UI/UX (Inspired by Xeroxic)
+- **Zero Clutter**: No noisy sidebars, no overwhelming charts, no aggressive badges.
+- **High-Contrast Simplicity**: Soft off-white backdrop (`#fcfcfd`), crisp dark typography, 1px subtle borders, and generous whitespace.
+- **Obvious Primary Action**: Direct, responsive comparison with instant visual feedback on desktop and mobile.
 
 ---
 
-### B. Budget Filtering & Smart Badging Algorithm
-1. Intercept user `origin`, `destination`, `maxBudget`, and `priority`.
-2. Compute parallel route payloads from OSRM, GTFS, and flight physics engines.
-3. Compare each mode against $C_{\text{total}} \le \text{maxBudget}$. Over-budget options receive the `⚠️ Over Budget` badge and can be filtered or inspected.
-4. Calculate multi-objective Pareto score for Balanced priority:
-   $$\text{Score} = (0.45 \times \text{NormCost}) + (0.45 \times \text{NormDuration}) + (0.10 \times \text{NormCO}_2)$$
-5. Dynamically assign badges:
-   - ⚡ **Fastest Path** (lowest travel duration)
-   - 💰 **Most Affordable Path** (lowest monetary cost)
-   - ⚖️ **Best Value** (optimal Pareto generalized score)
-   - 🌿 **Eco Champion** (lowest carbon footprint in $\text{kg CO}_2$)
+## 3. Technology Stack & Architecture
+
+- **Frontend Framework**: React 18 + TypeScript + Vite
+- **Styling**: Tailwind CSS 3.4
+- **Maps**: Mapbox GL JS (`mapbox-gl`)
+- **Location Search**: Mapbox Geocoding API (with built-in Pune landmarks offline fallback)
+- **Road Routing**: Mapbox Directions API (with spatial road circuity fallback)
+- **Icons**: Lucide React
 
 ---
 
-## 3. Database Schema (Supabase PostgreSQL)
+## 4. Configurable Fare Assumptions (`src/config/fares.ts`)
 
-The application includes an in-app Supabase Connection Modal with a real-time connection tester. To initialize your Supabase database, run the following SQL script in the [Supabase SQL Editor](https://app.supabase.com):
+All tariff formulas are kept in a single transparent configuration file:
 
-```sql
--- User Search & Route History Table
-create table public.saved_routes (
-  id uuid default gen_random_uuid() primary key,
-  user_id uuid references auth.users(id) on delete cascade,
-  origin text not null,
-  destination text not null,
-  max_budget numeric not null,
-  priority_mode text not null check (priority_mode in ('fastest', 'cheapest', 'balanced')),
-  selected_mode text,
-  route_payload jsonb not null,
-  created_at timestamp with time zone default timezone('utc'::text, now()) not null
-);
-
--- Enable RLS
-alter table public.saved_routes enable row level security;
-
-create policy "Users can view their own saved routes" 
-on public.saved_routes for select 
-using (auth.uid() = user_id or auth.uid() is null);
-
-create policy "Users can insert their own saved routes" 
-on public.saved_routes for insert 
-with check (auth.uid() = user_id or auth.uid() is null);
-
-create policy "Users can delete their own saved routes" 
-on public.saved_routes for delete 
-using (auth.uid() = user_id or auth.uid() is null);
-```
-
-*Note*: If Supabase credentials are not provided, RouteWise gracefully defaults to browser `localStorage` mode with zero setup interruption.
+1. **Auto Rickshaw (Pune RTO Regulated Meter Rates)**:
+   - Base fare: ₹25 for the first 1.5 km.
+   - Subsequent rate: ₹17.00 per km.
+2. **Bike Taxi (Rapido Pune Estimates)**:
+   - Base fare: ₹20 (covers first 1 km).
+   - Rate: ₹9.00/km + ₹0.75/min buffer + ₹2 platform fee.
+3. **Cab / Car (Uber Go / Ola Mini Estimates)**:
+   - Base fare: ₹60.
+   - Rate: ₹15.50/km + ₹1.50/min traffic buffer + ₹15 booking fee.
+4. **Pune Metro (Official Maha Metro Distance Slabs)**:
+   - 1–3 stations: ₹10
+   - 4–6 stations: ₹15
+   - 7–10 stations: ₹20
+   - 11–14 stations: ₹25
+   - 15–18 stations: ₹30
+   - > 18 stations: ₹35
+5. **Walking**:
+   - 100% Free (₹0) and 0g carbon footprint for distances under 4 km.
 
 ---
 
-## 4. Getting Started Locally
+## 5. API Setup (Optional)
 
-### Prerequisites
-- Node.js 18+ (tested on Node.js 24)
-- npm or yarn
+IndiaRide requires **only 1 external API provider**: **Mapbox**.
 
-### Installation
+### How to add your Mapbox Token:
+1. Create a free account at [account.mapbox.com](https://account.mapbox.com) (100,000 free requests/month, no credit card required).
+2. Copy your public token (`pk.eyJ...`).
+3. Create a `.env` file in the root directory:
+   ```env
+   VITE_MAPBOX_TOKEN=pk.eyJ1IjoieW91cnVzZXJuYW1lIiwiYSI6ImNs...
+   ```
+4. Start the application:
+   ```bash
+   npm run dev
+   ```
+
+> **Zero-Key Fallback**: If you run without a Mapbox token, IndiaRide automatically activates its **Pune Spatial Transit Canvas** with pre-indexed coordinates for top Pune hubs (Hinjewadi, Shivajinagar, Swargate, PCMC, Kothrud, Viman Nagar, etc.), making the app 100% interactive out of the box!
+
+---
+
+## 6. Development & Testing
+
 ```bash
-# Clone the repository
-git clone <repo-url>
-cd routewise
-
 # Install dependencies
 npm install
 
-# Start development server
+# Run unit tests
+node scripts/test-engine.mjs
+
+# Build for production
+npm run build
+
+# Start local development server
 npm run dev
 ```
 
 Visit [http://localhost:3000](http://localhost:3000) in your browser.
-
----
-
-## 5. Environment Variables (.env)
-
-Copy `.env.example` to `.env.local`:
-```bash
-cp .env.example .env.local
-```
-
-```env
-NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
-NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
-```
-
----
-
-## 6. Vercel Deployment
-
-Deploy with one click to Vercel:
-
-1. Push code to your GitHub/GitLab repository.
-2. In the Vercel Dashboard, import the repository.
-3. Under **Environment Variables**, add:
-   - `NEXT_PUBLIC_SUPABASE_URL`
-   - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
-4. Click **Deploy**.
