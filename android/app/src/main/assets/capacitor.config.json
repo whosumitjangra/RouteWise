@@ -1,0 +1,8 @@
+{
+	"appId": "com.routewise.pune",
+	"appName": "RouteWise",
+	"webDir": "dist",
+	"server": {
+		"androidScheme": "https"
+	}
+}
