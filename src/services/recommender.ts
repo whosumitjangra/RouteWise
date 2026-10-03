@@ -233,31 +233,28 @@ export function evaluateAndRankRoutes(
 
   winner.isRecommended = true;
 
-  // 7. Generate Plain-English AI Explanation
+  // 7. Generate Plain-English Explanation (Strictly ONE short sentence based on preference & budget)
   let explanationText = '';
 
   if (winner.isOverBudget) {
-    explanationText = `All viable routes exceed your ₹${budget} budget. ${winner.title} (₹${winner.cost.totalFare}) is the most economical choice.`;
+    explanationText = `${winner.title} is the closest match to your ₹${budget} budget at an estimated ₹${winner.cost.totalFare}.`;
+  } else if (preference === 'cheapest') {
+    explanationText = `${winner.title} gives you the lowest travel cost at an estimated ₹${winner.cost.totalFare}.`;
+  } else if (preference === 'fastest') {
+    explanationText = `${winner.title} is your quickest option, reaching the destination in ${winner.durationMinutes} minutes.`;
   } else if (winner.mode === 'walking') {
-    explanationText = `Recommended by AI: Completely free (₹0) and only a ${winner.durationMinutes}-minute walk (${winner.distanceKm} km).`;
+    explanationText = `A short ${winner.durationMinutes}-minute walk (${winner.distanceKm} km) reaches your destination at zero cost.`;
   } else if (winner.mode === 'cab') {
-    explanationText = `Recommended by AI: With your ₹${budget} budget, Economy Cab is the ideal choice (₹${winner.cost.totalFare}). You get 100% door-to-door AC comfort with 0 mode transfers, skipping the hassle of changing 3 transit vehicles.`;
+    explanationText = `Direct AC cab gives you zero transfers and door-to-door comfort within your ₹${budget} budget.`;
   } else if (winner.mode === 'auto') {
-    explanationText = `Recommended by AI: Direct Auto Rickshaw (₹${winner.cost.totalFare}) takes you straight to your destination with 0 transfers, avoiding a tiring 3-mode transit route while fitting your ₹${budget} budget.`;
+    explanationText = `Direct meter auto provides a fast, zero-transfer trip within your ₹${budget} budget.`;
   } else if (winner.mode === 'bus') {
-    const metroDiff = metroRoute ? metroRoute.cost.totalFare - winner.cost.totalFare : 0;
-    explanationText = `Recommended by AI: Direct PMPML Bus ${winner.busNumber || ''} is the smartest choice (₹${winner.cost.totalFare}). A single bus ride gets you there directly, saving you from the hassle of changing 3 different transit modes${
-      metroDiff > 0 ? ` while saving ₹${metroDiff}` : ''
-    }.`;
+    const busNum = winner.busNumber ? `Bus ${winner.busNumber}` : 'Bus';
+    explanationText = `Direct PMPML ${busNum} is the most affordable route at an estimated ₹${winner.cost.totalFare} with zero transfers.`;
   } else if (winner.mode === 'metro_multimodal') {
-    if (cabRoute && cabRoute.durationMinutes - winner.durationMinutes >= 15) {
-      const timeSaved = cabRoute.durationMinutes - winner.durationMinutes;
-      explanationText = `Recommended by AI: Pune Metro + Feeder cuts travel time by ${timeSaved} minutes by bypassing heavy road congestion across the city arterial corridor.`;
-    } else {
-      explanationText = `Recommended by AI: Pune Metro + Feeder provides reliable, traffic-free rail transit across this long-distance corridor.`;
-    }
+    explanationText = `Pune Metro bypasses road congestion to provide reliable, fast transit on this corridor.`;
   } else {
-    explanationText = `Recommended by AI as the best balance of travel time (${winner.durationMinutes} min), zero transfer friction, and cost (₹${winner.cost.totalFare}).`;
+    explanationText = `${winner.title} offers the best balance of travel time, directness, and estimated cost.`;
   }
 
   winner.recommendationReason = explanationText;

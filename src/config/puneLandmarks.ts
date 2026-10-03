@@ -184,6 +184,13 @@ export const PUNE_LANDMARKS: PuneLandmarkWithAliases[] = [
 
 export const PUNE_PRESET_TRIPS: PunePresetTrip[] = [
   {
+    id: 'ait-fc-road',
+    label: 'AIT Pune ➔ FC Road',
+    origin: PUNE_LANDMARKS[0], // AIT Pune
+    destination: PUNE_LANDMARKS.find((l) => l.aliases.includes('fc road')) || PUNE_LANDMARKS[18],
+    budget: 100,
+  },
+  {
     id: 'ait-pune-junction',
     label: 'AIT Pune ➔ Pune Junction',
     origin: PUNE_LANDMARKS[0], // AIT Pune
@@ -203,12 +210,5 @@ export const PUNE_PRESET_TRIPS: PunePresetTrip[] = [
     origin: PUNE_LANDMARKS[9], // Swargate
     destination: PUNE_LANDMARKS[17], // PCMC
     budget: 60,
-  },
-  {
-    id: 'kothrud-vimannagar',
-    label: 'Kothrud ➔ Viman Nagar',
-    origin: PUNE_LANDMARKS[15], // Kothrud
-    destination: PUNE_LANDMARKS[16], // Viman Nagar
-    budget: 120,
   },
 ];

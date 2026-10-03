@@ -21,11 +21,11 @@ export const Header: React.FC = () => {
           </div>
         </div>
 
-        {/* Clean City Live Status Badge (Zero API Key Logos) */}
+        {/* Clean City Status Badge */}
         <div className="flex items-center gap-2">
           <div className="flex items-center gap-1.5 text-xs text-zinc-600 px-2.5 py-1 rounded-md border border-zinc-200/80 bg-zinc-50/80">
-            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-            <span className="font-medium text-[11px]">Pune Transit Live</span>
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+            <span className="font-semibold text-[11px]">Pune Multimodal Transit</span>
           </div>
         </div>
 

@@ -69,12 +69,12 @@ export const FareModal: React.FC<FareModalProps> = ({ route, onClose }) => {
           )}
 
           <div className="flex items-center justify-between font-bold text-zinc-950 pt-2 border-t border-zinc-100">
-            <span>Calculated Fare</span>
+            <span>Estimated Fare</span>
             <span className="font-mono text-emerald-700">₹{route.cost.totalFare}</span>
           </div>
         </div>
 
-        {/* Live Provider Rates Breakdown for Auto */}
+        {/* Estimated Provider Rates Breakdown for Auto */}
         {route.mode === 'auto' && (
           <div className="p-3 bg-amber-50/80 rounded-xl border border-amber-200/90 space-y-2">
             <span className="text-[11px] font-bold text-amber-950 block">
@@ -82,13 +82,13 @@ export const FareModal: React.FC<FareModalProps> = ({ route, onClose }) => {
             </span>
             <div className="grid grid-cols-2 gap-2 text-xs">
               <div className="bg-white p-2 rounded-lg border border-zinc-200">
-                <span className="text-[10px] text-zinc-400 block">Uber Auto</span>
+                <span className="text-[10px] text-zinc-500 block font-medium">Uber Auto (Est.)</span>
                 <span className="font-mono font-bold text-zinc-900">
                   ₹{Math.round(route.cost.totalFare * 1.05 + 4)}
                 </span>
               </div>
               <div className="bg-white p-2 rounded-lg border border-zinc-200">
-                <span className="text-[10px] text-zinc-400 block">Rapido Auto</span>
+                <span className="text-[10px] text-zinc-500 block font-medium">Rapido Auto (Est.)</span>
                 <span className="font-mono font-bold text-zinc-900">
                   ₹{Math.max(25, Math.round(route.cost.totalFare * 0.96))}
                 </span>

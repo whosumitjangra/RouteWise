@@ -365,8 +365,8 @@ export const MapView: React.FC<MapViewProps> = ({
       {/* Top Map Indicator */}
       <div className="relative z-10 p-3 pointer-events-none flex items-center justify-between">
         <div className="bg-white/95 backdrop-blur-md px-2.5 py-1 rounded-lg border border-zinc-200/90 shadow-2xs text-[11px] font-semibold text-zinc-800 flex items-center gap-1.5 pointer-events-auto">
-          <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-          <span>Pune Live Street Map (Retina HD)</span>
+          <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+          <span>Pune Interactive Map (Retina HD)</span>
         </div>
       </div>
 

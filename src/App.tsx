@@ -255,28 +255,27 @@ export default function App() {
           </button>
         </div>
 
-        {/* Transit Options Header */}
+        {/* Route Comparison Header */}
         <div className="flex items-center justify-between px-1">
           <div className="flex items-center gap-2">
-            <span className="text-xs font-bold text-zinc-900">
-              Transit Options ({routes.filter((r) => r.isFeasible).length})
-            </span>
-            <span className="hidden sm:inline-flex text-[11px] font-semibold text-zinc-600 bg-zinc-100 border border-zinc-200 px-2.5 py-0.5 rounded-full items-center gap-1.5">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
-              <span>Map on Left • Transit Options on Right</span>
+            <h2 className="text-xs sm:text-sm font-bold text-zinc-900">
+              Route Comparison ({routes.filter((r) => r.isFeasible).length} Options)
+            </h2>
+            <span className="text-[10px] sm:text-[11px] font-semibold text-zinc-600 bg-zinc-100 border border-zinc-200 px-2.5 py-0.5 rounded-full">
+              Estimated fares
             </span>
           </div>
-          <span className="text-[11px] text-zinc-400 hidden sm:inline">
-            Click cards to explore stops & feeder legs
+          <span className="text-[11px] text-zinc-400 font-medium hidden sm:inline">
+            Interactive Map on Left • Comparison on Right
           </span>
         </div>
 
-        {/* 2-Column Split: Map permanently on Left (lg:order-1), Routes permanently on Right (lg:order-2) */}
+        {/* 2-Column Split: Map on Left (lg:col-span-5), Route Comparison on Right (lg:col-span-7) */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
           
-          {/* Map Column: Statically on Left by default (lg:col-span-6 lg:order-1) */}
+          {/* Map Column: Statically on Left (lg:col-span-5 lg:order-1) */}
           <div
-            className={`lg:col-span-6 lg:order-1 lg:sticky lg:top-20 h-[480px] sm:h-[580px] lg:h-[calc(100vh-130px)] lg:min-h-[660px] lg:max-h-[880px] ring-1 ring-zinc-200/90 shadow-xs rounded-2xl ${
+            className={`lg:col-span-5 lg:order-1 lg:sticky lg:top-20 h-[460px] sm:h-[540px] lg:h-[calc(100vh-130px)] lg:min-h-[620px] lg:max-h-[800px] ring-1 ring-zinc-200/90 shadow-xs rounded-2xl ${
               mobileTab === 'routes' ? 'hidden lg:block' : 'block'
             }`}
           >
@@ -296,12 +295,61 @@ export default function App() {
             />
           </div>
 
-          {/* Routes Column: Statically on Right by default (lg:col-span-6 lg:order-2) */}
+          {/* Routes Column: Core of the results page (lg:col-span-7 lg:order-2) */}
           <div
-            className={`lg:col-span-6 lg:order-2 space-y-3.5 ${
+            className={`lg:col-span-7 lg:order-2 space-y-3.5 ${
               mobileTab === 'map' ? 'hidden lg:block' : 'block'
             }`}
           >
+            {/* Quick Mode Comparison Bar: At-a-glance comparison across all transit modes */}
+            {routes.filter((r) => r.isFeasible).length > 0 && (
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                {routes
+                  .filter((r) => r.isFeasible)
+                  .map((r) => {
+                    const isSelected = selectedRouteId === r.id;
+                    const modeLabel =
+                      r.mode === 'bus'
+                        ? `Bus ${r.busNumber || ''}`
+                        : r.mode === 'metro_multimodal'
+                        ? 'Metro'
+                        : r.mode === 'auto'
+                        ? 'Auto'
+                        : r.mode === 'cab'
+                        ? 'Cab'
+                        : 'Walk';
+                    return (
+                      <button
+                        key={r.id}
+                        type="button"
+                        onClick={() => {
+                          setSelectedRouteId(r.id);
+                          setExpandedCardId(r.id);
+                        }}
+                        className={`p-2.5 rounded-xl border text-left transition-all cursor-pointer ${
+                          isSelected
+                            ? 'bg-zinc-950 text-white border-zinc-950 shadow-2xs'
+                            : 'bg-white hover:bg-zinc-50 border-zinc-200/90 text-zinc-900 shadow-2xs'
+                        }`}
+                      >
+                        <div className="flex items-center justify-between">
+                          <span className="font-bold text-[11px] truncate">
+                            {modeLabel}
+                          </span>
+                          <span className={`font-mono font-bold text-xs ${isSelected ? 'text-emerald-400' : 'text-zinc-950'}`}>
+                            ₹{r.cost.totalFare}
+                          </span>
+                        </div>
+                        <div className={`flex items-center justify-between text-[10px] mt-1 ${isSelected ? 'text-zinc-300' : 'text-zinc-500'}`}>
+                          <span>{r.durationMinutes} min</span>
+                          <span>{r.transferCount === 0 ? 'Direct' : `${r.transferCount} switch`}</span>
+                        </div>
+                      </button>
+                    );
+                  })}
+              </div>
+            )}
+
             {/* Out of Town City Banner: Reaching Soon */}
             {isOutOfTownActive && (
               <div className="bg-gradient-to-br from-amber-50 via-orange-50 to-amber-100/70 border border-amber-300 rounded-2xl p-4 sm:p-5 shadow-xs space-y-3.5 animate-in fade-in">
@@ -366,13 +414,13 @@ export default function App() {
                     }}
                     className="px-3 py-1.5 rounded-lg bg-zinc-950 hover:bg-zinc-800 text-white text-xs font-semibold flex items-center gap-1 transition-colors shadow-2xs"
                   >
-                    <span>← Explore Live Pune Transit (AIT ➔ Pune Junction)</span>
+                    <span>← Explore Pune Transit (AIT ➔ Pune Junction)</span>
                   </button>
                 </div>
               </div>
             )}
             
-            {/* Recommendation Banner */}
+            {/* Highly Visible "Recommended for you" Banner */}
             <RecommendationBanner
               recommendedRoute={recommendedRoute}
               explanationText={explanation}
@@ -385,10 +433,10 @@ export default function App() {
 
             {/* Alternatives List Header */}
             <div className="flex items-center justify-between px-1 pt-1">
-              <span className="text-[11px] font-semibold text-zinc-500 uppercase tracking-wider">
-                Available Alternatives ({routes.filter((r) => r.isFeasible).length})
+              <span className="text-[11px] font-bold text-zinc-500 uppercase tracking-wider">
+                All Route Options ({routes.filter((r) => r.isFeasible).length})
               </span>
-              <span className="text-[11px] text-zinc-400">
+              <span className="text-[11px] text-zinc-400 font-medium">
                 Sorted by {preference}
               </span>
             </div>
@@ -435,7 +483,7 @@ export default function App() {
             <span>Pune Multimodal Transit Engine</span>
           </div>
           <div className="text-[11px] text-zinc-400">
-            Deterministic fares • Pune RTO & Maha Metro compliant • Zero LLM hallucinations
+            Estimated fares based on Pune RTO & PMPML tariffs • Zero fare hallucinations
           </div>
         </div>
       </footer>

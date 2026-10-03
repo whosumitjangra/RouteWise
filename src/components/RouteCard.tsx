@@ -66,7 +66,7 @@ const AutoRideProviderComparison: React.FC<AutoRideProviderComparisonProps> = ({
               <span className="px-1.5 py-0.5 rounded bg-zinc-950 text-white text-[10px] font-bold">
                 Uber Auto
               </span>
-              <p className="text-[10px] text-zinc-400 mt-1">Live On-Demand</p>
+              <p className="text-[10px] text-zinc-500 mt-1">Estimated fare</p>
             </div>
             <span className="font-mono text-sm font-extrabold text-zinc-950">
               ₹{pricing.uberFare}
@@ -92,7 +92,7 @@ const AutoRideProviderComparison: React.FC<AutoRideProviderComparisonProps> = ({
               <span className="px-1.5 py-0.5 rounded bg-[#F9C900] text-zinc-950 text-[10px] font-bold">
                 Rapido Auto
               </span>
-              <p className="text-[10px] text-zinc-400 mt-1">Quick Pickup</p>
+              <p className="text-[10px] text-zinc-500 mt-1">Estimated fare</p>
             </div>
             <span className="font-mono text-sm font-extrabold text-zinc-950">
               ₹{pricing.rapidoFare}
@@ -248,9 +248,8 @@ export const RouteCard: React.FC<RouteCardProps> = ({
                   </span>
                 )}
                 {route.isRecommended && (
-                  <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-200 flex items-center gap-1 shadow-2xs">
-                    <Sparkles className="w-2.5 h-2.5 text-emerald-700" />
-                    <span>AI Best Choice</span>
+                  <span className="px-2 py-0.5 rounded-full text-[10px] font-extrabold uppercase tracking-wider bg-emerald-100 text-emerald-900 border border-emerald-300 flex items-center gap-1 shadow-2xs">
+                    <span>★ Recommended for you</span>
                   </span>
                 )}
                 {route.transferLabel && (
@@ -283,54 +282,63 @@ export const RouteCard: React.FC<RouteCardProps> = ({
             <div className="font-mono font-extrabold text-base sm:text-lg text-zinc-950">
               ₹{route.cost.totalFare}
             </div>
-            <div className="text-[10px] text-zinc-400">
-              {route.mode === 'metro_multimodal' || route.mode === 'auto'
-                ? 'Standard tariff'
-                : route.mode === 'bus'
-                ? 'PMPML Stage tariff'
-                : 'Live market fare'}
+            <div className="text-[10px] font-semibold text-zinc-500">
+              Estimated fare
             </div>
           </div>
 
         </div>
 
-        {/* Primary Metrics: Duration, Distance, Budget status */}
-        <div className="flex items-center justify-between gap-2 mt-3 pt-2.5 border-t border-zinc-100 text-xs">
+        {/* 6 Core Comparison Pillars: Duration, Distance, Transfers, Budget Status */}
+        <div className="flex items-center justify-between flex-wrap gap-2 mt-3 pt-2.5 border-t border-zinc-100 text-xs">
           
-          <div className="flex items-center gap-3 font-mono text-[11px]">
-            <span className="font-semibold text-zinc-800">
-              {route.durationMinutes} min
+          <div className="flex items-center gap-2.5 text-[11px]">
+            {/* Travel Time */}
+            <span className="font-semibold text-zinc-900 bg-zinc-100 px-2 py-0.5 rounded-md font-mono">
+              ⏱️ {route.durationMinutes} min
             </span>
-            <span className="text-zinc-300">•</span>
-            <span className="text-zinc-500">
-              {route.distanceKm} km
+
+            {/* Distance */}
+            <span className="text-zinc-600 font-mono">
+              📍 {route.distanceKm} km
+            </span>
+
+            {/* Transfers */}
+            <span
+              className={`px-2 py-0.5 rounded-md text-[10px] font-semibold border ${
+                (route.transferCount ?? 0) === 0
+                  ? 'bg-emerald-50 text-emerald-800 border-emerald-200'
+                  : (route.transferCount ?? 0) >= 2
+                  ? 'bg-amber-50 text-amber-900 border-amber-200'
+                  : 'bg-zinc-100 text-zinc-700 border-zinc-200'
+              }`}
+            >
+              {(route.transferCount ?? 0) === 0 ? '✓ 0 Transfers' : `${route.transferCount} Transfer${(route.transferCount ?? 0) > 1 ? 's' : ''}`}
             </span>
           </div>
 
-          {/* Budget delta indicator */}
+          {/* Budget status */}
           <div className="text-[11px]">
             {route.isOverBudget ? (
-              <span className="font-medium text-rose-600 flex items-center gap-1">
-                <AlertCircle className="w-3 h-3" />
-                <span>+₹{route.budgetDelta} over budget</span>
+              <span className="px-2 py-0.5 rounded-md bg-rose-50 border border-rose-200 font-semibold text-rose-700 flex items-center gap-1">
+                <AlertCircle className="w-3 h-3 text-rose-600" />
+                <span>Over budget (+₹{route.budgetDelta})</span>
               </span>
             ) : (
-              <span className="font-medium text-emerald-700">
-                ₹{Math.abs(route.budgetDelta)} under budget
+              <span className="px-2 py-0.5 rounded-md bg-emerald-50 border border-emerald-200 font-semibold text-emerald-800 flex items-center gap-1">
+                <CheckCircle2 className="w-3 h-3 text-emerald-600" />
+                <span>Within budget (₹{Math.abs(route.budgetDelta)} under)</span>
               </span>
             )}
           </div>
 
         </div>
 
-        {/* AI Commute Reasoning Insight */}
+        {/* Recommendation reason (One short sentence) */}
         {route.isRecommended && (route.aiExplanation || route.recommendationReason) && (
-          <div className="mt-2.5 p-2 sm:p-2.5 rounded-lg bg-emerald-50/80 border border-emerald-200/80 text-[11px] text-emerald-950 flex items-start gap-1.5 leading-snug">
-            <Sparkles className="w-3.5 h-3.5 text-emerald-600 shrink-0 mt-0.5" />
-            <div>
-              <span className="font-bold text-emerald-800 mr-1">AI Intelligence:</span>
-              <span className="text-zinc-700">{route.aiExplanation || route.recommendationReason}</span>
-            </div>
+          <div className="mt-2.5 p-2 sm:p-2.5 rounded-lg bg-emerald-50/90 border border-emerald-200 text-[11px] text-emerald-950 flex items-start gap-1.5 leading-snug">
+            <span className="font-bold text-emerald-900 shrink-0">Why this route:</span>
+            <span className="text-zinc-800 font-medium">{route.aiExplanation || route.recommendationReason}</span>
           </div>
         )}
 
