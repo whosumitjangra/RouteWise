@@ -166,8 +166,7 @@ export const RouteCard: React.FC<RouteCardProps> = ({
   onSelect,
   onOpenFareDetails,
 }) => {
-  const [isExpanded, setIsExpanded] = useState(false);
-  const isCardOpen = isSelected || isExpanded;
+  const isCardOpen = isSelected;
 
   const renderIcon = () => {
     switch (route.mode) {
@@ -191,9 +190,8 @@ export const RouteCard: React.FC<RouteCardProps> = ({
   };
 
   const handleCardClick = () => {
+    // Toggles selection in parent: opens card if closed, wraps up card if already open
     onSelect();
-    // Toggle path in brief on tap as requested by user
-    setIsExpanded((prev) => !prev);
   };
 
   if (!route.isFeasible) {
@@ -329,7 +327,7 @@ export const RouteCard: React.FC<RouteCardProps> = ({
         {/* Quick Path Indicator & Tap instruction */}
         <div className="mt-2.5 pt-2 border-t border-zinc-50 flex items-center justify-between text-[11px] text-zinc-400">
           <div className="flex items-center gap-1.5 text-zinc-600 font-medium">
-            <span>{isCardOpen ? 'Tap to collapse path' : 'Tap to open train route chain'}</span>
+            <span>{isCardOpen ? 'Tap card to wrap up' : 'Tap to expand route path'}</span>
             {isCardOpen ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
           </div>
 
@@ -641,6 +639,21 @@ export const RouteCard: React.FC<RouteCardProps> = ({
           <div className="p-2.5 bg-white rounded-lg border border-zinc-200/80 text-[11px] text-zinc-500 flex items-center justify-between">
             <span>Tariff Rule:</span>
             <span className="font-medium text-zinc-800">{route.cost.formulaDescription}</span>
+          </div>
+
+          {/* Wrap Up Card Button */}
+          <div className="pt-2 flex justify-center">
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                onSelect();
+              }}
+              className="py-1.5 px-4 rounded-full bg-zinc-200/90 hover:bg-zinc-300 text-zinc-800 text-xs font-semibold flex items-center gap-1.5 transition-colors shadow-2xs cursor-pointer"
+            >
+              <ChevronUp className="w-3.5 h-3.5 text-zinc-600" />
+              <span>Wrap up card</span>
+            </button>
           </div>
 
         </div>

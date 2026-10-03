@@ -381,8 +381,13 @@ export default function App() {
                   budget={budget}
                   isSelected={selectedRouteId === route.id}
                   onSelect={() => {
-                    setSelectedRouteId(route.id);
-                    setIsLayoutShifted(true);
+                    if (selectedRouteId === route.id) {
+                      setSelectedRouteId(null);
+                      setIsLayoutShifted(false);
+                    } else {
+                      setSelectedRouteId(route.id);
+                      setIsLayoutShifted(true);
+                    }
                   }}
                   onOpenFareDetails={(r) => setFareModalRoute(r)}
                 />
@@ -405,8 +410,13 @@ export default function App() {
               routes={routes}
               selectedRouteId={selectedRouteId}
               onSelectRoute={(id) => {
-                setSelectedRouteId(id);
-                setIsLayoutShifted(true);
+                if (selectedRouteId === id) {
+                  setSelectedRouteId(null);
+                  setIsLayoutShifted(false);
+                } else {
+                  setSelectedRouteId(id);
+                  setIsLayoutShifted(true);
+                }
               }}
               isLayoutShifted={isLayoutShifted}
             />

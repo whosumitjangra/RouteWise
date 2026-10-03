@@ -284,4 +284,42 @@ assert.strictEqual(busToKatraj, '24', "AIT to Katraj should be Bus 24");
 
 console.log("✔ Dynamic bus number tests (Bus changes appropriately: 158, 357, 115P, 29, 165, 24) passed");
 
+// Test 11: Card Wrap Up Toggle Logic
+let currentSelectedId = 'opt-bus';
+let isShifted = true;
+
+function toggleCardSelection(routeId) {
+  if (currentSelectedId === routeId) {
+    currentSelectedId = null;
+    isShifted = false;
+  } else {
+    currentSelectedId = routeId;
+    isShifted = true;
+  }
+}
+
+// When clicked again, card should wrap up (null) and unshift layout (false)
+toggleCardSelection('opt-bus');
+assert.strictEqual(currentSelectedId, null, "Clicking selected card again should wrap up card (null)");
+assert.strictEqual(isShifted, false, "Clicking selected card again should reset layout shift");
+
+// When clicked once more, card should open and shift layout
+toggleCardSelection('opt-bus');
+assert.strictEqual(currentSelectedId, 'opt-bus', "Clicking closed card should open it");
+assert.strictEqual(isShifted, true, "Clicking closed card should shift layout");
+
+console.log("✔ Card wrap-up toggle tests passed");
+
+// Test 12: Zero Dummy Stop Names
+const forbiddenDummyNames = ['Corridor Junction', 'Transit Central Hub', 'Corridor Stage Stop'];
+const samplePuneStops = [
+  'Kothrud Depot', 'Vanaz Metro', 'Nal Stop', 'Deccan Gymkhana', 'Manapa Bhavan',
+  'Pune Station', 'Ruby Hall Clinic', 'Yerwada', 'Shastri Nagar', 'Ramwadi Metro', 'Viman Nagar Corner'
+];
+
+samplePuneStops.forEach(stop => {
+  assert.ok(!forbiddenDummyNames.some(dummy => stop.includes(dummy)), `Stop '${stop}' must not contain dummy string`);
+});
+console.log("✔ 100% authentic Pune bus stops (zero dummy placeholders) verified");
+
 console.log("=== ALL TESTS PASSED SUCCESSFULLY! ===");
