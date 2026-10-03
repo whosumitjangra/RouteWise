@@ -12,7 +12,7 @@ import { buildPuneMetroOption } from './services/metroEngine';
 import { calculateRoadFare } from './services/fareEngine';
 import { evaluateAndRankRoutes } from './services/recommender';
 import { FARE_CONFIG } from './config/fares';
-import { ListFilter, Map as MapIcon } from 'lucide-react';
+import { ListFilter, Map as MapIcon, ArrowLeftRight } from 'lucide-react';
 
 export default function App() {
   // Default to AIT Pune -> Pune Junction as requested
@@ -28,6 +28,9 @@ export default function App() {
   const [explanation, setExplanation] = useState<string>('');
   const [selectedRouteId, setSelectedRouteId] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+
+  // Smooth layout shift state: map on left, details on right when route is selected
+  const [isLayoutShifted, setIsLayoutShifted] = useState<boolean>(false);
 
   // Modals
   const [fareModalRoute, setFareModalRoute] = useState<RouteOption | null>(null);
@@ -232,11 +235,41 @@ export default function App() {
           </button>
         </div>
 
-        {/* 2-Column Split: Routes List (Left) vs Map (Right) */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+        {/* Dynamic Layout Bar */}
+        <div className="flex items-center justify-between px-1">
+          <div className="flex items-center gap-2">
+            <span className="text-xs font-bold text-zinc-900">
+              Transit Options ({routes.filter((r) => r.isFeasible).length})
+            </span>
+            {isLayoutShifted && (
+              <span className="text-[11px] font-semibold text-emerald-800 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-full flex items-center gap-1 animate-in fade-in">
+                <span>Map shifted to Left • Route details on Right</span>
+              </span>
+            )}
+          </div>
+
+          <button
+            type="button"
+            onClick={() => setIsLayoutShifted((prev) => !prev)}
+            className="hidden lg:flex items-center gap-1.5 px-2.5 py-1 rounded-lg border border-zinc-200 hover:border-zinc-300 bg-white text-zinc-700 hover:text-zinc-950 text-xs font-semibold shadow-2xs transition-all"
+            title="Switch Map and Details sides"
+          >
+            <ArrowLeftRight className="w-3.5 h-3.5 text-zinc-500" />
+            <span>{isLayoutShifted ? 'Reset View (Cards on Left)' : 'Shift Map to Left'}</span>
+          </button>
+        </div>
+
+        {/* 2-Column Split: Routes List vs Map with smooth animated shift */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start relative">
           
-          {/* Left Column: Recommendation & Options */}
-          <div className={`lg:col-span-6 space-y-3.5 ${mobileTab === 'map' ? 'hidden lg:block' : 'block'}`}>
+          {/* Routes Column: shifts to right when a card is selected */}
+          <div
+            className={`lg:col-span-6 space-y-3.5 transition-transform duration-700 ease-in-out ${
+              isLayoutShifted
+                ? 'lg:translate-x-[calc(100%+1.5rem)]'
+                : 'lg:translate-x-0'
+            } ${mobileTab === 'map' ? 'hidden lg:block' : 'block'}`}
+          >
             
             {/* Recommendation Banner */}
             <RecommendationBanner
@@ -244,6 +277,7 @@ export default function App() {
               explanationText={explanation}
               onSelectRoute={(id) => {
                 setSelectedRouteId(id);
+                setIsLayoutShifted(true);
                 setMobileTab('map');
               }}
             />
@@ -266,7 +300,10 @@ export default function App() {
                   route={route}
                   budget={budget}
                   isSelected={selectedRouteId === route.id}
-                  onSelect={() => setSelectedRouteId(route.id)}
+                  onSelect={() => {
+                    setSelectedRouteId(route.id);
+                    setIsLayoutShifted(true);
+                  }}
                   onOpenFareDetails={(r) => setFareModalRoute(r)}
                 />
               ))}
@@ -274,14 +311,24 @@ export default function App() {
 
           </div>
 
-          {/* Right Column: Sticky Map */}
-          <div className={`lg:col-span-6 lg:sticky lg:top-20 h-[400px] sm:h-[480px] lg:h-[520px] ${mobileTab === 'routes' ? 'hidden lg:block' : 'block'}`}>
+          {/* Map Column: shifts to left when a card is selected */}
+          <div
+            className={`lg:col-span-6 lg:sticky lg:top-20 h-[400px] sm:h-[480px] lg:h-[520px] transition-transform duration-700 ease-in-out ${
+              isLayoutShifted
+                ? 'lg:-translate-x-[calc(100%+1.5rem)]'
+                : 'lg:translate-x-0'
+            } ${mobileTab === 'routes' ? 'hidden lg:block' : 'block'}`}
+          >
             <MapView
               origin={origin}
               destination={destination}
               routes={routes}
               selectedRouteId={selectedRouteId}
-              onSelectRoute={setSelectedRouteId}
+              onSelectRoute={(id) => {
+                setSelectedRouteId(id);
+                setIsLayoutShifted(true);
+              }}
+              isLayoutShifted={isLayoutShifted}
             />
           </div>
 

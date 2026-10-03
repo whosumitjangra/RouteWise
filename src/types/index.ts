@@ -33,6 +33,9 @@ export interface RouteLeg {
   instruction: string;
   badge?: string;
   stopsCount?: number;
+  isFeeder?: boolean;
+  fromCoords?: [number, number]; // [lat, lng]
+  toCoords?: [number, number];   // [lat, lng]
 }
 
 export interface StationWaypoint {

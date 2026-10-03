@@ -269,6 +269,9 @@ export function buildPuneMetroOption(
     toName: startStation.name,
     instruction: firstMileInstruction,
     badge: firstMileMode === 'walking' ? 'Walk' : 'Feeder Auto',
+    isFeeder: firstMileMode === 'auto',
+    fromCoords: [origin.lat, origin.lng],
+    toCoords: [startStation.lat, startStation.lng],
   });
 
   if (!hasInterchange) {
@@ -346,6 +349,9 @@ export function buildPuneMetroOption(
     toName: destination.name.split(',')[0],
     instruction: lastMileInstruction,
     badge: lastMileMode === 'walking' ? 'Walk' : 'Feeder Auto',
+    isFeeder: lastMileMode === 'auto',
+    fromCoords: [endStation.lat, endStation.lng],
+    toCoords: [destination.lat, destination.lng],
   });
 
   // Polyline coordinates

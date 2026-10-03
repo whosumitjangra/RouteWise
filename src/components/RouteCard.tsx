@@ -8,9 +8,11 @@ import {
   AlertCircle,
   HelpCircle,
   ArrowRight,
-  Shuffle
+  Shuffle,
+  ExternalLink
 } from 'lucide-react';
 import { RouteOption } from '../types';
+import { getUberBookingUrl, getRapidoBookingUrl } from '../utils/feederLinks';
 
 interface RouteCardProps {
   route: RouteOption;
@@ -247,12 +249,95 @@ export const RouteCard: React.FC<RouteCardProps> = ({
                           </>
                         )}
                       </div>
+
+                      {/* Feeder Booking Links (Uber & Rapido) */}
+                      {(leg.isFeeder || leg.badge === 'Feeder Auto' || leg.title.toLowerCase().includes('feeder')) && (
+                        <div className="mt-2.5 p-2.5 bg-amber-50/70 border border-amber-200/80 rounded-xl space-y-2">
+                          <div className="flex items-center justify-between">
+                            <span className="text-[11px] font-bold text-amber-950 flex items-center gap-1.5">
+                              <span>🛺</span>
+                              <span>Book Feeder Auto (to connect with Metro):</span>
+                            </span>
+                            <span className="text-[10px] text-amber-800 font-mono font-bold">
+                              ₹{leg.cost}
+                            </span>
+                          </div>
+
+                          <div className="flex items-center gap-2">
+                            <a
+                              href={getUberBookingUrl(
+                                { lat: leg.fromCoords?.[0] || 18.52, lng: leg.fromCoords?.[1] || 73.85, name: leg.fromName },
+                                { lat: leg.toCoords?.[0] || 18.53, lng: leg.toCoords?.[1] || 73.86, name: leg.toName }
+                              )}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              onClick={(e) => e.stopPropagation()}
+                              className="flex-1 py-1.5 px-2.5 rounded-lg bg-zinc-950 hover:bg-zinc-800 text-white text-[11px] font-semibold flex items-center justify-center gap-1.5 transition-colors shadow-xs"
+                            >
+                              <span className="font-bold">Uber</span> Auto
+                              <ExternalLink className="w-3 h-3 text-zinc-400" />
+                            </a>
+
+                            <a
+                              href={getRapidoBookingUrl()}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              onClick={(e) => e.stopPropagation()}
+                              className="flex-1 py-1.5 px-2.5 rounded-lg bg-[#F9C900] hover:bg-[#E5B800] text-zinc-950 text-[11px] font-bold flex items-center justify-center gap-1.5 transition-colors shadow-xs"
+                            >
+                              <span>Rapido</span> Auto
+                              <ExternalLink className="w-3 h-3 text-zinc-800" />
+                            </a>
+                          </div>
+                        </div>
+                      )}
                     </div>
                   </div>
                 </div>
               );
             })}
           </div>
+
+          {/* Direct Auto Rickshaw Booking */}
+          {route.mode === 'auto' && (
+            <div className="p-3 bg-amber-50/70 border border-amber-200/80 rounded-xl space-y-2">
+              <div className="flex items-center justify-between text-xs">
+                <span className="font-bold text-amber-950 flex items-center gap-1.5">
+                  <span>🛺</span>
+                  <span>Book City Auto Ride:</span>
+                </span>
+                <span className="text-[11px] text-amber-800 font-mono font-bold">
+                  Meter Fare ₹{route.cost.totalFare}
+                </span>
+              </div>
+              <div className="flex items-center gap-2">
+                <a
+                  href={getUberBookingUrl(
+                    { lat: route.coordinates[0]?.[1] || 18.52, lng: route.coordinates[0]?.[0] || 73.85, name: 'Pickup' },
+                    { lat: route.coordinates[route.coordinates.length - 1]?.[1] || 18.53, lng: route.coordinates[route.coordinates.length - 1]?.[0] || 73.86, name: 'Dropoff' }
+                  )}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={(e) => e.stopPropagation()}
+                  className="flex-1 py-1.5 px-2.5 rounded-lg bg-zinc-950 hover:bg-zinc-800 text-white text-[11px] font-semibold flex items-center justify-center gap-1.5 transition-colors shadow-xs"
+                >
+                  <span className="font-bold">Uber</span> Auto
+                  <ExternalLink className="w-3 h-3 text-zinc-400" />
+                </a>
+
+                <a
+                  href={getRapidoBookingUrl()}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={(e) => e.stopPropagation()}
+                  className="flex-1 py-1.5 px-2.5 rounded-lg bg-[#F9C900] hover:bg-[#E5B800] text-zinc-950 text-[11px] font-bold flex items-center justify-center gap-1.5 transition-colors shadow-xs"
+                >
+                  <span>Rapido</span> Auto
+                  <ExternalLink className="w-3 h-3 text-zinc-800" />
+                </a>
+              </div>
+            </div>
+          )}
 
           {/* Quick Tariff Summary */}
           <div className="p-2.5 bg-white rounded-lg border border-zinc-200/80 text-[11px] text-zinc-500 flex items-center justify-between">
