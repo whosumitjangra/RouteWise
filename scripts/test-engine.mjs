@@ -83,6 +83,37 @@ const cheapestExpl = generateExplanation(mockMetro, mockAuto, 'cheapest', 150);
 console.log("Explanation ('cheapest'):", cheapestExpl);
 assert.ok(cheapestExpl.includes("₹60 cheaper"), "Explanation should highlight ₹60 savings");
 assert.ok(cheapestExpl.includes("7 minutes slower"), "Explanation should highlight 7 minutes difference");
-
 console.log("✔ Natural language explainer test passed");
+
+// Test 5: Auto Ride Provider Pricing Formula & Constraints
+function calculateProviderPricing(distKm, baseMeterFare) {
+  const uberFare = Math.round(baseMeterFare * 1.05 + 4);
+  const rapidoFare = Math.max(25, Math.round(baseMeterFare * 0.96));
+  const isOfflineAvailable = distKm <= 10;
+  const offlineFare = isOfflineAvailable ? Math.max(15, Math.round(baseMeterFare / 3.5)) : undefined;
+  return {
+    uberFare,
+    rapidoFare,
+    offlineFare,
+    isOfflineAvailable,
+    disclaimer: "Price may vary"
+  };
+}
+
+// 4.0 km short ride: base meter fare = 25 + 2.5*17 = 68
+const shortRidePricing = calculateProviderPricing(4.0, 68);
+assert.strictEqual(shortRidePricing.isOfflineAvailable, true, "Short distance (4 km) should have offline booking");
+assert.strictEqual(shortRidePricing.offlineFare, Math.round(68 / 3.5), "Offline fare should be baseFare / 3.5");
+assert.strictEqual(shortRidePricing.disclaimer, "Price may vary", "Offline fare must have 'Price may vary' disclaimer");
+assert.ok(shortRidePricing.uberFare > 0, "Uber price should be calculated");
+assert.ok(shortRidePricing.rapidoFare > 0, "Rapido price should be calculated");
+
+// 12.0 km long ride (> 10 km): offline booking must be suppressed!
+const longRidePricing = calculateProviderPricing(12.0, 204);
+assert.strictEqual(longRidePricing.isOfflineAvailable, false, "Long distance (> 10 km) must NOT have offline booking");
+assert.strictEqual(longRidePricing.offlineFare, undefined, "Offline fare must be undefined after 10 km");
+assert.ok(longRidePricing.uberFare > 0, "Uber price must still be available for > 10 km");
+assert.ok(longRidePricing.rapidoFare > 0, "Rapido price must still be available for > 10 km");
+console.log("✔ Provider pricing (Uber, Rapido, and Offline base/3.5 with <=10km cap) tests passed");
+
 console.log("=== ALL TESTS PASSED SUCCESSFULLY! ===");

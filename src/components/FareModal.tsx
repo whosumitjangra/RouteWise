@@ -74,6 +74,44 @@ export const FareModal: React.FC<FareModalProps> = ({ route, onClose }) => {
           </div>
         </div>
 
+        {/* Live Provider Rates Breakdown for Auto */}
+        {route.mode === 'auto' && (
+          <div className="p-3 bg-amber-50/80 rounded-xl border border-amber-200/90 space-y-2">
+            <span className="text-[11px] font-bold text-amber-950 block">
+              Estimated Provider Comparison:
+            </span>
+            <div className="grid grid-cols-2 gap-2 text-xs">
+              <div className="bg-white p-2 rounded-lg border border-zinc-200">
+                <span className="text-[10px] text-zinc-400 block">Uber Auto</span>
+                <span className="font-mono font-bold text-zinc-900">
+                  ₹{Math.round(route.cost.totalFare * 1.05 + 4)}
+                </span>
+              </div>
+              <div className="bg-white p-2 rounded-lg border border-zinc-200">
+                <span className="text-[10px] text-zinc-400 block">Rapido Auto</span>
+                <span className="font-mono font-bold text-zinc-900">
+                  ₹{Math.max(25, Math.round(route.cost.totalFare * 0.96))}
+                </span>
+              </div>
+            </div>
+            {route.distanceKm <= 10 ? (
+              <div className="bg-white p-2 rounded-lg border border-amber-200 flex items-center justify-between">
+                <div>
+                  <span className="text-[10px] text-amber-900 font-semibold block">Manual Offline Booking</span>
+                  <span className="text-[9px] text-amber-700 font-bold">Price may vary</span>
+                </div>
+                <span className="font-mono font-bold text-amber-950">
+                  ₹{Math.max(15, Math.round(route.cost.totalFare / 3.5))}
+                </span>
+              </div>
+            ) : (
+              <span className="text-[10px] text-zinc-500 block">
+                Offline shared auto unavailable for &gt;10 km.
+              </span>
+            )}
+          </div>
+        )}
+
         {/* Transparency note */}
         <div className="p-3 bg-zinc-50 rounded-xl text-[11px] text-zinc-500 flex items-start gap-2 border border-zinc-100">
           <Info className="w-3.5 h-3.5 text-zinc-400 shrink-0 mt-0.5" />

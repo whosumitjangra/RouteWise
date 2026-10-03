@@ -38,6 +38,7 @@ export interface RouteLeg {
   isFeeder?: boolean;
   fromCoords?: [number, number]; // [lat, lng]
   toCoords?: [number, number];   // [lat, lng]
+  coordinates?: [number, number][]; // Street road geometry [[lng, lat], ...]
 }
 
 export interface StationWaypoint {

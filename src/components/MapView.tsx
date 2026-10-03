@@ -64,16 +64,17 @@ export const MapView: React.FC<MapViewProps> = ({
         attributionControl: false,
       });
 
-      // Integrate Mapbox Streets-v12 high-resolution tiles using user's token, with CartoDB fallback
+      // Integrate Mapbox Streets-v12 crystal-clear Retina @2x tiles using user's token
       const token = getMapboxToken();
       const tileUrl = hasValidMapboxToken()
-        ? `https://api.mapbox.com/styles/v1/mapbox/streets-v12/tiles/{z}/{x}/{y}?access_token=${token}`
-        : 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png';
+        ? `https://api.mapbox.com/styles/v1/mapbox/streets-v12/tiles/512/{z}/{x}/{y}@2x?access_token=${token}`
+        : 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}@2x.png';
 
       L.tileLayer(tileUrl, {
         maxZoom: 19,
-        tileSize: hasValidMapboxToken() ? 512 : 256,
-        zoomOffset: hasValidMapboxToken() ? -1 : 0,
+        tileSize: 512,
+        zoomOffset: -1,
+        detectRetina: true,
       }).addTo(map);
 
       layersGroupRef.current = L.layerGroup().addTo(map);
@@ -81,23 +82,7 @@ export const MapView: React.FC<MapViewProps> = ({
     }
 
     renderMapData();
-  }, [origin, destination, routes]);
-
-  // Update selection styles without full recreation
-  useEffect(() => {
-    if (!mapInstanceRef.current) return;
-
-    Object.entries(polylinesRef.current).forEach(([routeId, polyline]) => {
-      const isSelected = routeId === selectedRouteId;
-      polyline.setStyle({
-        weight: isSelected ? 5.5 : 2.5,
-        opacity: isSelected ? 1.0 : 0.45,
-      });
-      if (isSelected) {
-        polyline.bringToFront();
-      }
-    });
-  }, [selectedRouteId]);
+  }, [origin, destination, routes, selectedRouteId]);
 
   const renderMapData = () => {
     const map = mapInstanceRef.current;
@@ -109,26 +94,24 @@ export const MapView: React.FC<MapViewProps> = ({
 
     const allLatLngs: L.LatLngExpression[] = [];
 
-    // 1. Draw Pune Metro network corridors in background
-    // Purple Line
+    // 1. Draw Pune Metro network corridors in background (Purple & Aqua Lines)
     const purpleCoords = PUNE_METRO_STATIONS.filter((s) => s.line === 'purple').map(
       (s) => [s.lat, s.lng] as [number, number]
     );
     L.polyline(purpleCoords, {
-      color: '#6366f1',
-      weight: 2.5,
-      opacity: 0.4,
+      color: '#7c3aed',
+      weight: 3,
+      opacity: 0.35,
       dashArray: '4, 4',
     }).addTo(group);
 
-    // Aqua Line
     const aquaCoords = PUNE_METRO_STATIONS.filter((s) => s.line === 'aqua').map(
       (s) => [s.lat, s.lng] as [number, number]
     );
     L.polyline(aquaCoords, {
-      color: '#06b6d4',
-      weight: 2.5,
-      opacity: 0.4,
+      color: '#0891b2',
+      weight: 3,
+      opacity: 0.35,
       dashArray: '4, 4',
     }).addTo(group);
 
@@ -140,22 +123,22 @@ export const MapView: React.FC<MapViewProps> = ({
           <div style="
             background: #ffffff; 
             color: #059669; 
-            font-size: 10px; 
+            font-size: 11px; 
             font-weight: 700; 
-            padding: 2px 7px; 
+            padding: 3px 8px; 
             border-radius: 6px; 
             border: 1px solid #10b981; 
             box-shadow: 0 2px 6px rgba(0,0,0,0.15); 
             white-space: nowrap;
             margin-bottom: 3px;
           ">
-            📍 Start: ${origin.name.split(',')[0].slice(0, 18)}
+            📍 Start: ${origin.name.split(',')[0].slice(0, 20)}
           </div>
           <div style="
             background-color: #059669; 
             color: white; 
-            width: 22px; 
-            height: 22px; 
+            width: 24px; 
+            height: 24px; 
             border-radius: 50% 50% 50% 0; 
             transform: rotate(-45deg); 
             border: 2px solid white; 
@@ -164,12 +147,12 @@ export const MapView: React.FC<MapViewProps> = ({
             align-items: center;
             justify-content: center;
           ">
-            <span style="transform: rotate(45deg); font-weight: 800; font-size: 10px;">A</span>
+            <span style="transform: rotate(45deg); font-weight: 800; font-size: 11px;">A</span>
           </div>
         </div>
       `,
-      iconSize: [120, 48],
-      iconAnchor: [60, 48],
+      iconSize: [130, 52],
+      iconAnchor: [65, 52],
     });
 
     const markerA = L.marker([origin.lat, origin.lng], { icon: iconStart }).addTo(group);
@@ -184,22 +167,22 @@ export const MapView: React.FC<MapViewProps> = ({
           <div style="
             background: #ffffff; 
             color: #e11d48; 
-            font-size: 10px; 
+            font-size: 11px; 
             font-weight: 700; 
-            padding: 2px 7px; 
+            padding: 3px 8px; 
             border-radius: 6px; 
             border: 1px solid #f43f5e; 
             box-shadow: 0 2px 6px rgba(0,0,0,0.15); 
             white-space: nowrap;
             margin-bottom: 3px;
           ">
-            🏁 Destination: ${destination.name.split(',')[0].slice(0, 18)}
+            🏁 Destination: ${destination.name.split(',')[0].slice(0, 20)}
           </div>
           <div style="
             background-color: #e11d48; 
             color: white; 
-            width: 22px; 
-            height: 22px; 
+            width: 24px; 
+            height: 24px; 
             border-radius: 50% 50% 50% 0; 
             transform: rotate(-45deg); 
             border: 2px solid white; 
@@ -208,12 +191,12 @@ export const MapView: React.FC<MapViewProps> = ({
             align-items: center;
             justify-content: center;
           ">
-            <span style="transform: rotate(45deg); font-weight: 800; font-size: 10px;">B</span>
+            <span style="transform: rotate(45deg); font-weight: 800; font-size: 11px;">B</span>
           </div>
         </div>
       `,
-      iconSize: [120, 48],
-      iconAnchor: [60, 48],
+      iconSize: [130, 52],
+      iconAnchor: [65, 52],
     });
 
     const markerB = L.marker([destination.lat, destination.lng], { icon: iconDest }).addTo(group);
@@ -223,7 +206,7 @@ export const MapView: React.FC<MapViewProps> = ({
     // 4. Highlight Selected Route & Add Station Written Marks
     const selectedRoute = routes.find((r) => r.id === selectedRouteId) || routes[0];
 
-    // If Metro route is selected, annotate the exact boarding, interchange, and deboard stations!
+    // If Metro route is selected, annotate boarding, interchange, and deboard stations
     if (selectedRoute && selectedRoute.mode === 'metro_multimodal' && selectedRoute.stationWaypoints) {
       selectedRoute.stationWaypoints.forEach((wp) => {
         allLatLngs.push([wp.lat, wp.lng]);
@@ -244,7 +227,7 @@ export const MapView: React.FC<MapViewProps> = ({
                 color: ${badgeColor}; 
                 font-size: 10px; 
                 font-weight: 700; 
-                padding: 2.5px 8px; 
+                padding: 3px 8px; 
                 border-radius: 8px; 
                 border: 1.5px solid ${badgeBorder}; 
                 box-shadow: 0 3px 8px rgba(0,0,0,0.18); 
@@ -252,7 +235,7 @@ export const MapView: React.FC<MapViewProps> = ({
                 margin-bottom: 2px;
                 display: flex;
                 align-items: center;
-                gap: 3px;
+                gap: 4px;
               ">
                 <span>${iconSymbol}</span>
                 <span>${wp.name}</span>
@@ -262,13 +245,13 @@ export const MapView: React.FC<MapViewProps> = ({
                 height: 10px; 
                 border-radius: 50%; 
                 background: ${badgeBorder}; 
-                border: 2px solid white;
+                border: 2px solid white; 
                 box-shadow: 0 1px 4px rgba(0,0,0,0.3);
               "></div>
             </div>
           `,
-          iconSize: [140, 36],
-          iconAnchor: [70, 36],
+          iconSize: [150, 40],
+          iconAnchor: [75, 40],
         });
 
         const stMarker = L.marker([wp.lat, wp.lng], { icon: stationIcon }).addTo(group);
@@ -276,23 +259,23 @@ export const MapView: React.FC<MapViewProps> = ({
       });
     }
 
-    // 5. Draw Polylines for Feasible Route Alternatives
+    // 5. Draw Feasible Routes
+    // Draw unselected routes first in background
     routes.forEach((route) => {
       if (!route.isFeasible || route.coordinates.length < 2) return;
+      if (route.id === selectedRouteId) return; // Selected route will be drawn on top
 
       const latLngs: [number, number][] = route.coordinates.map((c) => [c[1], c[0]]);
       latLngs.forEach((pt) => allLatLngs.push(pt));
 
-      const isSelected = route.id === selectedRouteId;
       const color = MODE_COLORS[route.mode] || '#71717a';
 
       const polyline = L.polyline(latLngs, {
         color: color,
-        weight: isSelected ? 5.5 : 2.5,
-        opacity: isSelected ? 1.0 : 0.45,
+        weight: 2.5,
+        opacity: 0.45,
         lineCap: 'round',
         lineJoin: 'round',
-        dashArray: route.mode === 'metro_multimodal' ? '6, 6' : undefined,
       }).addTo(group);
 
       polyline.on('click', () => {
@@ -307,6 +290,65 @@ export const MapView: React.FC<MapViewProps> = ({
       polylinesRef.current[route.id] = polyline;
     });
 
+    // Draw the SELECTED route prominently on top
+    if (selectedRoute && selectedRoute.isFeasible && selectedRoute.coordinates.length >= 2) {
+      if (selectedRoute.mode === 'metro_multimodal' && selectedRoute.legs.length > 0) {
+        // Multi-modal breakdown: explicitly draw feeder legs across streets and metro train leg
+        selectedRoute.legs.forEach((leg) => {
+          if (!leg.coordinates || leg.coordinates.length < 2) return;
+
+          const legLatLngs: [number, number][] = leg.coordinates.map((c) => [c[1], c[0]]);
+          legLatLngs.forEach((pt) => allLatLngs.push(pt));
+
+          const isFeeder = leg.isFeeder || leg.badge === 'Feeder Auto';
+          const isWalking = leg.mode === 'walking';
+          const isTrain = leg.mode === 'metro_multimodal';
+
+          const legColor = isTrain
+            ? leg.lineColor || '#4f46e5'
+            : isWalking
+            ? '#0d9488'
+            : '#d97706';
+
+          const legPolyline = L.polyline(legLatLngs, {
+            color: legColor,
+            weight: isTrain ? 6 : 5,
+            opacity: 1.0,
+            dashArray: isTrain ? undefined : '6, 6',
+            lineCap: 'round',
+            lineJoin: 'round',
+          }).addTo(group);
+
+          legPolyline.bindTooltip(
+            `<strong>${leg.title}</strong><br/>${leg.instruction}<br/>${leg.durationMinutes} min • ${leg.distanceKm} km`,
+            { sticky: true }
+          );
+        });
+      } else {
+        // Road direct routes (Auto, Cab, Walking)
+        const latLngs: [number, number][] = selectedRoute.coordinates.map((c) => [c[1], c[0]]);
+        latLngs.forEach((pt) => allLatLngs.push(pt));
+
+        const color = MODE_COLORS[selectedRoute.mode] || '#71717a';
+
+        const polyline = L.polyline(latLngs, {
+          color: color,
+          weight: 6,
+          opacity: 1.0,
+          lineCap: 'round',
+          lineJoin: 'round',
+          dashArray: selectedRoute.mode === 'walking' ? '4, 4' : undefined,
+        }).addTo(group);
+
+        polyline.bindTooltip(
+          `<strong>${selectedRoute.title}</strong><br/>${selectedRoute.durationMinutes} min • ₹${selectedRoute.cost.totalFare}`,
+          { sticky: true }
+        );
+
+        polylinesRef.current[selectedRoute.id] = polyline;
+      }
+    }
+
     // 6. Fit bounds to comfortably display all endpoints and path
     if (allLatLngs.length > 0) {
       const bounds = L.latLngBounds(allLatLngs);
@@ -315,7 +357,7 @@ export const MapView: React.FC<MapViewProps> = ({
   };
 
   return (
-    <div className="relative w-full h-[380px] sm:h-full min-h-[380px] bg-zinc-100 rounded-2xl border border-zinc-200 overflow-hidden shadow-xs flex flex-col justify-between">
+    <div className="relative w-full h-full min-h-[460px] bg-zinc-100 rounded-2xl border border-zinc-200 overflow-hidden shadow-xs flex flex-col justify-between">
       
       {/* Map Canvas */}
       <div ref={mapContainerRef} className="absolute inset-0 z-0" />
@@ -324,11 +366,11 @@ export const MapView: React.FC<MapViewProps> = ({
       <div className="relative z-10 p-3 pointer-events-none flex items-center justify-between">
         <div className="bg-white/95 backdrop-blur-md px-2.5 py-1 rounded-lg border border-zinc-200/90 shadow-2xs text-[11px] font-semibold text-zinc-800 flex items-center gap-1.5 pointer-events-auto">
           <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-          <span>Pune Live Map (Mapbox Integrated)</span>
+          <span>Pune Live Street Map (Retina HD)</span>
         </div>
       </div>
 
-      {/* Bottom Mode Legend */}
+      {/* Bottom Mode Legend (Bike taxi removed per user instruction) */}
       <div className="relative z-10 m-3 bg-white/95 backdrop-blur-md px-3 py-2 rounded-xl border border-zinc-200/90 shadow-2xs text-xs text-zinc-700 pointer-events-auto flex items-center justify-between flex-wrap gap-2">
         <div className="flex items-center gap-3">
           <div className="flex items-center gap-1.5">
@@ -337,15 +379,15 @@ export const MapView: React.FC<MapViewProps> = ({
           </div>
           <div className="flex items-center gap-1.5">
             <span className="w-2.5 h-1 rounded bg-[#d97706]" />
-            <span className="text-[11px]">Auto</span>
-          </div>
-          <div className="flex items-center gap-1.5">
-            <span className="w-2.5 h-1 rounded bg-[#059669]" />
-            <span className="text-[11px]">Bike</span>
+            <span className="text-[11px]">Auto (Feeder / City)</span>
           </div>
           <div className="flex items-center gap-1.5">
             <span className="w-2.5 h-1 rounded bg-[#18181b]" />
             <span className="text-[11px]">Cab</span>
+          </div>
+          <div className="flex items-center gap-1.5">
+            <span className="w-2.5 h-1 rounded bg-[#0d9488]" />
+            <span className="text-[11px]">Walk (&lt; 1km)</span>
           </div>
         </div>
 

@@ -15,7 +15,139 @@ import {
   ChevronRight
 } from 'lucide-react';
 import { RouteOption } from '../types';
-import { getUberBookingUrl, getRapidoBookingUrl } from '../utils/feederLinks';
+import { 
+  getUberBookingUrl, 
+  getRapidoBookingUrl, 
+  calculateAutoProviderPricing, 
+  RideLocation 
+} from '../utils/feederLinks';
+
+interface AutoRideProviderComparisonProps {
+  distanceKm: number;
+  baseMeterFare: number;
+  pickup: RideLocation;
+  dropoff: RideLocation;
+  title: string;
+}
+
+const AutoRideProviderComparison: React.FC<AutoRideProviderComparisonProps> = ({
+  distanceKm,
+  baseMeterFare,
+  pickup,
+  dropoff,
+  title,
+}) => {
+  const pricing = calculateAutoProviderPricing(distanceKm, baseMeterFare, pickup, dropoff);
+
+  return (
+    <div className="mt-2.5 p-3 bg-amber-50/70 border border-amber-200/90 rounded-xl space-y-2.5">
+      <div className="flex items-center justify-between">
+        <span className="text-xs font-bold text-amber-950 flex items-center gap-1.5">
+          <span>🛺</span>
+          <span>{title}</span>
+        </span>
+        <span className="text-[10px] text-amber-800 font-mono font-bold bg-amber-100/80 px-2 py-0.5 rounded-md border border-amber-200">
+          {distanceKm} km
+        </span>
+      </div>
+
+      {/* Grid of separate pricing cards for Uber, Rapido, and Manual Offline Auto */}
+      <div
+        className={`grid grid-cols-1 ${
+          pricing.isOfflineAvailable ? 'sm:grid-cols-3' : 'sm:grid-cols-2'
+        } gap-2`}
+      >
+        {/* 1. Uber Auto */}
+        <div className="p-2.5 bg-white rounded-lg border border-zinc-200/90 flex flex-col justify-between shadow-2xs space-y-2">
+          <div className="flex items-start justify-between gap-1">
+            <div>
+              <span className="px-1.5 py-0.5 rounded bg-zinc-950 text-white text-[10px] font-bold">
+                Uber Auto
+              </span>
+              <p className="text-[10px] text-zinc-400 mt-1">Live On-Demand</p>
+            </div>
+            <span className="font-mono text-sm font-extrabold text-zinc-950">
+              ₹{pricing.uberFare}
+            </span>
+          </div>
+
+          <a
+            href={pricing.uberBookingUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={(e) => e.stopPropagation()}
+            className="w-full py-1.5 px-2 rounded-md bg-zinc-950 hover:bg-zinc-800 text-white text-[10px] font-bold flex items-center justify-center gap-1 transition-colors shadow-2xs"
+          >
+            <span>Book Uber</span>
+            <ExternalLink className="w-2.5 h-2.5 text-zinc-400" />
+          </a>
+        </div>
+
+        {/* 2. Rapido Auto */}
+        <div className="p-2.5 bg-white rounded-lg border border-zinc-200/90 flex flex-col justify-between shadow-2xs space-y-2">
+          <div className="flex items-start justify-between gap-1">
+            <div>
+              <span className="px-1.5 py-0.5 rounded bg-[#F9C900] text-zinc-950 text-[10px] font-bold">
+                Rapido Auto
+              </span>
+              <p className="text-[10px] text-zinc-400 mt-1">Quick Pickup</p>
+            </div>
+            <span className="font-mono text-sm font-extrabold text-zinc-950">
+              ₹{pricing.rapidoFare}
+            </span>
+          </div>
+
+          <a
+            href={pricing.rapidoBookingUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={(e) => e.stopPropagation()}
+            className="w-full py-1.5 px-2 rounded-md bg-[#F9C900] hover:bg-[#E5B800] text-zinc-950 text-[10px] font-bold flex items-center justify-center gap-1 transition-colors shadow-2xs"
+          >
+            <span>Book Rapido</span>
+            <ExternalLink className="w-2.5 h-2.5 text-zinc-800" />
+          </a>
+        </div>
+
+        {/* 3. Manually Offline Booking (Only for distance <= 10 km, rate divided by 3.5, with 'Price may vary') */}
+        {pricing.isOfflineAvailable && pricing.offlineFare !== undefined && (
+          <div className="p-2.5 bg-amber-50/40 rounded-lg border border-amber-300/80 flex flex-col justify-between shadow-2xs space-y-2">
+            <div className="flex items-start justify-between gap-1">
+              <div>
+                <span className="px-1.5 py-0.5 rounded bg-amber-100 text-amber-900 border border-amber-200 text-[10px] font-bold">
+                  Offline Auto
+                </span>
+                <p className="text-[10px] text-zinc-500 mt-1">Shared / Stand</p>
+              </div>
+              <div className="text-right">
+                <span className="font-mono text-sm font-extrabold text-amber-900">
+                  ₹{pricing.offlineFare}
+                </span>
+                <span className="text-[9px] text-amber-700 font-bold block mt-0.5">
+                  {pricing.offlineDisclaimer}
+                </span>
+              </div>
+            </div>
+
+            <div className="py-1 px-1.5 rounded-md bg-white border border-amber-200/70 text-[9px] text-amber-900 text-center font-medium">
+              Hail at street / auto stand
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* For distance > 10 km, explain that offline shared auto does not run */}
+      {!pricing.isOfflineAvailable && (
+        <div className="text-[10px] text-zinc-500 bg-white/90 px-2.5 py-1.5 rounded-lg border border-zinc-200 flex items-center gap-1.5">
+          <span>ℹ️</span>
+          <span>
+            Distances &gt; 10 km: Showing only Uber & Rapido on-demand auto prices. Offline shared auto is not available for routes above 10 km.
+          </span>
+        </div>
+      )}
+    </div>
+  );
+};
 
 interface RouteCardProps {
   route: RouteOption;
@@ -350,46 +482,23 @@ export const RouteCard: React.FC<RouteCardProps> = ({
                       </div>
                     )}
 
-                    {/* Feeder Booking Links (Uber & Rapido) */}
+                    {/* Feeder Booking Options: Separate Uber, Rapido, and Manual Offline Auto */}
                     {(leg.isFeeder || leg.badge === 'Feeder Auto' || leg.title.toLowerCase().includes('feeder')) && (
-                      <div className="mt-2.5 p-2.5 bg-amber-50/80 border border-amber-200/90 rounded-xl space-y-2">
-                        <div className="flex items-center justify-between">
-                          <span className="text-[11px] font-bold text-amber-950 flex items-center gap-1.5">
-                            <span>🛺</span>
-                            <span>Book Feeder Auto to connect with Metro:</span>
-                          </span>
-                          <span className="text-[10px] text-amber-800 font-mono font-bold">
-                            ₹{leg.cost}
-                          </span>
-                        </div>
-
-                        <div className="flex items-center gap-2">
-                          <a
-                            href={getUberBookingUrl(
-                              { lat: leg.fromCoords?.[0] || 18.52, lng: leg.fromCoords?.[1] || 73.85, name: leg.fromName },
-                              { lat: leg.toCoords?.[0] || 18.53, lng: leg.toCoords?.[1] || 73.86, name: leg.toName }
-                            )}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            onClick={(e) => e.stopPropagation()}
-                            className="flex-1 py-1.5 px-2.5 rounded-lg bg-zinc-950 hover:bg-zinc-800 text-white text-[11px] font-semibold flex items-center justify-center gap-1.5 transition-colors shadow-xs"
-                          >
-                            <span className="font-bold">Uber</span> Auto
-                            <ExternalLink className="w-3 h-3 text-zinc-400" />
-                          </a>
-
-                          <a
-                            href={getRapidoBookingUrl()}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            onClick={(e) => e.stopPropagation()}
-                            className="flex-1 py-1.5 px-2.5 rounded-lg bg-[#F9C900] hover:bg-[#E5B800] text-zinc-950 text-[11px] font-bold flex items-center justify-center gap-1.5 transition-colors shadow-xs"
-                          >
-                            <span>Rapido</span> Auto
-                            <ExternalLink className="w-3 h-3 text-zinc-800" />
-                          </a>
-                        </div>
-                      </div>
+                      <AutoRideProviderComparison
+                        distanceKm={leg.distanceKm}
+                        baseMeterFare={Math.round(25 + Math.max(0, leg.distanceKm - 1.5) * 17)}
+                        pickup={{
+                          lat: leg.fromCoords?.[0] || 18.52,
+                          lng: leg.fromCoords?.[1] || 73.85,
+                          name: leg.fromName,
+                        }}
+                        dropoff={{
+                          lat: leg.toCoords?.[0] || 18.53,
+                          lng: leg.toCoords?.[1] || 73.86,
+                          name: leg.toName,
+                        }}
+                        title="Feeder Auto to Metro Connection"
+                      />
                     )}
 
                   </div>
@@ -400,45 +509,23 @@ export const RouteCard: React.FC<RouteCardProps> = ({
 
           </div>
 
-          {/* Direct Auto Rickshaw Booking if mode is auto */}
+          {/* Direct Auto Rickshaw: Separate Uber, Rapido, and Manual Offline Booking */}
           {route.mode === 'auto' && (
-            <div className="p-3 bg-amber-50/70 border border-amber-200/80 rounded-xl space-y-2">
-              <div className="flex items-center justify-between text-xs">
-                <span className="font-bold text-amber-950 flex items-center gap-1.5">
-                  <span>🛺</span>
-                  <span>Book City Auto Ride:</span>
-                </span>
-                <span className="text-[11px] text-amber-800 font-mono font-bold">
-                  Meter Fare ₹{route.cost.totalFare}
-                </span>
-              </div>
-              <div className="flex items-center gap-2">
-                <a
-                  href={getUberBookingUrl(
-                    { lat: route.coordinates[0]?.[1] || 18.52, lng: route.coordinates[0]?.[0] || 73.85, name: 'Pickup' },
-                    { lat: route.coordinates[route.coordinates.length - 1]?.[1] || 18.53, lng: route.coordinates[route.coordinates.length - 1]?.[0] || 73.86, name: 'Dropoff' }
-                  )}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  onClick={(e) => e.stopPropagation()}
-                  className="flex-1 py-1.5 px-2.5 rounded-lg bg-zinc-950 hover:bg-zinc-800 text-white text-[11px] font-semibold flex items-center justify-center gap-1.5 transition-colors shadow-xs"
-                >
-                  <span className="font-bold">Uber</span> Auto
-                  <ExternalLink className="w-3 h-3 text-zinc-400" />
-                </a>
-
-                <a
-                  href={getRapidoBookingUrl()}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  onClick={(e) => e.stopPropagation()}
-                  className="flex-1 py-1.5 px-2.5 rounded-lg bg-[#F9C900] hover:bg-[#E5B800] text-zinc-950 text-[11px] font-bold flex items-center justify-center gap-1.5 transition-colors shadow-xs"
-                >
-                  <span>Rapido</span> Auto
-                  <ExternalLink className="w-3 h-3 text-zinc-800" />
-                </a>
-              </div>
-            </div>
+            <AutoRideProviderComparison
+              distanceKm={route.distanceKm}
+              baseMeterFare={route.cost.totalFare}
+              pickup={{
+                lat: route.coordinates[0]?.[1] || 18.52,
+                lng: route.coordinates[0]?.[0] || 73.85,
+                name: route.legs[0]?.fromName || 'Pickup Location',
+              }}
+              dropoff={{
+                lat: route.coordinates[route.coordinates.length - 1]?.[1] || 18.53,
+                lng: route.coordinates[route.coordinates.length - 1]?.[0] || 73.86,
+                name: route.legs[0]?.toName || 'Destination',
+              }}
+              title="Compare City Auto Fares & Providers"
+            />
           )}
 
           {/* Quick Tariff Summary */}

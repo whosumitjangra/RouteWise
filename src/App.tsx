@@ -8,7 +8,7 @@ import { FareModal } from './components/FareModal';
 import { LocationPoint, PreferenceMode, RouteOption } from './types';
 import { PUNE_PRESET_TRIPS } from './config/puneLandmarks';
 import { getRoadRoute } from './services/mapbox';
-import { buildPuneMetroOption } from './services/metroEngine';
+import { buildPuneMetroOptionAsync } from './services/metroEngine';
 import { calculateRoadFare } from './services/fareEngine';
 import { evaluateAndRankRoutes } from './services/recommender';
 import { FARE_CONFIG } from './config/fares';
@@ -45,17 +45,16 @@ export default function App() {
 
       setIsLoading(true);
       try {
-        // 1. Parallel execution: Fetch road routing for Driving, Cycling, Walking
-        const [roadDriving, roadBike, roadWalking] = await Promise.all([
+        // 1. Parallel execution: Fetch road routing for Driving, Walking, and Metro with feeder streets
+        const [roadDriving, roadWalking, metroOption] = await Promise.all([
           getRoadRoute(activeOrigin, activeDest, 'driving-traffic'),
-          getRoadRoute(activeOrigin, activeDest, 'cycling'),
           getRoadRoute(activeOrigin, activeDest, 'walking'),
+          buildPuneMetroOptionAsync(activeOrigin, activeDest),
         ]);
 
         const evaluatedRoutes: RouteOption[] = [];
 
-        // A. PUNE METRO + WALKING / FEEDER
-        const metroOption = buildPuneMetroOption(activeOrigin, activeDest);
+        // A. PUNE METRO + WALKING / FEEDER (Street-snapped geometry)
         evaluatedRoutes.push(metroOption);
 
         // B. AUTO RICKSHAW (Pune RTO Regulated Meter Tariff)
@@ -190,8 +189,8 @@ export default function App() {
       {/* Minimal Header */}
       <Header />
 
-      {/* Main Content Area */}
-      <main className="flex-1 max-w-5xl w-full mx-auto px-4 sm:px-6 py-6 sm:py-8 space-y-6">
+      {/* Main Content Area: Responsive half-and-half desktop layout */}
+      <main className="flex-1 max-w-[1400px] w-full mx-auto px-4 sm:px-6 py-6 sm:py-8 space-y-6">
         
         {/* Search & Query Input */}
         <SearchCard
@@ -311,9 +310,9 @@ export default function App() {
 
           </div>
 
-          {/* Map Column: rotates and shifts to left when a card is selected */}
+          {/* Map Column: rotates and shifts to left when a card is selected; commands half the viewport */}
           <div
-            className={`lg:col-span-6 lg:sticky lg:top-20 h-[400px] sm:h-[480px] lg:h-[520px] transition-all duration-700 ease-in-out ${
+            className={`lg:col-span-6 lg:sticky lg:top-20 h-[480px] sm:h-[580px] lg:h-[calc(100vh-130px)] lg:min-h-[660px] lg:max-h-[880px] transition-all duration-700 ease-in-out ${
               isLayoutShifted
                 ? 'lg:-translate-x-[calc(100%+1.5rem)] lg:[transform:rotateY(-3deg)_scale(1.01)] shadow-md rounded-2xl ring-1 ring-zinc-300'
                 : 'lg:translate-x-0 lg:[transform:rotateY(0deg)]'
@@ -344,7 +343,7 @@ export default function App() {
 
       {/* Minimal Footer */}
       <footer className="border-t border-zinc-200/80 bg-white py-5 text-center text-xs text-zinc-400">
-        <div className="max-w-5xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-2">
+        <div className="max-w-[1400px] mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-2">
           <div className="flex items-center gap-1.5 font-medium text-zinc-600">
             <span>RouteWise</span>
             <span>•</span>
