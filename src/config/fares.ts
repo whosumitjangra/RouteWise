@@ -26,6 +26,25 @@ export const FARE_CONFIG = {
     bookingFee: 15.0,
   },
 
+  // 3. PMPML Pune City & Intercity Bus (Official PMPML Stage Tariff)
+  bus: {
+    label: 'PMPML Pune Bus',
+    operator: 'PMPML (Pune Mahanagar Parivahan Mahamandal Ltd)',
+    slabs: [
+      { maxKm: 2, fare: 5 },
+      { maxKm: 4, fare: 10 },
+      { maxKm: 8, fare: 15 },
+      { maxKm: 12, fare: 20 },
+      { maxKm: 16, fare: 25 },
+      { maxKm: 20, fare: 30 },
+      { maxKm: 999, fare: 35 },
+    ],
+    dailyPassFare: 50,
+    dailyPassIntercityFare: 70,
+    averageOperatingSpeedKmh: 20,
+    stopDwellTimeMinutes: 0.8,
+  },
+
   // 4. Pune Metro (Maha Metro Official Fare Slabs)
   metro: {
     label: 'Pune Metro (Maha Metro Fare)',

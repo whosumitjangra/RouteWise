@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { 
   Train, 
+  Bus,
   Car, 
   Footprints, 
   ChevronDown, 
@@ -171,6 +172,8 @@ export const RouteCard: React.FC<RouteCardProps> = ({
     switch (route.mode) {
       case 'metro_multimodal':
         return <Train className="w-4 h-4 text-indigo-600" />;
+      case 'bus':
+        return <Bus className="w-4 h-4 text-rose-600" />;
       case 'auto':
         return (
           <span className="font-bold text-xs text-amber-700 font-mono tracking-tighter">
@@ -225,7 +228,9 @@ export const RouteCard: React.FC<RouteCardProps> = ({
         <div className="flex items-start justify-between gap-3">
           
           <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-lg bg-zinc-100 flex items-center justify-center shrink-0">
+            <div className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 ${
+              route.mode === 'bus' ? 'bg-rose-50 border border-rose-200/70' : 'bg-zinc-100'
+            }`}>
               {renderIcon()}
             </div>
             <div>
@@ -233,6 +238,11 @@ export const RouteCard: React.FC<RouteCardProps> = ({
                 <h3 className="font-bold text-xs sm:text-sm text-zinc-900">
                   {route.title}
                 </h3>
+                {route.busNumber && (
+                  <span className="px-1.5 py-0.2 rounded text-[10px] font-bold bg-rose-100 text-rose-800 border border-rose-200">
+                    🚌 {route.busNumber}
+                  </span>
+                )}
                 {route.isRecommended && (
                   <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-200">
                     ★ Best Choice
@@ -253,6 +263,8 @@ export const RouteCard: React.FC<RouteCardProps> = ({
             <div className="text-[10px] text-zinc-400">
               {route.mode === 'metro_multimodal' || route.mode === 'auto'
                 ? 'Standard tariff'
+                : route.mode === 'bus'
+                ? 'PMPML Stage tariff'
                 : 'Live market fare'}
             </div>
           </div>
@@ -314,16 +326,34 @@ export const RouteCard: React.FC<RouteCardProps> = ({
       {isCardOpen && (
         <div className="p-3.5 sm:p-5 bg-zinc-50/95 border-t border-zinc-200/90 rounded-b-xl space-y-4 text-xs animate-in fade-in">
           
-          {/* Train Chain Header */}
+          {/* Transit Chain Header */}
           <div className="flex items-center justify-between pb-2.5 border-b border-zinc-200/70">
             <div className="flex items-center gap-2">
-              <div className="w-6 h-6 rounded-lg bg-indigo-600 text-white flex items-center justify-center shadow-2xs">
-                <Train className="w-3.5 h-3.5" />
+              <div
+                className={`w-6 h-6 rounded-lg text-white flex items-center justify-center shadow-2xs ${
+                  route.mode === 'bus' ? 'bg-rose-600' : 'bg-indigo-600'
+                }`}
+              >
+                {route.mode === 'bus' ? (
+                  <Bus className="w-3.5 h-3.5" />
+                ) : (
+                  <Train className="w-3.5 h-3.5" />
+                )}
               </div>
               <div>
                 <span className="font-bold text-xs text-zinc-950 flex items-center gap-1.5">
-                  <span>Transit Train-Track Chain</span>
-                  <span className="text-[10px] font-mono px-1.5 py-0.2 rounded bg-indigo-50 text-indigo-700 border border-indigo-200 font-semibold">
+                  <span>
+                    {route.mode === 'bus'
+                      ? `PMPML Bus ${route.busNumber || ''} Stops Chain`
+                      : 'Transit Train-Track Chain'}
+                  </span>
+                  <span
+                    className={`text-[10px] font-mono px-1.5 py-0.2 rounded font-semibold border ${
+                      route.mode === 'bus'
+                        ? 'bg-rose-50 text-rose-700 border-rose-200'
+                        : 'bg-indigo-50 text-indigo-700 border-indigo-200'
+                    }`}
+                  >
                     Step-by-Step Path
                   </span>
                 </span>
@@ -334,27 +364,36 @@ export const RouteCard: React.FC<RouteCardProps> = ({
             </span>
           </div>
 
-          {/* Connected Train-Carriage Rail Track */}
+          {/* Connected Train-Carriage / Bus Track */}
           <div className="relative pl-6 sm:pl-7 space-y-4">
             
-            {/* Visual Rail Track Connecting Line */}
-            <div className="absolute left-[11px] sm:left-[13px] top-3 bottom-4 w-1 bg-gradient-to-b from-emerald-500 via-indigo-600 to-zinc-900 rounded-full" />
+            {/* Visual Rail / Bus Road Connecting Line */}
+            <div
+              className={`absolute left-[11px] sm:left-[13px] top-3 bottom-4 w-1 rounded-full ${
+                route.mode === 'bus'
+                  ? 'bg-gradient-to-b from-rose-500 via-rose-600 to-zinc-900'
+                  : 'bg-gradient-to-b from-emerald-500 via-indigo-600 to-zinc-900'
+              }`}
+            />
 
             {route.legs.map((leg, idx) => {
               const isInterchange = leg.title.includes('District Court') || leg.title.includes('Transfer');
               const isMetro = leg.mode === 'metro_multimodal';
+              const isBus = leg.mode === 'bus';
               const isFeeder = leg.isFeeder || leg.badge === 'Feeder Auto';
 
               return (
                 <div key={leg.id || idx} className="relative group">
                   
-                  {/* Station Node Pip on Rail Track */}
+                  {/* Station / Stop Node Pip */}
                   <div
                     className={`absolute -left-[23px] sm:-left-[25px] top-3 w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-mono font-bold shadow-2xs z-10 ${
                       isInterchange
                         ? 'bg-amber-500 text-white ring-2 ring-amber-300'
                         : isMetro
                         ? 'bg-indigo-600 text-white ring-2 ring-indigo-300'
+                        : isBus
+                        ? 'bg-rose-600 text-white ring-2 ring-rose-300'
                         : isFeeder
                         ? 'bg-amber-100 text-amber-900 ring-2 ring-amber-200'
                         : 'bg-zinc-800 text-white'
@@ -364,6 +403,8 @@ export const RouteCard: React.FC<RouteCardProps> = ({
                       <Shuffle className="w-3 h-3" />
                     ) : isMetro ? (
                       <Train className="w-2.5 h-2.5" />
+                    ) : isBus ? (
+                      <Bus className="w-2.5 h-2.5" />
                     ) : (
                       idx + 1
                     )}
@@ -426,16 +467,23 @@ export const RouteCard: React.FC<RouteCardProps> = ({
                       )}
                     </div>
 
-                    {/* TRAIN STOPS CHAIN: Visual Linked Railway Train Carriages */}
+                    {/* STOPS CHAIN: Visual Linked Railway Train / Bus Stops Carriages */}
                     {leg.stationList && leg.stationList.length > 0 && (
                       <div className="mt-2.5 p-2.5 sm:p-3 bg-zinc-900 text-white rounded-xl shadow-xs space-y-2">
                         <div className="flex items-center justify-between text-[11px]">
                           <span className="font-bold text-zinc-200 flex items-center gap-1.5">
-                            <span>🚆</span>
-                            <span>Train Stops Chain ({leg.stationList.length} Stations):</span>
+                            <span>{leg.mode === 'bus' ? '🚌' : '🚆'}</span>
+                            <span>
+                              {leg.mode === 'bus'
+                                ? `Bus ${leg.busNumber || ''} Stops Chain`
+                                : 'Train Stops Chain'}{' '}
+                              ({leg.stationList.length} Stops):
+                            </span>
                           </span>
                           <span className="text-zinc-400 font-mono text-[10px]">
-                            ~{Math.round(leg.stationList.length * 2.1)} min on train
+                            {leg.busFrequency
+                              ? leg.busFrequency
+                              : `~${Math.round(leg.stationList.length * 2.1)} min on train`}
                           </span>
                         </div>
 
@@ -526,6 +574,41 @@ export const RouteCard: React.FC<RouteCardProps> = ({
               }}
               title="Compare City Auto Fares & Providers"
             />
+          )}
+
+          {/* PMPML City Bus Info Box */}
+          {route.mode === 'bus' && (
+            <div className="p-3 bg-rose-50/70 border border-rose-200/90 rounded-xl space-y-2 text-xs">
+              <div className="flex items-center justify-between">
+                <span className="font-bold text-rose-950 flex items-center gap-1.5">
+                  <Bus className="w-4 h-4 text-rose-600" />
+                  <span>PMPML City & Intercity Bus {route.busNumber ? `(Bus ${route.busNumber})` : ''}</span>
+                </span>
+                <span className="text-[10px] font-bold font-mono px-2 py-0.5 rounded-md bg-rose-100 text-rose-800 border border-rose-200">
+                  ₹{route.cost.totalFare} Stage Fare
+                </span>
+              </div>
+
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 text-[11px] pt-1">
+                <div className="bg-white p-2 rounded-lg border border-rose-100">
+                  <span className="text-[10px] text-zinc-400 block">Frequency</span>
+                  <span className="font-semibold text-zinc-800">{route.busFrequency || 'Every 10-15 mins'}</span>
+                </div>
+                <div className="bg-white p-2 rounded-lg border border-rose-100">
+                  <span className="text-[10px] text-zinc-400 block">Daily Pass</span>
+                  <span className="font-semibold text-emerald-700">₹50 Pass Valid</span>
+                </div>
+                <div className="bg-white p-2 rounded-lg border border-rose-100 col-span-2 sm:col-span-1">
+                  <span className="text-[10px] text-zinc-400 block">Operator</span>
+                  <span className="font-semibold text-zinc-800">PMPML Pune</span>
+                </div>
+              </div>
+
+              <div className="text-[10px] text-rose-900 bg-white/90 p-2 rounded-lg border border-rose-200/60 flex items-center justify-between">
+                <span>🎫 Conductor ticketing inside bus or Aapli PMPML App</span>
+                <span className="font-bold text-emerald-700">Cheapest motorized transit</span>
+              </div>
+            </div>
           )}
 
           {/* Quick Tariff Summary */}

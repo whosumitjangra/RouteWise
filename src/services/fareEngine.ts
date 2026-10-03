@@ -38,6 +38,23 @@ export function calculateRoadFare(
     };
   }
 
+  if (mode === 'bus') {
+    let busFare = 35;
+    for (const slab of FARE_CONFIG.bus.slabs) {
+      if (distanceKm <= slab.maxKm) {
+        busFare = slab.fare;
+        break;
+      }
+    }
+
+    return {
+      baseFare: 5,
+      distanceFare: busFare - 5,
+      totalFare: busFare,
+      formulaDescription: `PMPML Stage Fare: ₹${busFare} (${distanceKm} km stage) • Daily Pass ₹50 valid`,
+    };
+  }
+
   if (mode === 'walking') {
     return {
       baseFare: 0,

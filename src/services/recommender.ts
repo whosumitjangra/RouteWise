@@ -45,8 +45,6 @@ export function evaluateAndRankRoutes(
     const normCost = (route.cost.totalFare - minCost) / (maxCost - minCost);
     const normDuration = (route.durationMinutes - minDuration) / (maxDuration - minDuration);
 
-    // Convenience / comfort factor
-    // Walking > 20 mins has higher fatigue penalty; Cab & Metro have higher comfort
     let comfortPenalty = 0.05;
     if (route.mode === 'walking') {
       comfortPenalty = route.durationMinutes > 20 ? 0.45 : 0.15;
@@ -54,6 +52,8 @@ export function evaluateAndRankRoutes(
       comfortPenalty = 0.04; // air-conditioned, zero road traffic
     } else if (route.mode === 'cab') {
       comfortPenalty = 0.02; // door-to-door AC
+    } else if (route.mode === 'bus') {
+      comfortPenalty = 0.06; // public city bus
     }
 
     route.score = +(normCost * 0.45 + normDuration * 0.45 + comfortPenalty * 0.10).toFixed(4);
@@ -130,6 +130,8 @@ export function evaluateAndRankRoutes(
         explanationText = `Recommended because it avoids road congestion, saves ₹${diff} over ${comp.title}, and takes only ${winner.durationMinutes} mins.`;
       } else if (winner.mode === 'auto') {
         explanationText = `Recommended for reliable direct door-to-door transit at official Pune RTO meter fare (₹${winner.cost.totalFare}).`;
+      } else if (winner.mode === 'bus') {
+        explanationText = `Recommended as the most economical city transit option via ${winner.title} (₹${winner.cost.totalFare}) across this corridor.`;
       } else {
         explanationText = `Recommended as the best balance of cost (₹${winner.cost.totalFare}) and travel time (${winner.durationMinutes} min).`;
       }

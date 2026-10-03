@@ -9,6 +9,7 @@ import { LocationPoint, PreferenceMode, RouteOption } from './types';
 import { PUNE_PRESET_TRIPS } from './config/puneLandmarks';
 import { getRoadRoute } from './services/mapbox';
 import { buildPuneMetroOptionAsync } from './services/metroEngine';
+import { buildPMPMLBusOption } from './services/busEngine';
 import { calculateRoadFare } from './services/fareEngine';
 import { evaluateAndRankRoutes } from './services/recommender';
 import { FARE_CONFIG } from './config/fares';
@@ -57,7 +58,11 @@ export default function App() {
         // A. PUNE METRO + WALKING / FEEDER (Street-snapped geometry)
         evaluatedRoutes.push(metroOption);
 
-        // B. AUTO RICKSHAW (Pune RTO Regulated Meter Tariff)
+        // B. PMPML PUNE CITY & INTERCITY BUS (Authentic Bus Number & Stops)
+        const busOption = buildPMPMLBusOption(activeOrigin, activeDest, roadDriving);
+        evaluatedRoutes.push(busOption);
+
+        // C. AUTO RICKSHAW (Pune RTO Regulated Meter Tariff)
         const autoFare = calculateRoadFare('auto', roadDriving.distanceKm, roadDriving.durationMinutes);
         evaluatedRoutes.push({
           id: 'opt-auto',

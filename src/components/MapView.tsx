@@ -16,6 +16,7 @@ interface MapViewProps {
 
 const MODE_COLORS: Record<string, string> = {
   metro_multimodal: '#4f46e5', // Indigo
+  bus: '#dc2626',              // PMPML Crimson Red
   auto: '#d97706',             // Amber
   cab: '#18181b',              // Zinc
   walking: '#0d9488',          // Teal
@@ -378,8 +379,12 @@ export const MapView: React.FC<MapViewProps> = ({
             <span className="text-[11px]">Metro</span>
           </div>
           <div className="flex items-center gap-1.5">
+            <span className="w-2.5 h-1 rounded bg-[#dc2626]" />
+            <span className="text-[11px]">PMPML Bus</span>
+          </div>
+          <div className="flex items-center gap-1.5">
             <span className="w-2.5 h-1 rounded bg-[#d97706]" />
-            <span className="text-[11px]">Auto (Feeder / City)</span>
+            <span className="text-[11px]">Auto</span>
           </div>
           <div className="flex items-center gap-1.5">
             <span className="w-2.5 h-1 rounded bg-[#18181b]" />

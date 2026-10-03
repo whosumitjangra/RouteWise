@@ -120,6 +120,8 @@ export const FareModal: React.FC<FareModalProps> = ({ route, onClose }) => {
               ? 'Calculated strictly per official Pune RTO meter rates (₹25 for first 1.5 km, ₹17/km thereafter).'
               : route.mode === 'metro_multimodal'
               ? 'Calculated strictly per official Maha Metro Pune station distance slabs (₹10 to ₹35 max).'
+              : route.mode === 'bus'
+              ? 'Calculated strictly per official PMPML Pune distance stage slabs (₹5 to ₹35 max). Daily pass (₹50) is also accepted on all city & BRTS routes.'
               : 'Clearly labelled estimated fare based on standard Pune market rates. Actual app surge may vary.'}
           </span>
         </div>

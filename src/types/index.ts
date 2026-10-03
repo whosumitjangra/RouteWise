@@ -2,6 +2,7 @@ export type PreferenceMode = 'cheapest' | 'fastest' | 'balanced';
 
 export type TransportMode = 
   | 'metro_multimodal' 
+  | 'bus'
   | 'auto' 
   | 'cab' 
   | 'walking';
@@ -33,9 +34,13 @@ export interface RouteLeg {
   instruction: string;
   badge?: string;
   stopsCount?: number;
-  stationList?: string[]; // Chain of stations on this train leg
+  stationList?: string[]; // Chain of stations/stops on this leg
   lineColor?: string;
   isFeeder?: boolean;
+  busNumber?: string;
+  busRouteName?: string;
+  busFrequency?: string;
+  busOperator?: string;
   fromCoords?: [number, number]; // [lat, lng]
   toCoords?: [number, number];   // [lat, lng]
   coordinates?: [number, number][]; // Street road geometry [[lng, lat], ...]
@@ -65,10 +70,24 @@ export interface RouteOption {
   coordinates: [number, number][]; // [lng, lat] for map
   legs: RouteLeg[];
   stationWaypoints?: StationWaypoint[];
+  busNumber?: string;
+  busFrequency?: string;
   score: number; // Normalized multi-objective score
   isRecommended: boolean;
   recommendationReason?: string;
   carbonKg: number;
+}
+
+export interface PMPMLBusRoute {
+  busNumber: string;
+  routeName: string;
+  originTerminal: string;
+  destinationTerminal: string;
+  viaStops: string[];
+  frequencyMinutes: number;
+  operatingHours: string;
+  isIntercity?: boolean;
+  approxDistanceKm?: number;
 }
 
 export interface MetroStation {

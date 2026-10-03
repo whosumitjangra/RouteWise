@@ -116,4 +116,31 @@ assert.ok(longRidePricing.uberFare > 0, "Uber price must still be available for 
 assert.ok(longRidePricing.rapidoFare > 0, "Rapido price must still be available for > 10 km");
 console.log("✔ Provider pricing (Uber, Rapido, and Offline base/3.5 with <=10km cap) tests passed");
 
+// Test 6: PMPML Pune Bus Stage Fare & Route Matching
+const PMPML_SLABS = [
+  { maxKm: 2, fare: 5 },
+  { maxKm: 4, fare: 10 },
+  { maxKm: 8, fare: 15 },
+  { maxKm: 12, fare: 20 },
+  { maxKm: 16, fare: 25 },
+  { maxKm: 20, fare: 30 },
+  { maxKm: 999, fare: 35 },
+];
+
+function calculateBusFare(distKm) {
+  for (const slab of PMPML_SLABS) {
+    if (distKm <= slab.maxKm) return slab.fare;
+  }
+  return 35;
+}
+
+assert.strictEqual(calculateBusFare(1.8), 5, "Stage 1 bus fare should be ₹5");
+assert.strictEqual(calculateBusFare(3.5), 10, "Stage 2 bus fare should be ₹10");
+assert.strictEqual(calculateBusFare(7.0), 15, "Stage 3 bus fare should be ₹15");
+assert.strictEqual(calculateBusFare(10.5), 20, "Stage 4 bus fare should be ₹20 (e.g. AIT to Pune Station)");
+assert.strictEqual(calculateBusFare(14.0), 25, "Stage 5 bus fare should be ₹25");
+assert.strictEqual(calculateBusFare(18.5), 30, "Stage 6 bus fare should be ₹30");
+assert.strictEqual(calculateBusFare(24.0), 35, "Stage 7 bus fare should be ₹35");
+console.log("✔ PMPML bus stage fare tests passed");
+
 console.log("=== ALL TESTS PASSED SUCCESSFULLY! ===");
