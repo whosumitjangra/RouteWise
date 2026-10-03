@@ -28,10 +28,11 @@ export default function App() {
   const [routes, setRoutes] = useState<RouteOption[]>([]);
   const [recommendedRoute, setRecommendedRoute] = useState<RouteOption | null>(null);
   const [explanation, setExplanation] = useState<string>('');
-  const [selectedRouteId, setSelectedRouteId] = useState<string | null>(null);
+  const [selectedRouteId, setSelectedRouteId] = useState<string | null>(null); // For map route highlight
+  const [expandedCardId, setExpandedCardId] = useState<string | null>(null);   // For card accordion open state
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  // Smooth layout shift state: map on left, details on right when route is selected
+  // Smooth layout shift state: map on left (order-1), details on right (order-2) when route is selected
   const [isLayoutShifted, setIsLayoutShifted] = useState<boolean>(false);
 
   // Modals
@@ -50,6 +51,14 @@ export default function App() {
     async (customOrigin?: LocationPoint, customDest?: LocationPoint) => {
       const activeOrigin = customOrigin || origin;
       const activeDest = customDest || destination;
+
+      // Synchronize origin & destination immediately so all components see the new search
+      if (customOrigin) setOrigin(customOrigin);
+      if (customDest) setDestination(customDest);
+
+      // Reset card expansion and layout shift on new search
+      setExpandedCardId(null);
+      setIsLayoutShifted(false);
 
       setIsLoading(true);
       try {
@@ -216,7 +225,11 @@ export default function App() {
           onBudgetChange={setBudget}
           onPreferenceChange={setPreference}
           onSubmit={(resolvedOrigin, resolvedDest) => {
-            calculateTransitOptions(resolvedOrigin, resolvedDest);
+            const finalOrigin = resolvedOrigin || origin;
+            const finalDest = resolvedDest || destination;
+            setOrigin(finalOrigin);
+            setDestination(finalDest);
+            calculateTransitOptions(finalOrigin, finalDest);
           }}
         />
 
@@ -270,15 +283,13 @@ export default function App() {
           </button>
         </div>
 
-        {/* 2-Column Split: Routes List vs Map with smooth, flat 2D slide animation (No 3D butterfly bend) */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start relative">
+        {/* 2-Column Split: Clean CSS flex/order layout shift without GPU matrix locks */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
           
-          {/* Routes Column: shifts smoothly to right when a card is selected */}
+          {/* Routes Column: Order 1 by default, Order 2 when map is shifted to left */}
           <div
-            className={`lg:col-span-6 space-y-3.5 transition-transform duration-500 ease-in-out ${
-              isLayoutShifted
-                ? 'lg:translate-x-[calc(100%+1.5rem)]'
-                : 'lg:translate-x-0'
+            className={`lg:col-span-6 space-y-3.5 transition-all duration-300 ${
+              isLayoutShifted ? 'lg:order-2' : 'lg:order-1'
             } ${mobileTab === 'map' ? 'hidden lg:block' : 'block'}`}
           >
             {/* Out of Town City Banner: Reaching Soon */}
@@ -357,6 +368,7 @@ export default function App() {
               explanationText={explanation}
               onSelectRoute={(id) => {
                 setSelectedRouteId(id);
+                setExpandedCardId(id);
                 setIsLayoutShifted(true);
                 setMobileTab('map');
               }}
@@ -379,12 +391,13 @@ export default function App() {
                   key={route.id}
                   route={route}
                   budget={budget}
-                  isSelected={selectedRouteId === route.id}
+                  isSelected={expandedCardId === route.id}
                   onSelect={() => {
-                    if (selectedRouteId === route.id) {
-                      setSelectedRouteId(null);
+                    if (expandedCardId === route.id) {
+                      setExpandedCardId(null);
                       setIsLayoutShifted(false);
                     } else {
+                      setExpandedCardId(route.id);
                       setSelectedRouteId(route.id);
                       setIsLayoutShifted(true);
                     }
@@ -396,12 +409,12 @@ export default function App() {
 
           </div>
 
-          {/* Map Column: shifts smoothly to left when a card is selected; commands half the viewport */}
+          {/* Map Column: Order 2 by default, Order 1 (on left) when card is expanded! */}
           <div
-            className={`lg:col-span-6 lg:sticky lg:top-20 h-[480px] sm:h-[580px] lg:h-[calc(100vh-130px)] lg:min-h-[660px] lg:max-h-[880px] transition-transform duration-500 ease-in-out ${
+            className={`lg:col-span-6 lg:sticky lg:top-20 h-[480px] sm:h-[580px] lg:h-[calc(100vh-130px)] lg:min-h-[660px] lg:max-h-[880px] transition-all duration-300 ${
               isLayoutShifted
-                ? 'lg:-translate-x-[calc(100%+1.5rem)] shadow-md rounded-2xl ring-1 ring-zinc-300'
-                : 'lg:translate-x-0'
+                ? 'lg:order-1 ring-1 ring-zinc-300 shadow-md rounded-2xl'
+                : 'lg:order-2'
             } ${mobileTab === 'routes' ? 'hidden lg:block' : 'block'}`}
           >
             <MapView
@@ -410,11 +423,12 @@ export default function App() {
               routes={routes}
               selectedRouteId={selectedRouteId}
               onSelectRoute={(id) => {
-                if (selectedRouteId === id) {
-                  setSelectedRouteId(null);
+                setSelectedRouteId(id);
+                if (expandedCardId === id) {
+                  setExpandedCardId(null);
                   setIsLayoutShifted(false);
                 } else {
-                  setSelectedRouteId(id);
+                  setExpandedCardId(id);
                   setIsLayoutShifted(true);
                 }
               }}

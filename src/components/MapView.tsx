@@ -47,9 +47,10 @@ export const MapView: React.FC<MapViewProps> = ({
 
   useEffect(() => {
     if (!mapInstanceRef.current) return;
+    mapInstanceRef.current.invalidateSize();
     const timer = setTimeout(() => {
       mapInstanceRef.current?.invalidateSize();
-    }, 720);
+    }, 150);
     return () => clearTimeout(timer);
   }, [isLayoutShifted, selectedRouteId]);
 

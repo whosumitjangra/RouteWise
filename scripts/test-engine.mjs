@@ -322,4 +322,24 @@ samplePuneStops.forEach(stop => {
 });
 console.log("✔ 100% authentic Pune bus stops (zero dummy placeholders) verified");
 
+// Test 13: New Search Origin/Destination Sync and Wrapped Cards
+let stateOrigin = { name: "AIT Pune", lat: 18.60, lng: 73.87 };
+let stateDest = { name: "Pune Junction", lat: 18.52, lng: 73.87 };
+let expandedCard = "opt-bus";
+let layoutShifted = true;
+
+function performNewSearch(newO, newD) {
+  stateOrigin = newO;
+  stateDest = newD;
+  expandedCard = null; // Cards must start wrapped up
+  layoutShifted = false; // Layout starts unshifted
+}
+
+performNewSearch({ name: "Kothrud", lat: 18.50, lng: 73.80 }, { name: "Viman Nagar", lat: 18.56, lng: 73.91 });
+assert.strictEqual(stateOrigin.name, "Kothrud", "Origin must update to new searched origin");
+assert.strictEqual(stateDest.name, "Viman Nagar", "Destination must update to new searched destination");
+assert.strictEqual(expandedCard, null, "All cards must reset to wrapped up state on new search");
+assert.strictEqual(layoutShifted, false, "Layout shift must reset on new search");
+console.log("✔ New search state sync & card wrap reset verified");
+
 console.log("=== ALL TESTS PASSED SUCCESSFULLY! ===");

@@ -164,17 +164,18 @@ export const SearchCard: React.FC<SearchCardProps> = ({
       let resolvedFrom = origin;
       if (fromQuery.trim() && fromQuery.trim().toLowerCase() !== origin.name.toLowerCase()) {
         resolvedFrom = await resolveLocationQuery(fromQuery, origin);
-        onOriginChange(resolvedFrom);
-        setFromQuery(resolvedFrom.name);
       }
 
       // Resolve "To" query if user typed something custom
       let resolvedTo = destination;
       if (toQuery.trim() && toQuery.trim().toLowerCase() !== destination.name.toLowerCase()) {
         resolvedTo = await resolveLocationQuery(toQuery, destination);
-        onDestinationChange(resolvedTo);
-        setToQuery(resolvedTo.name);
       }
+
+      onOriginChange(resolvedFrom);
+      onDestinationChange(resolvedTo);
+      setFromQuery(resolvedFrom.name);
+      setToQuery(resolvedTo.name);
 
       // Execute calculation with resolved coordinates
       onSubmit(resolvedFrom, resolvedTo);
