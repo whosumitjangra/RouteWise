@@ -26,7 +26,7 @@ function getMetroFare(stationsCount) {
   return 35;
 }
 
-console.log("=== RUNNING INDIARIDE UNIT & INTEGRATION TESTS ===");
+console.log("=== RUNNING ROUTEWISE UNIT & INTEGRATION TESTS ===");
 
 // Test 1: Auto Fare
 assert.strictEqual(calculateAutoFare(1.0), 25, "Short auto ride should be ₹25 base");
@@ -46,7 +46,20 @@ assert.strictEqual(getMetroFare(18), 30, "18 stations should be ₹30");
 assert.strictEqual(getMetroFare(22), 35, "22 stations should be ₹35");
 console.log("✔ Pune Metro fare slab test passed");
 
-// Test 3: Recommendation Explanation generator
+// Test 3: Walking Distance Threshold Rules (Realistic Urban Mobility)
+const MAX_WALKING_KM = 1.0;
+function isWalkingOptionIncluded(distanceKm) {
+  return distanceKm <= MAX_WALKING_KM;
+}
+
+assert.strictEqual(isWalkingOptionIncluded(0.8), true, "800m walk should be included");
+assert.strictEqual(isWalkingOptionIncluded(1.0), true, "1.0 km walk should be included");
+assert.strictEqual(isWalkingOptionIncluded(1.2), false, "1.2 km walk should be excluded");
+assert.strictEqual(isWalkingOptionIncluded(4.0), false, "4.0 km walk must NEVER be included as walking option");
+assert.strictEqual(isWalkingOptionIncluded(9.5), false, "9.5 km (AIT to Pune Jdn) walk must NEVER be included");
+console.log("✔ Walking threshold (<= 1.0 km) rule verified");
+
+// Test 4: Recommendation Explanation generator
 function generateExplanation(winner, runnerUp, preference, budget) {
   if (winner.totalFare > budget) {
     return `All viable options exceed your ₹${budget} budget. ${winner.title} is most economical.`;
@@ -63,7 +76,7 @@ function generateExplanation(winner, runnerUp, preference, budget) {
   return `Recommended as the best balance of cost (₹${winner.totalFare}) and time (${winner.duration} min).`;
 }
 
-const mockMetro = { title: 'Pune Metro + Walking', totalFare: 35, duration: 32 };
+const mockMetro = { title: 'Pune Metro + Feeder', totalFare: 35, duration: 32 };
 const mockAuto = { title: 'Auto Rickshaw', totalFare: 95, duration: 25 };
 
 const cheapestExpl = generateExplanation(mockMetro, mockAuto, 'cheapest', 150);

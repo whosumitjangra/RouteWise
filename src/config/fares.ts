@@ -53,11 +53,11 @@ export const FARE_CONFIG = {
     maxFeederWalkDistanceKm: 4.5,
   },
 
-  // 5. Walking / Active
+  // 5. Walking / Active (Only practical for short strolls under 1.0 km)
   walking: {
     label: 'Walking (Free)',
     cost: 0,
     averageSpeedKmh: 4.8,
-    maxReasonableDistanceKm: 3.5,
+    maxReasonableDistanceKm: 1.0,
   },
 };

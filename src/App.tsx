@@ -11,6 +11,7 @@ import { getRoadRoute } from './services/mapbox';
 import { buildPuneMetroOption } from './services/metroEngine';
 import { calculateRoadFare } from './services/fareEngine';
 import { evaluateAndRankRoutes } from './services/recommender';
+import { FARE_CONFIG } from './config/fares';
 import { ListFilter, Map as MapIcon } from 'lucide-react';
 
 export default function App() {
@@ -151,8 +152,8 @@ export default function App() {
           carbonKg: +(roadDriving.distanceKm * 0.16).toFixed(2),
         });
 
-        // E. WALKING (For trips under 4.0 km)
-        if (roadWalking.distanceKm <= 4.0) {
+        // E. WALKING (Strictly practical for short strolls <= 1.0 km)
+        if (roadWalking.distanceKm <= FARE_CONFIG.walking.maxReasonableDistanceKm) {
           evaluatedRoutes.push({
             id: 'opt-walk',
             mode: 'walking',

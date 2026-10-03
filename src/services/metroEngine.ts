@@ -225,15 +225,31 @@ export function buildPuneMetroOption(
     firstMileInstruction = `Take a shared auto or e-rickshaw (${originToStationKm} km) to ${startStation.name}`;
   }
 
-  // Last-Mile Leg
-  const lastMileMinutes = Math.max(3, Math.round((destToStationKm / 4.8) * 60));
-  const lastMileTitle = `Walk to Destination`;
-  const lastMileInstruction = `Exit ${endStation.name} and walk ${destToStationKm} km to ${destination.name.split(',')[0]}`;
+  // Last-Mile Leg (walking if <= 1.0 km, shared auto feeder if > 1.0 km)
+  let lastMileMode: 'walking' | 'auto' = 'walking';
+  let lastMileMinutes = 0;
+  let lastMileCost = 0;
+  let lastMileTitle = '';
+  let lastMileInstruction = '';
+
+  if (destToStationKm <= 1.0) {
+    lastMileMode = 'walking';
+    lastMileMinutes = Math.max(3, Math.round((destToStationKm / 4.8) * 60));
+    lastMileCost = 0;
+    lastMileTitle = `Walk to Destination`;
+    lastMileInstruction = `Exit ${endStation.name} and walk ${destToStationKm} km to ${destination.name.split(',')[0]}`;
+  } else {
+    lastMileMode = 'auto';
+    lastMileMinutes = Math.max(4, Math.round((destToStationKm / 24) * 60));
+    lastMileCost = 15; // Shared auto / feeder at destination
+    lastMileTitle = `Feeder / Auto to Destination`;
+    lastMileInstruction = `Exit ${endStation.name} and take a shared auto or e-rickshaw (${destToStationKm} km) to ${destination.name.split(',')[0]}`;
+  }
 
   // Boarding & entry buffer
   const stationEntryExitBuffer = 4;
   const totalDurationMinutes = firstMileMinutes + metroRideMinutes + lastMileMinutes + stationEntryExitBuffer;
-  const totalFare = metroTicketFare + firstMileCost;
+  const totalFare = metroTicketFare + firstMileCost + lastMileCost;
 
   const metroDistanceKm = +(stationsCount * 1.25).toFixed(1);
   const totalDistanceKm = +(originToStationKm + metroDistanceKm + destToStationKm).toFixed(1);
@@ -318,18 +334,18 @@ export function buildPuneMetroOption(
     });
   }
 
-  // Leg 3: Last-Mile Walk
+  // Leg 3: Last-Mile Leg
   legs.push({
-    id: 'leg-3-walk',
-    mode: 'walking',
+    id: 'leg-3-feeder',
+    mode: lastMileMode,
     title: lastMileTitle,
     durationMinutes: lastMileMinutes,
     distanceKm: destToStationKm,
-    cost: 0,
+    cost: lastMileCost,
     fromName: endStation.name,
     toName: destination.name.split(',')[0],
     instruction: lastMileInstruction,
-    badge: 'Walk',
+    badge: lastMileMode === 'walking' ? 'Walk' : 'Feeder Auto',
   });
 
   // Polyline coordinates
@@ -355,11 +371,11 @@ export function buildPuneMetroOption(
     cost: {
       baseFare: metroTicketFare,
       distanceFare: 0,
-      timeFare: firstMileCost,
+      timeFare: firstMileCost + lastMileCost,
       totalFare: totalFare,
-      formulaDescription: `Maha Metro Fare ₹${metroTicketFare} (${stationsCount} stations) ${
-        firstMileCost > 0 ? `+ ₹${firstMileCost} feeder auto` : '+ Walk'
-      }`,
+      formulaDescription: `Maha Metro Fare ₹${metroTicketFare} (${stationsCount} stations)${
+        firstMileCost > 0 ? ` + ₹${firstMileCost} first-mile` : ''
+      }${lastMileCost > 0 ? ` + ₹${lastMileCost} last-mile` : ''}`,
     },
     isOverBudget: false,
     budgetDelta: 0,
