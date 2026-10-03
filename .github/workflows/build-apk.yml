@@ -63,7 +63,14 @@ jobs:
 
       - name: Prepare APK Artifact
         run: |
-          cp android/app/build/outputs/apk/debug/app-debug.apk RouteWise.apk
+          APK_FILE=$(find android -name "*.apk" | head -n 1)
+          if [ -z "$APK_FILE" ]; then
+            echo "No APK file found in android directory!"
+            find android -type f
+            exit 1
+          fi
+          echo "Found APK at: $APK_FILE"
+          cp "$APK_FILE" RouteWise.apk
           ls -lh RouteWise.apk
 
       - name: Upload APK Artifact
