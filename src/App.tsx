@@ -15,6 +15,8 @@ import { calculateRoadFare } from './services/fareEngine';
 import { evaluateAndRankRoutes } from './services/recommender';
 import { FARE_CONFIG } from './config/fares';
 import { ListFilter, Map as MapIcon } from 'lucide-react';
+import { checkForAppUpdate, UpdateInfo } from './services/updateChecker';
+import { UpdateNotificationBanner } from './components/UpdateNotificationBanner';
 
 export default function App() {
   // Default to AIT Pune -> Pune Junction as requested
@@ -34,6 +36,9 @@ export default function App() {
 
   // Modals
   const [fareModalRoute, setFareModalRoute] = useState<RouteOption | null>(null);
+
+  // App update info from GitHub releases
+  const [updateInfo, setUpdateInfo] = useState<UpdateInfo | null>(null);
 
   // Mobile layout tab
   const [mobileTab, setMobileTab] = useState<'routes' | 'map'>('routes');
@@ -195,9 +200,14 @@ export default function App() {
     [origin, destination, budget, preference]
   );
 
-  // Initial calculation on load
+  // Initial calculation on load & background update check
   useEffect(() => {
     calculateTransitOptions();
+    checkForAppUpdate().then((info) => {
+      if (info.hasUpdate) {
+        setUpdateInfo(info);
+      }
+    });
   }, []);
 
   return (
@@ -205,6 +215,9 @@ export default function App() {
       
       {/* Minimal Header */}
       <Header />
+
+      {/* Update Available Notification Banner */}
+      <UpdateNotificationBanner updateInfo={updateInfo} />
 
       {/* Main Content Area: Responsive half-and-half desktop layout */}
       <main className="flex-1 max-w-[1400px] w-full mx-auto px-4 sm:px-6 py-6 sm:py-8 space-y-6">
