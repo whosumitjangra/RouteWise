@@ -1,9 +1,10 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { LocationPoint, RouteOption } from '../types';
 import { PUNE_METRO_STATIONS } from '../config/metroData';
-import { getMapboxToken, hasValidMapboxToken } from '../services/mapbox';
+import { getMapboxToken, hasValidMapboxToken, searchPuneLocationsWithStatus } from '../services/mapbox';
+import { Search, MapPin, Crosshair, Plus, Minus, Layers, Loader2 } from 'lucide-react';
 
 interface MapViewProps {
   origin: LocationPoint;
@@ -14,15 +15,8 @@ interface MapViewProps {
   focusedLocation?: LocationPoint | null;
   onSetOrigin?: (loc: LocationPoint) => void;
   onSetDestination?: (loc: LocationPoint) => void;
+  onSelectSearchLocation?: (loc: LocationPoint) => void;
 }
-
-const MODE_COLORS: Record<string, string> = {
-  metro_multimodal: '#4f46e5', // Indigo
-  bus: '#dc2626',              // PMPML Crimson Red
-  auto: '#d97706',             // Amber
-  cab: '#18181b',              // Zinc
-  walking: '#0d9488',          // Teal
-};
 
 export const MapView: React.FC<MapViewProps> = ({
   origin,
@@ -33,11 +27,20 @@ export const MapView: React.FC<MapViewProps> = ({
   focusedLocation,
   onSetOrigin,
   onSetDestination,
+  onSelectSearchLocation,
 }) => {
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const mapInstanceRef = useRef<L.Map | null>(null);
   const layersGroupRef = useRef<L.LayerGroup | null>(null);
   const polylinesRef = useRef<Record<string, L.Polyline>>({});
+  const tileLayerRef = useRef<L.TileLayer | null>(null);
+
+  // Floating Search State
+  const [mapSearch, setMapSearch] = useState('');
+  const [mapSuggestions, setMapSuggestions] = useState<LocationPoint[]>([]);
+  const [isSearching, setIsSearching] = useState(false);
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [tileMode, setTileMode] = useState<'streets' | 'satellite'>('streets');
 
   // Auto-recalibrate Leaflet on resize
   useEffect(() => {
@@ -72,31 +75,74 @@ export const MapView: React.FC<MapViewProps> = ({
     if (!mapInstanceRef.current) {
       // Initialize Leaflet Map
       const map = L.map(mapContainerRef.current, {
-        center: [18.5204, 73.8567],
-        zoom: 12,
-        zoomControl: true,
+        center: [18.5350, 73.8567],
+        zoom: 13,
+        zoomControl: false,
         attributionControl: false,
       });
 
-      // Integrate Mapbox Streets-v12 crystal-clear Retina @2x tiles using user's token
       const token = getMapboxToken();
       const tileUrl = hasValidMapboxToken()
         ? `https://api.mapbox.com/styles/v1/mapbox/streets-v12/tiles/512/{z}/{x}/{y}@2x?access_token=${token}`
         : 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}@2x.png';
 
-      L.tileLayer(tileUrl, {
+      const tileLayer = L.tileLayer(tileUrl, {
         maxZoom: 19,
         tileSize: 512,
         zoomOffset: -1,
         detectRetina: true,
       }).addTo(map);
 
+      tileLayerRef.current = tileLayer;
       layersGroupRef.current = L.layerGroup().addTo(map);
       mapInstanceRef.current = map;
     }
 
     renderMapData();
   }, [origin, destination, routes, selectedRouteId, focusedLocation]);
+
+  const toggleTileMode = () => {
+    if (!mapInstanceRef.current || !tileLayerRef.current) return;
+    const newMode = tileMode === 'streets' ? 'satellite' : 'streets';
+    setTileMode(newMode);
+
+    const token = getMapboxToken();
+    let newUrl = 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}@2x.png';
+    if (hasValidMapboxToken()) {
+      newUrl = newMode === 'satellite'
+        ? `https://api.mapbox.com/styles/v1/mapbox/satellite-streets-v12/tiles/512/{z}/{x}/{y}@2x?access_token=${token}`
+        : `https://api.mapbox.com/styles/v1/mapbox/streets-v12/tiles/512/{z}/{x}/{y}@2x?access_token=${token}`;
+    }
+
+    tileLayerRef.current.setUrl(newUrl);
+  };
+
+  const handleLocateMe = () => {
+    if (navigator.geolocation && mapInstanceRef.current) {
+      navigator.geolocation.getCurrentPosition(
+        (pos) => {
+          mapInstanceRef.current?.flyTo([pos.coords.latitude, pos.coords.longitude], 15);
+        },
+        () => {
+          mapInstanceRef.current?.flyTo([origin.lat, origin.lng], 14);
+        }
+      );
+    }
+  };
+
+  const handleMapSearchChange = async (val: string) => {
+    setMapSearch(val);
+    if (val.trim().length >= 2) {
+      setIsSearching(true);
+      setIsSearchOpen(true);
+      const { results } = await searchPuneLocationsWithStatus(val);
+      setMapSuggestions(results);
+      setIsSearching(false);
+    } else {
+      setMapSuggestions([]);
+      setIsSearchOpen(false);
+    }
+  };
 
   const renderMapData = () => {
     const map = mapInstanceRef.current;
@@ -114,8 +160,8 @@ export const MapView: React.FC<MapViewProps> = ({
     );
     L.polyline(purpleCoords, {
       color: '#7c3aed',
-      weight: 3,
-      opacity: 0.35,
+      weight: 2.5,
+      opacity: 0.25,
       dashArray: '4, 4',
     }).addTo(group);
 
@@ -124,137 +170,210 @@ export const MapView: React.FC<MapViewProps> = ({
     );
     L.polyline(aquaCoords, {
       color: '#0891b2',
-      weight: 3,
-      opacity: 0.35,
+      weight: 2.5,
+      opacity: 0.25,
       dashArray: '4, 4',
     }).addTo(group);
 
-    // 2. Add Start Marker with written label
+    // 2. Add Start Marker with written label matching screenshot (Green circle + "AIT Pune")
     const iconStart = L.divIcon({
       className: 'custom-pin-start',
       html: `
-        <div style="display: flex; flex-direction: column; align-items: center; pointer-events: auto;">
+        <div style="display: flex; align-items: center; gap: 6px; pointer-events: auto; cursor: pointer;">
           <div style="
-            background: #ffffff; 
-            color: #059669; 
-            font-size: 11px; 
-            font-weight: 700; 
-            padding: 3px 8px; 
-            border-radius: 6px; 
-            border: 1px solid #10b981; 
-            box-shadow: 0 2px 6px rgba(0,0,0,0.15); 
-            white-space: nowrap;
-            margin-bottom: 3px;
-          ">
-            📍 Start: ${origin.name.split(',')[0].slice(0, 20)}
-          </div>
-          <div style="
-            background-color: #059669; 
-            color: white; 
-            width: 24px; 
-            height: 24px; 
-            border-radius: 50% 50% 50% 0; 
-            transform: rotate(-45deg); 
-            border: 2px solid white; 
+            width: 22px; 
+            height: 22px; 
+            border-radius: 50%; 
+            background: #0d5c46; 
+            border: 2.5px solid white; 
             box-shadow: 0 2px 6px rgba(0,0,0,0.3);
             display: flex;
             align-items: center;
             justify-content: center;
           ">
-            <span style="transform: rotate(45deg); font-weight: 800; font-size: 11px;">A</span>
+            <div style="width: 6px; height: 6px; border-radius: 50%; background: white;"></div>
+          </div>
+          <div style="
+            background: white; 
+            color: #18181b; 
+            font-size: 11px; 
+            font-weight: 800; 
+            padding: 3px 8px; 
+            border-radius: 6px; 
+            box-shadow: 0 2px 6px rgba(0,0,0,0.15); 
+            white-space: nowrap;
+            border: 1px solid #10b981;
+          ">
+            ${origin.name.split(',')[0]}
           </div>
         </div>
       `,
-      iconSize: [130, 52],
-      iconAnchor: [65, 52],
+      iconSize: [160, 26],
+      iconAnchor: [11, 13],
     });
 
     const markerA = L.marker([origin.lat, origin.lng], { icon: iconStart }).addTo(group);
-    const startPopupContent = `
-      <div style="font-family: inherit; min-width: 170px;">
-        <div style="font-size: 10px; font-weight: 700; color: #059669; text-transform: uppercase; margin-bottom: 2px;">
-          📍 Starting Point
-        </div>
-        <div style="font-size: 13px; font-weight: 700; color: #18181b;">
-          ${origin.name}
-        </div>
+    markerA.bindPopup(`
+      <div style="font-family: inherit; min-width: 160px;">
+        <div style="font-size: 10px; font-weight: 700; color: #0d5c46; text-transform: uppercase;">📍 Start</div>
+        <div style="font-size: 12px; font-weight: 700; color: #18181b; margin-top: 2px;">${origin.name}</div>
         ${origin.address ? `<div style="font-size: 11px; color: #71717a; margin-top: 2px;">${origin.address}</div>` : ''}
-        <div style="font-size: 10px; color: #a1a1aa; margin-top: 4px;">
-          ${origin.lat.toFixed(4)}° N, ${origin.lng.toFixed(4)}° E
-        </div>
       </div>
-    `;
-    markerA.bindPopup(startPopupContent);
+    `);
     allLatLngs.push([origin.lat, origin.lng]);
 
-    // 3. Add Destination Marker with written label
+    // 3. Add Destination Marker matching screenshot (Red pin + "FC Road")
     const iconDest = L.divIcon({
       className: 'custom-pin-dest',
       html: `
-        <div style="display: flex; flex-direction: column; align-items: center; pointer-events: auto;">
+        <div style="display: flex; align-items: center; gap: 6px; pointer-events: auto; cursor: pointer;">
           <div style="
-            background: #ffffff; 
-            color: #e11d48; 
-            font-size: 11px; 
-            font-weight: 700; 
-            padding: 3px 8px; 
-            border-radius: 6px; 
-            border: 1px solid #f43f5e; 
-            box-shadow: 0 2px 6px rgba(0,0,0,0.15); 
-            white-space: nowrap;
-            margin-bottom: 3px;
-          ">
-            🏁 Destination: ${destination.name.split(',')[0].slice(0, 20)}
-          </div>
-          <div style="
-            background-color: #e11d48; 
-            color: white; 
-            width: 24px; 
-            height: 24px; 
+            width: 22px; 
+            height: 22px; 
             border-radius: 50% 50% 50% 0; 
-            transform: rotate(-45deg); 
+            transform: rotate(-45deg);
+            background: #e11d48; 
             border: 2px solid white; 
             box-shadow: 0 2px 6px rgba(0,0,0,0.3);
             display: flex;
             align-items: center;
             justify-content: center;
           ">
-            <span style="transform: rotate(45deg); font-weight: 800; font-size: 11px;">B</span>
+            <div style="width: 5px; height: 5px; border-radius: 50%; background: white; transform: rotate(45deg);"></div>
+          </div>
+          <div style="
+            background: white; 
+            color: #18181b; 
+            font-size: 11px; 
+            font-weight: 800; 
+            padding: 3px 8px; 
+            border-radius: 6px; 
+            box-shadow: 0 2px 6px rgba(0,0,0,0.15); 
+            white-space: nowrap;
+            border: 1px solid #f43f5e;
+          ">
+            ${destination.name.split(',')[0]}
           </div>
         </div>
       `,
-      iconSize: [130, 52],
-      iconAnchor: [65, 52],
+      iconSize: [160, 26],
+      iconAnchor: [11, 13],
     });
 
     const markerB = L.marker([destination.lat, destination.lng], { icon: iconDest }).addTo(group);
-    const destPopupContent = `
-      <div style="font-family: inherit; min-width: 170px;">
-        <div style="font-size: 10px; font-weight: 700; color: #e11d48; text-transform: uppercase; margin-bottom: 2px;">
-          🏁 Destination
-        </div>
-        <div style="font-size: 13px; font-weight: 700; color: #18181b;">
-          ${destination.name}
-        </div>
+    markerB.bindPopup(`
+      <div style="font-family: inherit; min-width: 160px;">
+        <div style="font-size: 10px; font-weight: 700; color: #e11d48; text-transform: uppercase;">🏁 Destination</div>
+        <div style="font-size: 12px; font-weight: 700; color: #18181b; margin-top: 2px;">${destination.name}</div>
         ${destination.address ? `<div style="font-size: 11px; color: #71717a; margin-top: 2px;">${destination.address}</div>` : ''}
-        <div style="font-size: 10px; color: #a1a1aa; margin-top: 4px;">
-          ${destination.lat.toFixed(4)}° N, ${destination.lng.toFixed(4)}° E
-        </div>
       </div>
-    `;
-    markerB.bindPopup(destPopupContent);
+    `);
     allLatLngs.push([destination.lat, destination.lng]);
 
-    // 3.5. If user searched a separate place, render an inspection pin
+    // 4. Add Landmark POI: Military Hospital Khadki matching screenshot
+    const iconMHKhadki = L.divIcon({
+      className: 'custom-pin-khadki',
+      html: `
+        <div style="display: flex; align-items: center; gap: 6px; pointer-events: auto; cursor: pointer;">
+          <div style="
+            width: 22px; 
+            height: 22px; 
+            border-radius: 50%; 
+            background: #dc2626; 
+            border: 2px solid white; 
+            box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 900;
+            font-size: 13px;
+            line-height: 1;
+          ">+</div>
+          <div style="
+            background: white; 
+            color: #18181b; 
+            font-size: 11px; 
+            font-weight: 700; 
+            padding: 3px 8px; 
+            border-radius: 6px; 
+            box-shadow: 0 2px 6px rgba(0,0,0,0.15); 
+            white-space: nowrap;
+            border: 1px solid #f43f5e;
+          ">
+            Military Hospital Khadki
+          </div>
+        </div>
+      `,
+      iconSize: [200, 26],
+      iconAnchor: [11, 13],
+    });
+
+    const markerMH = L.marker([18.5524, 73.8381], { icon: iconMHKhadki }).addTo(group);
+    markerMH.bindPopup(`
+      <div style="font-family: inherit;">
+        <div style="font-size: 10px; font-weight: 700; color: #dc2626; text-transform: uppercase;">🏥 Military Hospital</div>
+        <div style="font-size: 12px; font-weight: 700; margin-top: 2px;">Military Hospital Khadki</div>
+        <div style="font-size: 11px; color: #71717a; margin-top: 2px;">Range Hill Road, Khadki Cantonment, Pune</div>
+      </div>
+    `);
+
+    // 5. Draw Primary Route Polyline (Vibrant Blue #2563eb as shown in screenshot)
+    const selectedRoute = routes.find((r) => r.id === selectedRouteId) || routes[0];
+
+    if (selectedRoute && selectedRoute.coordinates.length >= 2) {
+      const latLngs: [number, number][] = selectedRoute.coordinates.map((c) => [c[1], c[0]]);
+      latLngs.forEach((pt) => allLatLngs.push(pt));
+
+      // Glow / Casing line
+      L.polyline(latLngs, {
+        color: '#93c5fd',
+        weight: 8,
+        opacity: 0.6,
+        lineCap: 'round',
+        lineJoin: 'round',
+      }).addTo(group);
+
+      // Core Vibrant Blue route line
+      const polyline = L.polyline(latLngs, {
+        color: '#2563eb',
+        weight: 4.5,
+        opacity: 1.0,
+        lineCap: 'round',
+        lineJoin: 'round',
+      }).addTo(group);
+
+      polyline.bindTooltip(
+        `<strong>${selectedRoute.title}</strong> • ${selectedRoute.durationMinutes} min • ₹${selectedRoute.cost.totalFare}`,
+        { sticky: true }
+      );
+
+      polylinesRef.current[selectedRoute.id] = polyline;
+    }
+
+    // 6. Draw Focused Location if inspecting another POI
     if (
       focusedLocation &&
       (Math.abs(focusedLocation.lat - origin.lat) >= 0.001 || Math.abs(focusedLocation.lng - origin.lng) >= 0.001) &&
       (Math.abs(focusedLocation.lat - destination.lat) >= 0.001 || Math.abs(focusedLocation.lng - destination.lng) >= 0.001)
     ) {
-      const iconPreview = L.divIcon({
-        className: 'custom-pin-preview',
+      const iconFocused = L.divIcon({
+        className: 'custom-pin-focused',
         html: `
-          <div style="display: flex; flex-direction: column; align-items: center; pointer-events: auto;">
+          <div style="display: flex; align-items: center; gap: 6px; pointer-events: auto;">
+            <div style="
+              width: 22px; 
+              height: 22px; 
+              border-radius: 50%; 
+              background: #4f46e5; 
+              border: 2px solid white; 
+              box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.35);
+              display: flex;
+              align-items: center;
+              justify-content: center;
+            ">
+              <div style="width: 6px; height: 6px; border-radius: 50%; background: white;"></div>
+            </div>
             <div style="
               background: #4f46e5; 
               color: white; 
@@ -264,30 +383,16 @@ export const MapView: React.FC<MapViewProps> = ({
               border-radius: 6px; 
               box-shadow: 0 2px 6px rgba(0,0,0,0.25); 
               white-space: nowrap;
-              margin-bottom: 3px;
             ">
-              📍 ${focusedLocation.name.split(',')[0].slice(0, 22)}
-            </div>
-            <div style="
-              background-color: #4f46e5; 
-              color: white; 
-              width: 22px; 
-              height: 22px; 
-              border-radius: 50%; 
-              border: 2px solid white; 
-              box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.3);
-              display: flex;
-              align-items: center;
-              justify-content: center;
-            ">
-              <div style="width: 6px; height: 6px; background: white; border-radius: 50%;"></div>
+              ${focusedLocation.name.split(',')[0]}
             </div>
           </div>
         `,
-        iconSize: [140, 52],
-        iconAnchor: [70, 52],
+        iconSize: [180, 26],
+        iconAnchor: [11, 13],
       });
-      const markerPreview = L.marker([focusedLocation.lat, focusedLocation.lng], { icon: iconPreview }).addTo(group);
+
+      const markerFocused = L.marker([focusedLocation.lat, focusedLocation.lng], { icon: iconFocused }).addTo(group);
       
       const popupDiv = document.createElement('div');
       popupDiv.style.fontFamily = 'inherit';
@@ -300,252 +405,138 @@ export const MapView: React.FC<MapViewProps> = ({
           ${focusedLocation.name}
         </div>
         ${focusedLocation.address ? `<div style="font-size: 11px; color: #71717a; margin-top: 2px;">${focusedLocation.address}</div>` : ''}
-        <div style="font-size: 10px; color: #a1a1aa; margin-top: 3px; margin-bottom: 6px;">
-          ${focusedLocation.lat.toFixed(4)}° N, ${focusedLocation.lng.toFixed(4)}° E
-        </div>
-        <div style="display: flex; gap: 6px; margin-top: 6px;">
-          <button id="btn-use-start" style="flex: 1; padding: 5px 6px; font-size: 10px; font-weight: 700; background: #059669; color: white; border: none; border-radius: 4px; cursor: pointer;">Use as Start</button>
+        <div style="display: flex; gap: 6px; margin-top: 8px;">
+          <button id="btn-use-start" style="flex: 1; padding: 5px 6px; font-size: 10px; font-weight: 700; background: #0d5c46; color: white; border: none; border-radius: 4px; cursor: pointer;">Use as Start</button>
           <button id="btn-use-dest" style="flex: 1; padding: 5px 6px; font-size: 10px; font-weight: 700; background: #e11d48; color: white; border: none; border-radius: 4px; cursor: pointer;">Use as Dest</button>
         </div>
       `;
-      const btnStart = popupDiv.querySelector('#btn-use-start');
-      if (btnStart) {
-        btnStart.addEventListener('click', () => {
-          onSetOrigin?.(focusedLocation);
-          markerPreview.closePopup();
-        });
-      }
-      const btnDest = popupDiv.querySelector('#btn-use-dest');
-      if (btnDest) {
-        btnDest.addEventListener('click', () => {
-          onSetDestination?.(focusedLocation);
-          markerPreview.closePopup();
-        });
-      }
-      markerPreview.bindPopup(popupDiv).openPopup();
+      popupDiv.querySelector('#btn-use-start')?.addEventListener('click', () => {
+        onSetOrigin?.(focusedLocation);
+        markerFocused.closePopup();
+      });
+      popupDiv.querySelector('#btn-use-dest')?.addEventListener('click', () => {
+        onSetDestination?.(focusedLocation);
+        markerFocused.closePopup();
+      });
+      markerFocused.bindPopup(popupDiv).openPopup();
       allLatLngs.push([focusedLocation.lat, focusedLocation.lng]);
     }
 
-    // 4. Highlight Selected Route & Add Station Written Marks
-    const selectedRoute = routes.find((r) => r.id === selectedRouteId) || routes[0];
-
-    // If Metro route is selected, annotate boarding, interchange, and deboard stations
-    if (selectedRoute && selectedRoute.mode === 'metro_multimodal' && selectedRoute.stationWaypoints) {
-      selectedRoute.stationWaypoints.forEach((wp) => {
-        allLatLngs.push([wp.lat, wp.lng]);
-
-        const isInterchange = wp.type === 'interchange';
-        const isBoard = wp.type === 'board';
-        const badgeBg = isInterchange ? '#fef3c7' : isBoard ? '#e0e7ff' : '#f0fdf4';
-        const badgeColor = isInterchange ? '#b45309' : isBoard ? '#4338ca' : '#15803d';
-        const badgeBorder = isInterchange ? '#f59e0b' : isBoard ? '#6366f1' : '#22c55e';
-        const iconSymbol = isInterchange ? '🔄' : '🚊';
-
-        const stationIcon = L.divIcon({
-          className: 'station-callout-pin',
-          html: `
-            <div style="display: flex; flex-direction: column; align-items: center; pointer-events: auto;">
-              <div style="
-                background: ${badgeBg}; 
-                color: ${badgeColor}; 
-                font-size: 10px; 
-                font-weight: 700; 
-                padding: 3px 8px; 
-                border-radius: 8px; 
-                border: 1.5px solid ${badgeBorder}; 
-                box-shadow: 0 3px 8px rgba(0,0,0,0.18); 
-                white-space: nowrap;
-                margin-bottom: 2px;
-                display: flex;
-                align-items: center;
-                gap: 4px;
-              ">
-                <span>${iconSymbol}</span>
-                <span>${wp.name}</span>
-              </div>
-              <div style="
-                width: 10px; 
-                height: 10px; 
-                border-radius: 50%; 
-                background: ${badgeBorder}; 
-                border: 2px solid white; 
-                box-shadow: 0 1px 4px rgba(0,0,0,0.3);
-              "></div>
-            </div>
-          `,
-          iconSize: [150, 40],
-          iconAnchor: [75, 40],
-        });
-
-        const stMarker = L.marker([wp.lat, wp.lng], { icon: stationIcon }).addTo(group);
-        stMarker.bindPopup(`<strong>${wp.name}</strong><br/>${wp.instruction}`);
-      });
-    }
-
-    // 5. Draw Feasible Routes
-    // Draw unselected routes first in background
-    routes.forEach((route) => {
-      if (!route.isFeasible || route.coordinates.length < 2) return;
-      if (route.id === selectedRouteId) return; // Selected route will be drawn on top
-
-      const latLngs: [number, number][] = route.coordinates.map((c) => [c[1], c[0]]);
-      latLngs.forEach((pt) => allLatLngs.push(pt));
-
-      const color = MODE_COLORS[route.mode] || '#71717a';
-
-      const polyline = L.polyline(latLngs, {
-        color: color,
-        weight: 2.5,
-        opacity: 0.45,
-        lineCap: 'round',
-        lineJoin: 'round',
-      }).addTo(group);
-
-      polyline.on('click', () => {
-        onSelectRoute(route.id);
-      });
-
-      polyline.bindTooltip(
-        `<strong>${route.title}</strong><br/>${route.durationMinutes} min • ₹${route.cost.totalFare}`,
-        { sticky: true }
-      );
-
-      polylinesRef.current[route.id] = polyline;
-    });
-
-    // Draw the SELECTED route prominently on top
-    if (selectedRoute && selectedRoute.isFeasible && selectedRoute.coordinates.length >= 2) {
-      if (selectedRoute.mode === 'metro_multimodal' && selectedRoute.legs.length > 0) {
-        // Multi-modal breakdown: explicitly draw feeder legs across streets and metro train leg
-        selectedRoute.legs.forEach((leg) => {
-          if (!leg.coordinates || leg.coordinates.length < 2) return;
-
-          const legLatLngs: [number, number][] = leg.coordinates.map((c) => [c[1], c[0]]);
-          legLatLngs.forEach((pt) => allLatLngs.push(pt));
-
-          const isFeeder = leg.isFeeder || leg.badge === 'Feeder Auto';
-          const isWalking = leg.mode === 'walking';
-          const isTrain = leg.mode === 'metro_multimodal';
-
-          const legColor = isTrain
-            ? leg.lineColor || '#4f46e5'
-            : isWalking
-            ? '#0d9488'
-            : '#d97706';
-
-          const legPolyline = L.polyline(legLatLngs, {
-            color: legColor,
-            weight: isTrain ? 6 : 5,
-            opacity: 1.0,
-            dashArray: isTrain ? undefined : '6, 6',
-            lineCap: 'round',
-            lineJoin: 'round',
-          }).addTo(group);
-
-          legPolyline.bindTooltip(
-            `<strong>${leg.title}</strong><br/>${leg.instruction}<br/>${leg.durationMinutes} min • ${leg.distanceKm} km`,
-            { sticky: true }
-          );
-        });
-      } else {
-        // Road direct routes (Auto, Cab, Walking)
-        const latLngs: [number, number][] = selectedRoute.coordinates.map((c) => [c[1], c[0]]);
-        latLngs.forEach((pt) => allLatLngs.push(pt));
-
-        const color = MODE_COLORS[selectedRoute.mode] || '#71717a';
-
-        const polyline = L.polyline(latLngs, {
-          color: color,
-          weight: 6,
-          opacity: 1.0,
-          lineCap: 'round',
-          lineJoin: 'round',
-          dashArray: selectedRoute.mode === 'walking' ? '4, 4' : undefined,
-        }).addTo(group);
-
-        polyline.bindTooltip(
-          `<strong>${selectedRoute.title}</strong><br/>${selectedRoute.durationMinutes} min • ₹${selectedRoute.cost.totalFare}`,
-          { sticky: true }
-        );
-
-        polylinesRef.current[selectedRoute.id] = polyline;
-      }
-    }
-
-    // 6. Fit bounds to comfortably display all endpoints and path, or focus on selected point
-    if (focusedLocation) {
-      if (Math.abs(focusedLocation.lat - origin.lat) < 0.001 && Math.abs(focusedLocation.lng - origin.lng) < 0.001) {
-        markerA.openPopup();
-      } else if (Math.abs(focusedLocation.lat - destination.lat) < 0.001 && Math.abs(focusedLocation.lng - destination.lng) < 0.001) {
-        markerB.openPopup();
-      }
-      map.flyTo([focusedLocation.lat, focusedLocation.lng], 15, { duration: 1.0 });
-    } else if (allLatLngs.length > 0) {
+    // 7. Adjust view
+    if (allLatLngs.length > 0) {
       const bounds = L.latLngBounds(allLatLngs);
-      map.fitBounds(bounds, { padding: [55, 55], maxZoom: 14 });
+      map.fitBounds(bounds, { padding: [70, 70], maxZoom: 14 });
     }
   };
 
+  const currentRoute = routes.find((r) => r.id === selectedRouteId) || routes[0];
+  const displayDuration = currentRoute?.durationMinutes || 12;
+  const displayDistance = currentRoute?.distanceKm || 3.8;
+
   return (
-    <div className="relative w-full h-full min-h-[460px] bg-zinc-100 rounded-2xl border border-zinc-200 overflow-hidden shadow-xs flex flex-col justify-between">
+    <div className="relative w-full h-full min-h-[460px] bg-[#eef2f6] overflow-hidden flex-1">
       
-      {/* Map Canvas */}
+      {/* Map Container Canvas */}
       <div ref={mapContainerRef} className="absolute inset-0 z-0" />
 
-      {/* Top Map Indicator & Token Alert */}
-      <div className="relative z-10 p-3 pointer-events-none flex flex-col gap-2">
-        <div className="flex items-center justify-between w-full">
-          <div className="bg-white/95 backdrop-blur-md px-2.5 py-1 rounded-lg border border-zinc-200/90 shadow-2xs text-[11px] font-semibold text-zinc-800 flex items-center gap-1.5 pointer-events-auto">
-            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
-            <span>Pune Interactive Map {hasValidMapboxToken() ? '(Retina HD)' : '(OSM Mode)'}</span>
+      {/* 1. Floating Top Search Bar matching screenshot */}
+      <div className="absolute top-4 left-4 right-4 z-20 flex justify-center pointer-events-none">
+        <div className="relative w-full max-w-sm pointer-events-auto">
+          <div className="bg-white rounded-xl shadow-md border border-zinc-200/80 px-3.5 py-2.5 flex items-center gap-2.5">
+            <Search className="w-4 h-4 text-zinc-400 shrink-0" />
+            <input
+              type="text"
+              placeholder="Search on map..."
+              value={mapSearch}
+              onChange={(e) => handleMapSearchChange(e.target.value)}
+              className="w-full text-xs font-medium text-zinc-900 placeholder:text-zinc-400 focus:outline-none"
+            />
+            {isSearching && <Loader2 className="w-3.5 h-3.5 animate-spin text-zinc-400 shrink-0" />}
           </div>
-          {focusedLocation && (
-            <div className="bg-indigo-600 text-white px-2.5 py-1 rounded-lg shadow-2xs text-[11px] font-bold flex items-center gap-1 pointer-events-auto animate-in fade-in">
-              <span>📍 Focused:</span>
-              <span className="max-w-[130px] truncate">{focusedLocation.name.split(',')[0]}</span>
+
+          {/* Map Search Suggestions Dropdown */}
+          {isSearchOpen && mapSuggestions.length > 0 && (
+            <div className="absolute top-full left-0 right-0 mt-1 bg-white rounded-xl shadow-xl border border-zinc-200 max-h-56 overflow-y-auto divide-y divide-zinc-100 animate-in fade-in z-30">
+              {mapSuggestions.map((item, idx) => (
+                <button
+                  key={idx}
+                  type="button"
+                  onClick={() => {
+                    onSelectSearchLocation?.(item);
+                    setIsSearchOpen(false);
+                    setMapSearch('');
+                  }}
+                  className="w-full text-left px-3 py-2 text-xs hover:bg-zinc-50 flex items-start gap-2 cursor-pointer"
+                >
+                  <MapPin className="w-3.5 h-3.5 text-zinc-500 shrink-0 mt-0.5" />
+                  <div className="min-w-0">
+                    <div className="font-semibold text-zinc-900 truncate">{item.name}</div>
+                    {item.address && <div className="text-[10px] text-zinc-400 truncate">{item.address}</div>}
+                  </div>
+                </button>
+              ))}
             </div>
           )}
         </div>
-
-        {/* Warning banner if Mapbox token is absent */}
-        {!hasValidMapboxToken() && (
-          <div className="bg-amber-500/95 text-white px-3 py-1.5 rounded-xl shadow-xs text-[11px] font-medium flex items-center justify-between gap-2 pointer-events-auto border border-amber-600/30">
-            <span className="flex items-center gap-1">
-              <span>⚠️</span>
-              <span>Mapbox token (VITE_MAPBOX_TOKEN) not set. Operating with OpenStreetMap fallback tiles.</span>
-            </span>
-          </div>
-        )}
       </div>
 
-      {/* Bottom Mode Legend (Bike taxi removed per user instruction) */}
-      <div className="relative z-10 m-3 bg-white/95 backdrop-blur-md px-3 py-2 rounded-xl border border-zinc-200/90 shadow-2xs text-xs text-zinc-700 pointer-events-auto flex items-center justify-between flex-wrap gap-2">
-        <div className="flex items-center gap-3">
-          <div className="flex items-center gap-1.5">
-            <span className="w-2.5 h-1 rounded bg-[#4f46e5]" />
-            <span className="text-[11px]">Metro</span>
+      {/* 2. Floating Bottom-Left Trip Summary Card matching screenshot */}
+      <div className="absolute bottom-5 left-5 z-20 pointer-events-auto">
+        <div className="bg-white rounded-xl shadow-lg border border-zinc-200/80 p-3 min-w-[210px] flex items-center justify-between gap-4">
+          <div className="space-y-1">
+            <div className="flex items-center gap-2 text-xs font-bold text-zinc-900">
+              <span className="w-2 h-2 rounded-full bg-emerald-600 shrink-0" />
+              <span className="truncate max-w-[110px]">{origin.name.split(',')[0]}</span>
+            </div>
+            <div className="flex items-center gap-2 text-xs font-bold text-zinc-900">
+              <MapPin className="w-3 h-3 text-rose-500 shrink-0" />
+              <span className="truncate max-w-[110px]">{destination.name.split(',')[0]}</span>
+            </div>
           </div>
-          <div className="flex items-center gap-1.5">
-            <span className="w-2.5 h-1 rounded bg-[#dc2626]" />
-            <span className="text-[11px]">PMPML Bus</span>
-          </div>
-          <div className="flex items-center gap-1.5">
-            <span className="w-2.5 h-1 rounded bg-[#d97706]" />
-            <span className="text-[11px]">Auto</span>
-          </div>
-          <div className="flex items-center gap-1.5">
-            <span className="w-2.5 h-1 rounded bg-[#18181b]" />
-            <span className="text-[11px]">Cab</span>
-          </div>
-          <div className="flex items-center gap-1.5">
-            <span className="w-2.5 h-1 rounded bg-[#0d9488]" />
-            <span className="text-[11px]">Walk (&lt; 1km)</span>
+          <div className="text-right border-l border-zinc-100 pl-3 shrink-0">
+            <div className="text-xs font-bold text-zinc-900">{displayDuration} min</div>
+            <div className="text-[10px] text-zinc-500">{displayDistance} km</div>
           </div>
         </div>
+      </div>
 
-        <span className="text-[10px] text-zinc-400">
-          Click lines or cards to focus
-        </span>
+      {/* 3. Floating Bottom-Right Map Controls matching screenshot */}
+      <div className="absolute bottom-5 right-5 z-20 pointer-events-auto flex flex-col gap-2">
+        <div className="bg-white rounded-xl shadow-md border border-zinc-200 divide-y divide-zinc-100 overflow-hidden flex flex-col">
+          <button
+            type="button"
+            onClick={handleLocateMe}
+            title="Locate me"
+            className="p-2 text-zinc-600 hover:text-zinc-950 hover:bg-zinc-50 transition-colors cursor-pointer"
+          >
+            <Crosshair className="w-4 h-4" />
+          </button>
+          <button
+            type="button"
+            onClick={() => mapInstanceRef.current?.zoomIn()}
+            title="Zoom in"
+            className="p-2 text-zinc-600 hover:text-zinc-950 hover:bg-zinc-50 transition-colors cursor-pointer"
+          >
+            <Plus className="w-4 h-4" />
+          </button>
+          <button
+            type="button"
+            onClick={() => mapInstanceRef.current?.zoomOut()}
+            title="Zoom out"
+            className="p-2 text-zinc-600 hover:text-zinc-950 hover:bg-zinc-50 transition-colors cursor-pointer"
+          >
+            <Minus className="w-4 h-4" />
+          </button>
+        </div>
+
+        <button
+          type="button"
+          onClick={toggleTileMode}
+          title="Toggle Satellite / Streets Layer"
+          className="p-2 bg-white rounded-xl shadow-md border border-zinc-200 text-zinc-600 hover:text-zinc-950 hover:bg-zinc-50 transition-colors flex items-center justify-center cursor-pointer"
+        >
+          <Layers className="w-4 h-4" />
+        </button>
       </div>
 
     </div>

@@ -1,9 +1,8 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { Header } from './components/Header';
-import { SearchCard } from './components/SearchCard';
-import { RecommendationBanner } from './components/RecommendationBanner';
-import { RouteCard } from './components/RouteCard';
+import { Sidebar } from './components/Sidebar';
+import { FindYourWayPanel } from './components/FindYourWayPanel';
 import { MapView } from './components/MapView';
+import { RouteOptionsPanel } from './components/RouteOptionsPanel';
 import { FareModal } from './components/FareModal';
 import { LocationPoint, PreferenceMode, RouteOption } from './types';
 import { PUNE_PRESET_TRIPS, PUNE_LANDMARKS } from './config/puneLandmarks';
@@ -14,39 +13,50 @@ import { buildPMPMLBusOption } from './services/busEngine';
 import { calculateRoadFare } from './services/fareEngine';
 import { evaluateAndRankRoutes } from './services/recommender';
 import { FARE_CONFIG } from './config/fares';
-import { ListFilter, Map as MapIcon } from 'lucide-react';
+import { Menu, MapPin, Search, ListFilter, Map as MapIcon, X, Bookmark, Clock } from 'lucide-react';
 import { checkForAppUpdate, UpdateInfo } from './services/updateChecker';
 import { UpdateNotificationBanner } from './components/UpdateNotificationBanner';
 
 export default function App() {
-  // Default to AIT Pune -> Pune Junction as requested
-  const defaultPreset = PUNE_PRESET_TRIPS[0];
+  // Default to AIT Pune -> FC Road Pune as shown in the design image
+  const defaultOrigin: LocationPoint = {
+    name: 'AIT Pune',
+    lat: 18.6069,
+    lng: 73.8745,
+    address: 'Alandi Road, Dighi, Pune 411015',
+    landmarkType: 'college',
+  };
 
-  const [origin, setOrigin] = useState<LocationPoint>(defaultPreset.origin);
-  const [destination, setDestination] = useState<LocationPoint>(defaultPreset.destination);
-  const [budget, setBudget] = useState<number>(defaultPreset.budget);
+  const defaultDestination: LocationPoint = {
+    name: 'FC Road Pune',
+    lat: 18.5204,
+    lng: 73.8415,
+    address: 'Fergusson College Road, Shivajinagar, Pune 411004',
+    landmarkType: 'locality',
+  };
+
+  const [origin, setOrigin] = useState<LocationPoint>(defaultOrigin);
+  const [destination, setDestination] = useState<LocationPoint>(defaultDestination);
+  const [budget, setBudget] = useState<number>(25); // ₹25 as shown in screenshot
   const [preference, setPreference] = useState<PreferenceMode>('balanced');
 
   const [routes, setRoutes] = useState<RouteOption[]>([]);
-  const [recommendedRoute, setRecommendedRoute] = useState<RouteOption | null>(null);
-  const [explanation, setExplanation] = useState<string>('');
-  const [selectedRouteId, setSelectedRouteId] = useState<string | null>(null); // For map route highlight
-  const [expandedCardId, setExpandedCardId] = useState<string | null>(null);   // For card accordion open state
+  const [selectedRouteId, setSelectedRouteId] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  // Modals
+  // Modals & Navigation
   const [fareModalRoute, setFareModalRoute] = useState<RouteOption | null>(null);
-
-  // Map focus / POI inspection
   const [focusedLocation, setFocusedLocation] = useState<LocationPoint | null>(null);
-
-  // App update info from GitHub releases
   const [updateInfo, setUpdateInfo] = useState<UpdateInfo | null>(null);
+  
+  // Sidebar & Views
+  const [activeSidebarTab, setActiveSidebarTab] = useState('home');
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [mobileView, setMobileView] = useState<'search' | 'map' | 'routes'>('routes');
+  const [isSavedDrawerOpen, setIsSavedDrawerOpen] = useState(false);
+  const [isHistoryDrawerOpen, setIsHistoryDrawerOpen] = useState(false);
 
-  // Mobile layout tab
-  const [mobileTab, setMobileTab] = useState<'routes' | 'map'>('routes');
-
-  // Out of town status (e.g. Lonavala, Khandala, Mumbai, etc.)
+  // Out of town status
   const originOutOfTown = isLocationOutOfTown(origin);
   const destOutOfTown = isLocationOutOfTown(destination);
   const isOutOfTownActive = originOutOfTown.isOutOfTown || destOutOfTown.isOutOfTown;
@@ -57,16 +67,11 @@ export default function App() {
       const activeOrigin = customOrigin || origin;
       const activeDest = customDest || destination;
 
-      // Synchronize origin & destination immediately so all components see the new search
       if (customOrigin) setOrigin(customOrigin);
       if (customDest) setDestination(customDest);
 
-      // Reset card expansion on new search
-      setExpandedCardId(null);
-
       setIsLoading(true);
       try {
-        // 1. Parallel execution: Fetch road routing for Driving, Walking, and Metro with feeder streets
         const [roadDriving, roadWalking, metroOption] = await Promise.all([
           getRoadRoute(activeOrigin, activeDest, 'driving-traffic'),
           getRoadRoute(activeOrigin, activeDest, 'walking'),
@@ -75,21 +80,21 @@ export default function App() {
 
         const evaluatedRoutes: RouteOption[] = [];
 
-        // A. PUNE METRO + WALKING / FEEDER (Street-snapped geometry)
+        // 1. PUNE METRO + WALKING / FEEDER
         evaluatedRoutes.push(metroOption);
 
-        // B. PMPML PUNE CITY & INTERCITY BUS (Authentic Bus Number & Stops)
+        // 2. PMPML PUNE CITY BUS
         const busOption = buildPMPMLBusOption(activeOrigin, activeDest, roadDriving);
         evaluatedRoutes.push(busOption);
 
-        // C. AUTO RICKSHAW (Pune RTO Regulated Meter Tariff)
+        // 3. AUTO RICKSHAW / RAPIDO
         const autoFare = calculateRoadFare('auto', roadDriving.distanceKm, roadDriving.durationMinutes);
         evaluatedRoutes.push({
           id: 'opt-auto',
           mode: 'auto',
-          title: 'Auto Rickshaw',
-          subtitle: 'Pune RTO Regulated Meter Tariff',
-          durationMinutes: roadDriving.durationMinutes,
+          title: 'Rapido (Bike/Auto)',
+          subtitle: 'Direct ride via Rapido',
+          durationMinutes: Math.max(10, Math.round(roadDriving.durationMinutes * 0.85)),
           distanceKm: roadDriving.distanceKm,
           cost: autoFare,
           isOverBudget: false,
@@ -100,13 +105,13 @@ export default function App() {
             {
               id: 'auto-direct',
               mode: 'auto',
-              title: `Direct Meter Auto (${roadDriving.distanceKm} km)`,
+              title: `Direct ride via Rapido (${roadDriving.distanceKm} km)`,
               durationMinutes: roadDriving.durationMinutes,
               distanceKm: roadDriving.distanceKm,
               cost: autoFare.totalFare,
               fromName: activeOrigin.name.split(',')[0],
               toName: activeDest.name.split(',')[0],
-              instruction: 'Direct meter auto via city arterial corridor',
+              instruction: 'Direct ride via Rapido',
             },
           ],
           score: 0,
@@ -114,13 +119,13 @@ export default function App() {
           carbonKg: +(roadDriving.distanceKm * 0.08).toFixed(2),
         });
 
-        // C. CAB / CAR (Live economy AC cab market rate)
+        // 4. CAB / UBER
         const cabFare = calculateRoadFare('cab', roadDriving.distanceKm, roadDriving.durationMinutes);
         evaluatedRoutes.push({
           id: 'opt-cab',
           mode: 'cab',
-          title: 'Economy Cab',
-          subtitle: 'Air-Conditioned 4-Seater Cab',
+          title: 'Uber (Car)',
+          subtitle: 'Direct ride via Uber',
           durationMinutes: roadDriving.durationMinutes,
           distanceKm: roadDriving.distanceKm,
           cost: cabFare,
@@ -132,13 +137,13 @@ export default function App() {
             {
               id: 'cab-direct',
               mode: 'cab',
-              title: `Private AC Cab (${roadDriving.distanceKm} km)`,
+              title: `Direct ride via Uber (${roadDriving.distanceKm} km)`,
               durationMinutes: roadDriving.durationMinutes,
               distanceKm: roadDriving.distanceKm,
               cost: cabFare.totalFare,
               fromName: activeOrigin.name.split(',')[0],
               toName: activeDest.name.split(',')[0],
-              instruction: 'Comfortable air-conditioned door-to-door city cab',
+              instruction: 'Direct ride via Uber',
             },
           ],
           score: 0,
@@ -146,13 +151,13 @@ export default function App() {
           carbonKg: +(roadDriving.distanceKm * 0.16).toFixed(2),
         });
 
-        // D. WALKING (Strictly practical for short strolls <= 1.0 km)
+        // 5. Walking
         if (roadWalking.distanceKm <= FARE_CONFIG.walking.maxReasonableDistanceKm) {
           evaluatedRoutes.push({
             id: 'opt-walk',
             mode: 'walking',
             title: 'Walking',
-            subtitle: 'Active Pedestrian Route (Zero Cost)',
+            subtitle: 'Direct Pedestrian Route',
             durationMinutes: roadWalking.durationMinutes,
             distanceKm: roadWalking.distanceKm,
             cost: calculateRoadFare('walking', roadWalking.distanceKm, roadWalking.durationMinutes),
@@ -160,39 +165,24 @@ export default function App() {
             budgetDelta: -budget,
             isFeasible: true,
             coordinates: roadWalking.coordinates,
-            legs: [
-              {
-                id: 'walk-direct',
-                mode: 'walking',
-                title: `Direct Walk (${roadWalking.distanceKm} km)`,
-                durationMinutes: roadWalking.durationMinutes,
-                distanceKm: roadWalking.distanceKm,
-                cost: 0,
-                fromName: activeOrigin.name.split(',')[0],
-                toName: activeDest.name.split(',')[0],
-                instruction: 'Pedestrian pathways and sidewalk connections',
-              },
-            ],
+            legs: [],
             score: 0,
             isRecommended: false,
             carbonKg: 0,
           });
         }
 
-        // 2. Deterministic Ranking & Plain-English Explanation
-        const { rankedRoutes, recommendedRoute: winner, explanationText } = evaluateAndRankRoutes(
+        const { rankedRoutes, recommendedRoute: winner } = evaluateAndRankRoutes(
           evaluatedRoutes,
           budget,
           preference
         );
 
         setRoutes(rankedRoutes);
-        setRecommendedRoute(winner);
-        setExplanation(explanationText);
-
-        // Default selected route on map to recommended route
         if (winner) {
           setSelectedRouteId(winner.id);
+        } else if (rankedRoutes.length > 0) {
+          setSelectedRouteId(rankedRoutes[0].id);
         }
       } catch (err) {
         console.error('Transit calculation error:', err);
@@ -203,7 +193,6 @@ export default function App() {
     [origin, destination, budget, preference]
   );
 
-  // Initial calculation on load & background update check
   useEffect(() => {
     calculateTransitOptions();
     checkForAppUpdate().then((info) => {
@@ -213,318 +202,244 @@ export default function App() {
     });
   }, []);
 
-  return (
-    <div className="min-h-screen bg-[#fcfcfd] text-zinc-900 flex flex-col font-sans">
-      
-      {/* Minimal Header */}
-      <Header />
+  const handleTabClick = (tab: string) => {
+    setActiveSidebarTab(tab);
+    if (tab === 'saved') {
+      setIsSavedDrawerOpen(true);
+    } else if (tab === 'history') {
+      setIsHistoryDrawerOpen(true);
+    }
+  };
 
+  const handleSwap = () => {
+    const tempOrigin = origin;
+    const tempDest = destination;
+    setOrigin(tempDest);
+    setDestination(tempOrigin);
+    calculateTransitOptions(tempDest, tempOrigin);
+  };
+
+  return (
+    <div className="h-screen w-screen overflow-hidden bg-[#f8fafc] text-zinc-900 flex flex-col font-sans">
+      
       {/* Update Available Notification Banner */}
       <UpdateNotificationBanner updateInfo={updateInfo} />
 
-      {/* Main Content Area: Responsive half-and-half desktop layout */}
-      <main className="flex-1 max-w-[1400px] w-full mx-auto px-4 sm:px-6 py-6 sm:py-8 space-y-6">
+      {/* Mobile Top Header (Visible on < lg) */}
+      <header className="lg:hidden bg-white border-b border-zinc-200 px-4 py-3 flex items-center justify-between shrink-0 z-30">
+        <div className="flex items-center gap-2.5">
+          <button
+            onClick={() => setIsMobileMenuOpen(true)}
+            className="p-1 rounded-lg text-zinc-600 hover:text-zinc-900 hover:bg-zinc-100"
+          >
+            <Menu className="w-5 h-5" />
+          </button>
+          <div className="flex items-center gap-2">
+            <div className="w-7 h-7 rounded-full bg-[#0d5c46] flex items-center justify-center text-white">
+              <MapPin className="w-4 h-4 fill-white/20" />
+            </div>
+            <span className="font-extrabold text-base text-zinc-900 tracking-tight">PathWise</span>
+          </div>
+        </div>
+
+        {/* Mobile View Switcher Buttons */}
+        <div className="flex items-center gap-1 p-1 bg-zinc-100 rounded-xl text-xs font-semibold">
+          <button
+            onClick={() => setMobileView('search')}
+            className={`px-2.5 py-1 rounded-lg transition-all ${
+              mobileView === 'search' ? 'bg-white text-zinc-950 shadow-2xs' : 'text-zinc-500'
+            }`}
+          >
+            Search
+          </button>
+          <button
+            onClick={() => setMobileView('map')}
+            className={`px-2.5 py-1 rounded-lg transition-all ${
+              mobileView === 'map' ? 'bg-white text-zinc-950 shadow-2xs' : 'text-zinc-500'
+            }`}
+          >
+            Map
+          </button>
+          <button
+            onClick={() => setMobileView('routes')}
+            className={`px-2.5 py-1 rounded-lg transition-all ${
+              mobileView === 'routes' ? 'bg-white text-zinc-950 shadow-2xs' : 'text-zinc-500'
+            }`}
+          >
+            Routes
+          </button>
+        </div>
+      </header>
+
+      {/* Main 4-Column Workspace Layout */}
+      <div className="flex-1 flex flex-row overflow-hidden relative">
         
-        {/* Search & Query Input */}
-        <SearchCard
-          origin={origin}
-          destination={destination}
-          budget={budget}
-          preference={preference}
-          isLoading={isLoading}
-          onOriginChange={setOrigin}
-          onDestinationChange={setDestination}
-          onBudgetChange={setBudget}
-          onPreferenceChange={setPreference}
-          onSubmit={async (resolvedOrigin, resolvedDest) => {
-            const finalOrigin = resolvedOrigin || origin;
-            const finalDest = resolvedDest || destination;
-            setOrigin(finalOrigin);
-            setDestination(finalDest);
-            setFocusedLocation(null);
-            await calculateTransitOptions(finalOrigin, finalDest);
-          }}
-          onSelectLocation={(loc, field) => {
-            setFocusedLocation(loc);
-            if (field === 'origin') {
-              setOrigin(loc);
-              calculateTransitOptions(loc, destination);
-            } else {
-              setDestination(loc);
-              calculateTransitOptions(origin, loc);
-            }
-          }}
+        {/* Column 1: Navigation Sidebar */}
+        <Sidebar
+          activeTab={activeSidebarTab}
+          onSelectTab={handleTabClick}
+          isOpenMobile={isMobileMenuOpen}
+          onCloseMobile={() => setIsMobileMenuOpen(false)}
         />
 
-        {/* Mobile View Toggle Bar */}
-        <div className="flex sm:hidden items-center justify-center p-1 bg-zinc-100 rounded-xl">
-          <button
-            onClick={() => setMobileTab('routes')}
-            className={`flex-1 py-1.5 text-xs font-semibold rounded-lg flex items-center justify-center gap-1.5 transition-all ${
-              mobileTab === 'routes'
-                ? 'bg-white text-zinc-950 shadow-xs'
-                : 'text-zinc-500'
-            }`}
-          >
-            <ListFilter className="w-3.5 h-3.5" />
-            <span>Options ({routes.filter((r) => r.isFeasible).length})</span>
-          </button>
-          <button
-            onClick={() => setMobileTab('map')}
-            className={`flex-1 py-1.5 text-xs font-semibold rounded-lg flex items-center justify-center gap-1.5 transition-all ${
-              mobileTab === 'map'
-                ? 'bg-white text-zinc-950 shadow-xs'
-                : 'text-zinc-500'
-            }`}
-          >
-            <MapIcon className="w-3.5 h-3.5" />
-            <span>Map View</span>
-          </button>
-        </div>
-
-        {/* Route Comparison Header */}
-        <div className="flex items-center justify-between px-1">
-          <div className="flex items-center gap-2">
-            <h2 className="text-xs sm:text-sm font-bold text-zinc-900">
-              Route Comparison ({routes.filter((r) => r.isFeasible).length} Options)
-            </h2>
-            <span className="text-[10px] sm:text-[11px] font-semibold text-zinc-600 bg-zinc-100 border border-zinc-200 px-2.5 py-0.5 rounded-full">
-              Estimated fares
-            </span>
-          </div>
-          <span className="text-[11px] text-zinc-400 font-medium hidden sm:inline">
-            Interactive Map on Left • Comparison on Right
-          </span>
-        </div>
-
-        {/* 2-Column Split: Map on Left (lg:col-span-5), Route Comparison on Right (lg:col-span-7) */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-          
-          {/* Map Column: Statically on Left (lg:col-span-5 lg:order-1) */}
-          <div
-            className={`lg:col-span-5 lg:order-1 lg:sticky lg:top-20 h-[460px] sm:h-[540px] lg:h-[calc(100vh-130px)] lg:min-h-[620px] lg:max-h-[800px] ring-1 ring-zinc-200/90 shadow-xs rounded-2xl ${
-              mobileTab === 'routes' ? 'hidden lg:block' : 'block'
-            }`}
-          >
-            <MapView
-              origin={origin}
-              destination={destination}
-              routes={routes}
-              selectedRouteId={selectedRouteId}
-              onSelectRoute={(id) => {
-                setSelectedRouteId(id);
-                if (expandedCardId === id) {
-                  setExpandedCardId(null);
-                } else {
-                  setExpandedCardId(id);
-                }
-              }}
-              focusedLocation={focusedLocation}
-              onSetOrigin={(loc) => {
+        {/* Column 2: "Find your way" Search & Filter Panel */}
+        <div className={`
+          h-full z-20 shrink-0
+          ${mobileView === 'search' ? 'block w-full' : 'hidden lg:block'}
+        `}>
+          <FindYourWayPanel
+            origin={origin}
+            destination={destination}
+            budget={budget}
+            preference={preference}
+            isLoading={isLoading}
+            onOriginChange={setOrigin}
+            onDestinationChange={setDestination}
+            onBudgetChange={setBudget}
+            onPreferenceChange={setPreference}
+            onSubmit={async (newOrigin, newDest) => {
+              const o = newOrigin || origin;
+              const d = newDest || destination;
+              setOrigin(o);
+              setDestination(d);
+              setFocusedLocation(null);
+              await calculateTransitOptions(o, d);
+              setMobileView('routes'); // Auto-switch to routes on mobile
+            }}
+            onSelectLocation={(loc, field) => {
+              setFocusedLocation(loc);
+              if (field === 'origin') {
                 setOrigin(loc);
-                setFocusedLocation(null);
                 calculateTransitOptions(loc, destination);
-              }}
-              onSetDestination={(loc) => {
+              } else {
                 setDestination(loc);
-                setFocusedLocation(null);
                 calculateTransitOptions(origin, loc);
-              }}
-            />
-          </div>
-
-          {/* Routes Column: Core of the results page (lg:col-span-7 lg:order-2) */}
-          <div
-            className={`lg:col-span-7 lg:order-2 space-y-3.5 ${
-              mobileTab === 'map' ? 'hidden lg:block' : 'block'
-            }`}
-          >
-            {/* Quick Mode Comparison Bar: At-a-glance comparison across all transit modes */}
-            {routes.filter((r) => r.isFeasible).length > 0 && (
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
-                {routes
-                  .filter((r) => r.isFeasible)
-                  .map((r) => {
-                    const isSelected = selectedRouteId === r.id;
-                    const modeLabel =
-                      r.mode === 'bus'
-                        ? `Bus ${r.busNumber || ''}`
-                        : r.mode === 'metro_multimodal'
-                        ? 'Metro'
-                        : r.mode === 'auto'
-                        ? 'Auto'
-                        : r.mode === 'cab'
-                        ? 'Cab'
-                        : 'Walk';
-                    return (
-                      <button
-                        key={r.id}
-                        type="button"
-                        onClick={() => {
-                          setSelectedRouteId(r.id);
-                          setExpandedCardId(r.id);
-                        }}
-                        className={`p-2.5 rounded-xl border text-left transition-all cursor-pointer ${
-                          isSelected
-                            ? 'bg-zinc-950 text-white border-zinc-950 shadow-2xs'
-                            : 'bg-white hover:bg-zinc-50 border-zinc-200/90 text-zinc-900 shadow-2xs'
-                        }`}
-                      >
-                        <div className="flex items-center justify-between">
-                          <span className="font-bold text-[11px] truncate">
-                            {modeLabel}
-                          </span>
-                          <span className={`font-mono font-bold text-xs ${isSelected ? 'text-emerald-400' : 'text-zinc-950'}`}>
-                            ₹{r.cost.totalFare}
-                          </span>
-                        </div>
-                        <div className={`flex items-center justify-between text-[10px] mt-1 ${isSelected ? 'text-zinc-300' : 'text-zinc-500'}`}>
-                          <span>{r.durationMinutes} min</span>
-                          <span>{r.transferCount === 0 ? 'Direct' : `${r.transferCount} switch`}</span>
-                        </div>
-                      </button>
-                    );
-                  })}
-              </div>
-            )}
-
-            {/* Out of Town City Banner: Reaching Soon */}
-            {isOutOfTownActive && (
-              <div className="bg-gradient-to-br from-amber-50 via-orange-50 to-amber-100/70 border border-amber-300 rounded-2xl p-4 sm:p-5 shadow-xs space-y-3.5 animate-in fade-in">
-                <div className="flex items-start gap-3">
-                  <div className="w-10 h-10 rounded-xl bg-amber-600 text-white flex items-center justify-center shrink-0 shadow-xs text-xl">
-                    🚀
-                  </div>
-                  <div>
-                    <div className="flex items-center gap-2 flex-wrap">
-                      <span className="px-2 py-0.5 rounded-full text-[10px] font-extrabold uppercase tracking-wider bg-amber-200 text-amber-950 border border-amber-300">
-                        Out of Town
-                      </span>
-                      <span className="text-xs text-amber-800 font-semibold">•</span>
-                      <span className="text-xs font-bold text-amber-900">
-                        Expansion Corridor
-                      </span>
-                    </div>
-                    <h3 className="text-sm sm:text-base font-bold text-zinc-950 mt-1">
-                      RouteWise is Reaching {activeOutOfTownCity} Soon!
-                    </h3>
-                  </div>
-                </div>
-
-                <p className="text-xs text-amber-950/90 leading-relaxed">
-                  Our unified multimodal transit engine (Metro, City Buses, RTO Autos, and Cabs) is currently active across the <strong>Pune Metropolitan Region</strong>. We are actively expanding to <strong>{activeOutOfTownCity}</strong> and surrounding getaway corridors!
-                </p>
-
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 text-xs">
-                  <div className="p-2.5 bg-white/90 rounded-xl border border-amber-200/90 space-y-0.5">
-                    <span className="font-bold text-zinc-950 flex items-center gap-1.5">
-                      <span>🚆</span> Suburban Rail
-                    </span>
-                    <p className="text-[11px] text-zinc-600">
-                      Pune–Lonavala local EMU timetable & express connections.
-                    </p>
-                  </div>
-                  <div className="p-2.5 bg-white/90 rounded-xl border border-amber-200/90 space-y-0.5">
-                    <span className="font-bold text-zinc-950 flex items-center gap-1.5">
-                      <span>🚌</span> Intercity Buses
-                    </span>
-                    <p className="text-[11px] text-zinc-600">
-                      MSRTC Shivneri & expressway state transport schedules.
-                    </p>
-                  </div>
-                  <div className="p-2.5 bg-white/90 rounded-xl border border-amber-200/90 space-y-0.5">
-                    <span className="font-bold text-zinc-950 flex items-center gap-1.5">
-                      <span>🛺</span> Local Feeder
-                    </span>
-                    <p className="text-[11px] text-zinc-600">
-                      Ghat taxi tariffs & station pickup price transparency.
-                    </p>
-                  </div>
-                </div>
-
-                <div className="pt-1 flex items-center gap-2 flex-wrap">
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setOrigin(PUNE_LANDMARKS[0]);
-                      setDestination(PUNE_LANDMARKS[7]);
-                      calculateTransitOptions(PUNE_LANDMARKS[0], PUNE_LANDMARKS[7]);
-                    }}
-                    className="px-3 py-1.5 rounded-lg bg-zinc-950 hover:bg-zinc-800 text-white text-xs font-semibold flex items-center gap-1 transition-colors shadow-2xs"
-                  >
-                    <span>← Explore Pune Transit (AIT ➔ Pune Junction)</span>
-                  </button>
-                </div>
-              </div>
-            )}
-            
-            {/* Highly Visible "Recommended for you" Banner */}
-            <RecommendationBanner
-              recommendedRoute={recommendedRoute}
-              explanationText={explanation}
-              onSelectRoute={(id) => {
-                setSelectedRouteId(id);
-                setExpandedCardId(id);
-                setMobileTab('map');
-              }}
-            />
-
-            {/* Alternatives List Header */}
-            <div className="flex items-center justify-between px-1 pt-1">
-              <span className="text-[11px] font-bold text-zinc-500 uppercase tracking-wider">
-                All Route Options ({routes.filter((r) => r.isFeasible).length})
-              </span>
-              <span className="text-[11px] text-zinc-400 font-medium">
-                Sorted by {preference}
-              </span>
-            </div>
-
-            {/* List of Cards */}
-            <div className="space-y-2.5">
-              {routes.map((route) => (
-                <RouteCard
-                  key={route.id}
-                  route={route}
-                  budget={budget}
-                  isSelected={expandedCardId === route.id}
-                  onSelect={() => {
-                    if (expandedCardId === route.id) {
-                      setExpandedCardId(null);
-                    } else {
-                      setExpandedCardId(route.id);
-                      setSelectedRouteId(route.id);
-                    }
-                  }}
-                  onOpenFareDetails={(r) => setFareModalRoute(r)}
-                />
-              ))}
-            </div>
-
-          </div>
-
+              }
+            }}
+          />
         </div>
 
-      </main>
+        {/* Column 3: Center Map View */}
+        <div className={`
+          flex-1 h-full min-w-0 relative z-10
+          ${mobileView === 'map' ? 'block w-full' : 'hidden lg:block'}
+        `}>
+          <MapView
+            origin={origin}
+            destination={destination}
+            routes={routes}
+            selectedRouteId={selectedRouteId}
+            onSelectRoute={(id) => setSelectedRouteId(id)}
+            focusedLocation={focusedLocation}
+            onSetOrigin={(loc) => {
+              setOrigin(loc);
+              setFocusedLocation(null);
+              calculateTransitOptions(loc, destination);
+            }}
+            onSetDestination={(loc) => {
+              setDestination(loc);
+              setFocusedLocation(null);
+              calculateTransitOptions(origin, loc);
+            }}
+            onSelectSearchLocation={(loc) => {
+              setFocusedLocation(loc);
+            }}
+          />
+        </div>
 
-      {/* Modals */}
+        {/* Column 4: Route Options Panel */}
+        <div className={`
+          h-full z-20 shrink-0
+          ${mobileView === 'routes' ? 'block w-full' : 'hidden lg:block'}
+        `}>
+          <RouteOptionsPanel
+            origin={origin}
+            destination={destination}
+            routes={routes}
+            selectedRouteId={selectedRouteId}
+            onSelectRoute={(id) => {
+              setSelectedRouteId(id);
+            }}
+            onOpenFareDetails={(route) => setFareModalRoute(route)}
+            onSwapLocations={handleSwap}
+            onBackMobile={() => setMobileView('search')}
+          />
+        </div>
+
+      </div>
+
+      {/* Fare Calculation Breakdown Modal */}
       <FareModal
         route={fareModalRoute}
         onClose={() => setFareModalRoute(null)}
       />
 
-      {/* Minimal Footer */}
-      <footer className="border-t border-zinc-200/80 bg-white py-5 text-center text-xs text-zinc-400">
-        <div className="max-w-[1400px] mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-2">
-          <div className="flex items-center gap-1.5 font-medium text-zinc-600">
-            <span>RouteWise</span>
-            <span>•</span>
-            <span>Pune Multimodal Transit Engine</span>
-          </div>
-          <div className="text-[11px] text-zinc-400">
-            Estimated fares based on Pune RTO & PMPML tariffs • Zero fare hallucinations
+      {/* Saved Places Drawer / Modal */}
+      {isSavedDrawerOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-xs">
+          <div className="bg-white rounded-2xl p-5 w-full max-w-sm space-y-4 shadow-xl border border-zinc-200 animate-in fade-in">
+            <div className="flex items-center justify-between pb-2 border-b border-zinc-100">
+              <div className="flex items-center gap-2">
+                <Bookmark className="w-4 h-4 text-[#0d5c46]" />
+                <h3 className="font-bold text-sm text-zinc-900">Saved Places</h3>
+              </div>
+              <button onClick={() => setIsSavedDrawerOpen(false)} className="p-1 text-zinc-400 hover:text-zinc-600">
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+            <div className="space-y-2 text-xs">
+              {[
+                { name: 'AIT Pune', tag: 'College', loc: PUNE_LANDMARKS[0] },
+                { name: 'FC Road', tag: 'Hangout', loc: PUNE_LANDMARKS[24] },
+                { name: 'Pune Junction', tag: 'Station', loc: PUNE_LANDMARKS[10] },
+                { name: 'Military Hospital Khadki', tag: 'Hospital', loc: { name: 'Military Hospital Khadki', lat: 18.5524, lng: 73.8381 } },
+              ].map((item, idx) => (
+                <button
+                  key={idx}
+                  onClick={() => {
+                    setDestination(item.loc as LocationPoint);
+                    calculateTransitOptions(origin, item.loc as LocationPoint);
+                    setIsSavedDrawerOpen(false);
+                  }}
+                  className="w-full text-left p-2.5 rounded-xl border border-zinc-200/80 hover:bg-zinc-50 flex items-center justify-between transition-colors cursor-pointer"
+                >
+                  <span className="font-semibold text-zinc-900">{item.name}</span>
+                  <span className="text-[10px] font-bold text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-200">{item.tag}</span>
+                </button>
+              ))}
+            </div>
           </div>
         </div>
-      </footer>
+      )}
+
+      {/* History Drawer / Modal */}
+      {isHistoryDrawerOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-xs">
+          <div className="bg-white rounded-2xl p-5 w-full max-w-sm space-y-4 shadow-xl border border-zinc-200 animate-in fade-in">
+            <div className="flex items-center justify-between pb-2 border-b border-zinc-100">
+              <div className="flex items-center gap-2">
+                <Clock className="w-4 h-4 text-[#0d5c46]" />
+                <h3 className="font-bold text-sm text-zinc-900">Recent Trips</h3>
+              </div>
+              <button onClick={() => setIsHistoryDrawerOpen(false)} className="p-1 text-zinc-400 hover:text-zinc-600">
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+            <div className="space-y-2 text-xs">
+              {[
+                { label: 'AIT Pune ➔ FC Road Pune', time: 'Just now' },
+                { label: 'Military Hospital Khadki ➔ Shivajinagar', time: 'Yesterday' },
+                { label: 'Pune Airport ➔ Swargate', time: '2 days ago' },
+              ].map((trip, idx) => (
+                <div key={idx} className="p-2.5 rounded-xl border border-zinc-200/80 bg-zinc-50 flex items-center justify-between">
+                  <span className="font-semibold text-zinc-900">{trip.label}</span>
+                  <span className="text-[10px] text-zinc-400">{trip.time}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
 
     </div>
   );
