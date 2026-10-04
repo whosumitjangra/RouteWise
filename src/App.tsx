@@ -37,6 +37,9 @@ export default function App() {
   // Modals
   const [fareModalRoute, setFareModalRoute] = useState<RouteOption | null>(null);
 
+  // Map focus / POI inspection
+  const [focusedLocation, setFocusedLocation] = useState<LocationPoint | null>(null);
+
   // App update info from GitHub releases
   const [updateInfo, setUpdateInfo] = useState<UpdateInfo | null>(null);
 
@@ -238,7 +241,18 @@ export default function App() {
             const finalDest = resolvedDest || destination;
             setOrigin(finalOrigin);
             setDestination(finalDest);
+            setFocusedLocation(null);
             await calculateTransitOptions(finalOrigin, finalDest);
+          }}
+          onSelectLocation={(loc, field) => {
+            setFocusedLocation(loc);
+            if (field === 'origin') {
+              setOrigin(loc);
+              calculateTransitOptions(loc, destination);
+            } else {
+              setDestination(loc);
+              calculateTransitOptions(origin, loc);
+            }
           }}
         />
 
@@ -304,6 +318,17 @@ export default function App() {
                 } else {
                   setExpandedCardId(id);
                 }
+              }}
+              focusedLocation={focusedLocation}
+              onSetOrigin={(loc) => {
+                setOrigin(loc);
+                setFocusedLocation(null);
+                calculateTransitOptions(loc, destination);
+              }}
+              onSetDestination={(loc) => {
+                setDestination(loc);
+                setFocusedLocation(null);
+                calculateTransitOptions(origin, loc);
               }}
             />
           </div>

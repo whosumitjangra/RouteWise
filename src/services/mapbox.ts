@@ -49,6 +49,20 @@ function cleanQuery(str: string): string {
 }
 
 const TYPO_MAP: Record<string, string> = {
+  kirkee: 'khadki',
+  poona: 'pune',
+  cst: 'chhatrapati shivaji maharaj terminus',
+  vt: 'chhatrapati shivaji maharaj terminus',
+  rly: 'railway',
+  stn: 'station',
+  hosp: 'hospital',
+  hosptl: 'hospital',
+  clg: 'college',
+  coll: 'college',
+  univ: 'university',
+  apt: 'airport',
+  arpt: 'airport',
+  mh: 'military hospital',
   lheogaon: 'lohegaon',
   lohgaon: 'lohegaon',
   lohegao: 'lohegaon',
@@ -84,6 +98,15 @@ function normalizeQueryWithTypos(raw: string): string[] {
   const cleaned = cleanQuery(raw);
   const variants = new Set<string>([cleaned]);
 
+  // Strip natural language prepositions (e.g. "Hospitals near Khadki" -> "Hospitals Khadki")
+  const stripped = cleaned
+    .replace(/\b(near|in|at|around|towards|opp|opposite|beside)\b/gi, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+  if (stripped && stripped !== cleaned) {
+    variants.add(stripped);
+  }
+
   const tokens = cleaned.split(/\s+/);
   const correctedTokens = tokens.map((t) => TYPO_MAP[t] || t);
   const corrected = correctedTokens.join(' ');
@@ -92,9 +115,24 @@ function normalizeQueryWithTypos(raw: string): string[] {
   }
 
   for (const [typo, fix] of Object.entries(TYPO_MAP)) {
-    if (cleaned.includes(typo)) {
-      variants.add(cleaned.replace(new RegExp(typo, 'g'), fix));
+    const wordRegex = new RegExp(`\\b${typo}\\b`, 'g');
+    if (wordRegex.test(cleaned)) {
+      variants.add(cleaned.replace(wordRegex, fix));
     }
+  }
+
+  if (stripped && stripped !== cleaned) {
+    for (const [typo, fix] of Object.entries(TYPO_MAP)) {
+      const wordRegex = new RegExp(`\\b${typo}\\b`, 'g');
+      if (wordRegex.test(stripped)) {
+        variants.add(stripped.replace(wordRegex, fix));
+      }
+    }
+  }
+
+  // Also retain the exact raw query string
+  if (raw.trim()) {
+    variants.add(raw.trim());
   }
 
   return Array.from(variants);
@@ -140,22 +178,167 @@ function matchesFuzzyToken(queryVariants: string[], targetName: string, aliases:
  * 4. Mapbox Geocoding API (discovers sub-streets, colonies, societies)
  * 5. OpenStreetMap Nominatim Live Geocoder
  */
-export async function searchPuneLocations(rawQuery: string): Promise<LocationPoint[]> {
-  const q = cleanQuery(rawQuery);
-  if (!q || q.length < 2) return [];
+export function detectLandmarkTypeAndLabel(
+  name: string,
+  featureType?: string,
+  address?: string,
+  categories?: string[]
+): { landmarkType: LocationPoint['landmarkType']; categoryLabel: string } {
+  const text = `${name} ${featureType || ''} ${address || ''} ${(categories || []).join(' ')}`.toLowerCase();
 
+  if (text.includes('military hospital')) {
+    return { landmarkType: 'hospital', categoryLabel: 'Military Hospital' };
+  }
+  if (
+    text.includes('hospital') ||
+    text.includes('clinic') ||
+    text.includes('medical') ||
+    text.includes('dispensary') ||
+    text.includes('healthcare') ||
+    text.includes('health centre') ||
+    text.includes('nursing')
+  ) {
+    return { landmarkType: 'hospital', categoryLabel: 'Hospital' };
+  }
+  if (text.includes('metro') || text.includes('metro station')) {
+    return { landmarkType: 'metro', categoryLabel: 'Metro' };
+  }
+  if (
+    text.includes('railway') ||
+    text.includes('train') ||
+    text.includes('junction') ||
+    text.includes('terminus') ||
+    text.includes('station') ||
+    text.includes('cst')
+  ) {
+    return { landmarkType: 'station', categoryLabel: 'Railway Station' };
+  }
+  if (
+    text.includes('bus stand') ||
+    text.includes('bus stop') ||
+    text.includes('bus depot') ||
+    text.includes('pmt') ||
+    text.includes('pmpml') ||
+    text.includes('msrtc')
+  ) {
+    return { landmarkType: 'bus_stand', categoryLabel: 'Bus Stand' };
+  }
+  if (text.includes('airport') || text.includes('aerodrome') || text.includes('aeromall')) {
+    return { landmarkType: 'airport', categoryLabel: 'Airport' };
+  }
+  if (
+    text.includes('college') ||
+    text.includes('university') ||
+    text.includes('institute') ||
+    text.includes('school') ||
+    text.includes('campus') ||
+    text.includes('vidyalaya') ||
+    text.includes('ait')
+  ) {
+    return { landmarkType: 'college', categoryLabel: 'College / School' };
+  }
+  if (
+    text.includes('restaurant') ||
+    text.includes('cafe') ||
+    text.includes('pizza') ||
+    text.includes('hotel') ||
+    text.includes('bakery') ||
+    text.includes('dining') ||
+    text.includes('bar')
+  ) {
+    return { landmarkType: 'restaurant', categoryLabel: 'Food & Dining' };
+  }
+  if (
+    text.includes('court') ||
+    text.includes('collector') ||
+    text.includes('police') ||
+    text.includes('government') ||
+    text.includes('rto') ||
+    text.includes('cantonment') ||
+    text.includes('secretariat')
+  ) {
+    return { landmarkType: 'government', categoryLabel: 'Govt & Cantonment' };
+  }
+  if (featureType === 'locality' || featureType === 'neighborhood' || featureType === 'suburb') {
+    return { landmarkType: 'locality', categoryLabel: 'Locality' };
+  }
+  return { landmarkType: 'poi', categoryLabel: 'Landmark' };
+}
+
+export interface SearchLocationsResponse {
+  results: LocationPoint[];
+  status: 'ok' | 'no_results' | 'no_token' | 'api_error' | 'network_error';
+  errorMessage?: string;
+  source?: 'mapbox_searchbox' | 'mapbox_geocoding' | 'photon_osm' | 'local_catalogue';
+}
+
+/**
+ * Search Pune and regional locations with rich multi-provider cascade:
+ * 1. Mapbox Search Box API (modern place/POI search with proximity bias)
+ * 2. Mapbox Geocoding v5 API fallback
+ * 3. Photon (Komoot OSM full-text POI geocoder)
+ * 4. Curated local catalog (Metro stations, AIT Pune, landmarks, out-of-town cities)
+ */
+export async function searchPuneLocationsWithStatus(rawQuery: string): Promise<SearchLocationsResponse> {
+  const q = cleanQuery(rawQuery);
+  if (!q || q.length < 2) {
+    return { results: [], status: 'no_results' };
+  }
+
+  const token = getMapboxToken();
+  const hasToken = hasValidMapboxToken();
   const queryVariants = normalizeQueryWithTypos(rawQuery);
   const matchedPoints: LocationPoint[] = [];
+  let apiEncounteredError = false;
+  let networkFailed = false;
 
   const isDuplicate = (lat: number, lng: number, name: string) => {
-    return matchedPoints.some(
-      (p) =>
-        (Math.abs(p.lat - lat) < 0.003 && Math.abs(p.lng - lng) < 0.003) ||
-        cleanQuery(p.name) === cleanQuery(name)
-    );
+    const n = cleanQuery(name);
+    return matchedPoints.some((p) => {
+      const pName = cleanQuery(p.name);
+      if (pName === n) return true;
+      const isVeryClose = Math.abs(p.lat - lat) < 0.0015 && Math.abs(p.lng - lng) < 0.0015;
+      return isVeryClose && (pName.includes(n) || n.includes(pName));
+    });
   };
 
-  // Tier 0: Out-of-Town Cities & Getaways
+  // Tier 0: Curated Pune Landmarks, Out-of-Town Cities & Metro Stations (Zero-latency instant matching)
+  for (const item of PUNE_LANDMARKS) {
+    if (matchesFuzzyToken(queryVariants, item.name, item.aliases)) {
+      if (!isDuplicate(item.lat, item.lng, item.name)) {
+        const { landmarkType, categoryLabel } = detectLandmarkTypeAndLabel(item.name);
+        matchedPoints.push({
+          name: item.name,
+          lat: item.lat,
+          lng: item.lng,
+          address: `${item.name}, Pune`,
+          landmarkType: item.landmarkType || landmarkType,
+          categoryLabel: categoryLabel || 'Landmark',
+        });
+      }
+    }
+  }
+
+  for (const station of PUNE_METRO_STATIONS) {
+    const sName = cleanQuery(station.name);
+    if (
+      queryVariants.some((qv) => sName.includes(qv) || qv.includes(sName)) ||
+      station.marathiName.includes(rawQuery)
+    ) {
+      const stationFullName = `${station.name} (${station.line === 'purple' ? 'Purple Line' : 'Aqua Line'})`;
+      if (!isDuplicate(station.lat, station.lng, stationFullName)) {
+        matchedPoints.push({
+          name: stationFullName,
+          lat: station.lat,
+          lng: station.lng,
+          address: `Pune Metro ${station.line === 'purple' ? 'Purple Line' : 'Aqua Line'}, Pune`,
+          landmarkType: 'metro',
+          categoryLabel: 'Metro Station',
+        });
+      }
+    }
+  }
+
   for (const city of OUT_OF_TOWN_CITIES) {
     const cityName = cleanQuery(city.name);
     const hasAliasMatch = city.aliases.some((alias) => {
@@ -169,127 +352,255 @@ export async function searchPuneLocations(rawQuery: string): Promise<LocationPoi
           name: `${city.name}, ${city.state}`,
           lat: city.lat,
           lng: city.lng,
+          address: `${city.name}, Maharashtra`,
           landmarkType: 'out_of_town',
           isOutOfTown: true,
           cityName: city.name,
+          categoryLabel: 'Getaway Destination',
         });
       }
     }
   }
 
-  // Tier 1: Local curated Pune landmarks with fuzzy aliases & token matching
-  for (const item of PUNE_LANDMARKS) {
-    if (matchesFuzzyToken(queryVariants, item.name, item.aliases)) {
-      if (!isDuplicate(item.lat, item.lng, item.name)) {
-        matchedPoints.push({
-          name: item.name,
-          lat: item.lat,
-          lng: item.lng,
-          landmarkType: item.landmarkType,
-        });
-      }
+  // Collect search terms to try (exact raw query + typo-corrected variants)
+  const searchTermsToTry: string[] = [];
+  if (rawQuery.trim()) searchTermsToTry.push(rawQuery.trim());
+  for (const v of queryVariants) {
+    if (v && !searchTermsToTry.includes(v)) {
+      searchTermsToTry.push(v);
     }
   }
 
-  // Tier 2: Search Pune Metro stations
-  for (const station of PUNE_METRO_STATIONS) {
-    const sName = cleanQuery(station.name);
-    if (
-      queryVariants.some((qv) => sName.includes(qv) || qv.includes(sName)) ||
-      station.marathiName.includes(rawQuery)
-    ) {
-      const stationFullName = `${station.name} (${station.line === 'purple' ? 'Purple Line' : 'Aqua Line'})`;
-      if (!isDuplicate(station.lat, station.lng, stationFullName)) {
-        matchedPoints.push({
-          name: stationFullName,
-          lat: station.lat,
-          lng: station.lng,
-          landmarkType: 'metro',
-        });
-      }
-    }
-  }
-
-  // Tier 3: Mapbox Geocoding (always query in background to discover sub-streets/colonies)
-  if (hasValidMapboxToken()) {
+  // Tier 1: Modern Mapbox Search Box API (Official POI/Address Engine)
+  if (hasToken) {
     try {
-      const token = getMapboxToken();
-      const bbox = '73.65,18.35,74.15,18.75';
-      const searchTerm = queryVariants[queryVariants.length - 1] || rawQuery;
-      const url = `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(
-        searchTerm
-      )}.json?access_token=${token}&country=IN&bbox=${bbox}&limit=8&types=poi,address,neighborhood,locality`;
+      for (const term of searchTermsToTry.slice(0, 2)) {
+        const url = `https://api.mapbox.com/search/searchbox/v1/forward?q=${encodeURIComponent(
+          term
+        )}&access_token=${token}&proximity=73.8567,18.5204&country=IN&limit=10&types=poi,address,street,neighborhood,locality,place,district`;
+
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 2500);
+        const res = await fetch(url, { signal: controller.signal });
+        clearTimeout(timeoutId);
+
+        if (res.ok) {
+          const data = await res.json();
+          if (data.features && Array.isArray(data.features)) {
+            for (const f of data.features) {
+              const name = f.properties?.name || '';
+              const address = f.properties?.place_formatted || f.properties?.full_address || '';
+              const featureType = f.properties?.feature_type || '';
+              const categories = f.properties?.poi_category || [];
+              const coords = f.geometry?.coordinates;
+
+              if (name && coords && coords.length >= 2) {
+                const lng = coords[0];
+                const lat = coords[1];
+                if (!isDuplicate(lat, lng, name)) {
+                  const { landmarkType, categoryLabel } = detectLandmarkTypeAndLabel(
+                    name,
+                    featureType,
+                    address,
+                    categories
+                  );
+                  matchedPoints.push({
+                    name,
+                    lat,
+                    lng,
+                    address,
+                    landmarkType,
+                    categoryLabel,
+                  });
+                }
+              }
+            }
+          }
+        } else if (res.status === 401 || res.status === 403) {
+          apiEncounteredError = true;
+        }
+      }
+    } catch (e: any) {
+      if (e?.name === 'TypeError' || e?.message?.includes('network') || e?.message?.includes('fetch failed')) {
+        networkFailed = true;
+      } else {
+        apiEncounteredError = true;
+      }
+    }
+  }
+
+  // Tier 2: OpenStreetMap Photon POI Engine (Live deep category search & zero-token resilience)
+  if (matchedPoints.length < 6) {
+    try {
+      const photonTerm = searchTermsToTry.find((t) => t.includes(' ') && !t.includes('near')) || searchTermsToTry[0] || rawQuery;
+      const photonUrl = `https://photon.komoot.io/api/?q=${encodeURIComponent(
+        photonTerm
+      )}&lat=18.5204&lon=73.8567&limit=8`;
 
       const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 1600);
+      const timeoutId = setTimeout(() => controller.abort(), 2200);
+      const res = await fetch(photonUrl, { signal: controller.signal });
+      clearTimeout(timeoutId);
+
+      if (res.ok) {
+        const data = await res.json();
+        if (data.features && Array.isArray(data.features)) {
+          for (const f of data.features) {
+            const props = f.properties || {};
+            const name = props.name || '';
+            const addressParts = [props.street, props.district, props.city, props.state].filter(Boolean);
+            const address = addressParts.join(', ');
+            const coords = f.geometry?.coordinates;
+
+            if (name && coords && coords.length >= 2) {
+              const lng = coords[0];
+              const lat = coords[1];
+              if (!isDuplicate(lat, lng, name)) {
+                const { landmarkType, categoryLabel } = detectLandmarkTypeAndLabel(
+                  name,
+                  props.osm_value || props.osm_key,
+                  address
+                );
+                matchedPoints.push({
+                  name,
+                  lat,
+                  lng,
+                  address,
+                  landmarkType,
+                  categoryLabel,
+                });
+              }
+            }
+          }
+        }
+      }
+    } catch (e) {
+      // Continue gracefully to next tier
+    }
+  }
+
+  // Tier 3: Mapbox Geocoding v5 Fallback (if still sparse)
+  if (hasToken && matchedPoints.length < 6) {
+    try {
+      const geocodeTerm = searchTermsToTry[0] || rawQuery;
+      const url = `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(
+        geocodeTerm
+      )}.json?access_token=${token}&country=IN&proximity=73.8567,18.5204&limit=8`;
+
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 2000);
       const res = await fetch(url, { signal: controller.signal });
       clearTimeout(timeoutId);
 
       if (res.ok) {
         const data = await res.json();
-        if (data.features && data.features.length > 0) {
+        if (data.features && Array.isArray(data.features)) {
           for (const feat of data.features) {
-            const cleanName = feat.place_name.replace(', Maharashtra, India', '').replace(', India', '');
+            const cleanName = feat.text || feat.place_name.replace(', Maharashtra, India', '').replace(', India', '');
+            const address = feat.place_name || '';
             const lat = feat.center[1];
             const lng = feat.center[0];
             if (!isDuplicate(lat, lng, cleanName)) {
+              const { landmarkType, categoryLabel } = detectLandmarkTypeAndLabel(
+                cleanName,
+                feat.place_type?.[0],
+                address
+              );
               matchedPoints.push({
                 name: cleanName,
                 lat,
                 lng,
-                landmarkType: 'commercial',
+                address,
+                landmarkType,
+                categoryLabel,
               });
             }
           }
         }
       }
     } catch (e) {
-      // Continue silently
+      // Continue to local catalogue
     }
   }
 
-  // Tier 4: OpenStreetMap Nominatim Live Geocoding (if results are fewer than 8)
-  if (matchedPoints.length < 8) {
-    try {
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 1400);
-      const searchTerm = queryVariants[queryVariants.length - 1] || rawQuery;
-      const osmQuery = `${searchTerm}, Pune, Maharashtra`;
-      const osmUrl = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(
-        osmQuery
-      )}&limit=6&countrycodes=in&viewbox=73.65,18.75,74.15,18.35`;
+  // Rank results by relevance across query words and synonym variants (e.g. kirkee -> khadki)
+  const allQueryVariants = normalizeQueryWithTypos(rawQuery).map(cleanQuery);
+  const primaryClean = cleanQuery(rawQuery);
+  const allKeywords = Array.from(
+    new Set(allQueryVariants.flatMap((v) => v.split(/\s+/)).filter((w) => w.length >= 2))
+  );
 
-      const res = await fetch(osmUrl, {
-        signal: controller.signal,
-        headers: {
-          'Accept-Language': 'en',
-        },
-      });
-      clearTimeout(timeoutId);
+  matchedPoints.sort((a, b) => {
+    const aName = cleanQuery(a.name);
+    const bName = cleanQuery(b.name);
 
-      if (res.ok) {
-        const data = await res.json();
-        for (const item of data) {
-          const lat = parseFloat(item.lat);
-          const lng = parseFloat(item.lon);
-          const shortName = item.display_name.split(',').slice(0, 3).join(', ');
-          
-          if (!isDuplicate(lat, lng, shortName)) {
-            matchedPoints.push({
-              name: shortName,
-              lat,
-              lng,
-              landmarkType: 'commercial',
-            });
-          }
-        }
-      }
-    } catch (e) {
-      // Fallback completed
+    // 1. Exact query match
+    if (aName === primaryClean && bName !== primaryClean) return -1;
+    if (bName === primaryClean && aName !== primaryClean) return 1;
+
+    // 2. Starts with query
+    const aStarts = aName.startsWith(primaryClean);
+    const bStarts = bName.startsWith(primaryClean);
+    if (aStarts && !bStarts) return -1;
+    if (!aStarts && bStarts) return 1;
+
+    // 2.5. Acronym / Parenthesis match (e.g. '(ait)', 'coep', 'cst')
+    const firstWord = primaryClean.split(/\s+/)[0];
+    if (firstWord && firstWord.length >= 2) {
+      const aHasAcronym = aName.includes(`(${firstWord})`) || aName.split(/\s+/).includes(firstWord);
+      const bHasAcronym = bName.includes(`(${firstWord})`) || bName.split(/\s+/).includes(firstWord);
+      if (aHasAcronym && !bHasAcronym) return -1;
+      if (!aHasAcronym && bHasAcronym) return 1;
     }
+
+    // 3. Keyword matches across all variants
+    const aMatches = allKeywords.filter((w) => aName.includes(w)).length;
+    const bMatches = allKeywords.filter((w) => bName.includes(w)).length;
+    if (aMatches !== bMatches) return bMatches - aMatches;
+
+    return 0;
+  });
+
+  // Determine overall status
+  const finalResults = matchedPoints.slice(0, 16);
+
+  if (finalResults.length > 0) {
+    return { results: finalResults, status: 'ok' };
   }
 
-  return matchedPoints.slice(0, 16);
+  if (!hasToken) {
+    return {
+      results: [],
+      status: 'no_token',
+      errorMessage: 'Mapbox API token (VITE_MAPBOX_TOKEN) is not configured in .env',
+    };
+  }
+
+  if (networkFailed) {
+    return {
+      results: [],
+      status: 'network_error',
+      errorMessage: 'Network connection failed. Unable to reach map providers.',
+    };
+  }
+
+  if (apiEncounteredError) {
+    return {
+      results: [],
+      status: 'api_error',
+      errorMessage: 'Search API returned an authorization or server error.',
+    };
+  }
+
+  return { results: [], status: 'no_results' };
+}
+
+/**
+ * Convenience wrapper returning LocationPoint array
+ */
+export async function searchPuneLocations(rawQuery: string): Promise<LocationPoint[]> {
+  const resp = await searchPuneLocationsWithStatus(rawQuery);
+  return resp.results;
 }
 
 /**
@@ -301,6 +612,8 @@ export async function resolveLocationQuery(query: string, fallbackDefault?: Loca
     name: 'Pune, Maharashtra',
     lat: 18.5204,
     lng: 73.8567,
+    address: 'Pune, Maharashtra, India',
+    categoryLabel: 'City',
   };
 
   if (!query || query.trim().length === 0) return safeFallback;
@@ -313,19 +626,28 @@ export async function resolveLocationQuery(query: string, fallbackDefault?: Loca
 
   const queryVariants = normalizeQueryWithTypos(query);
 
+  // 1. Check Out of town cities
   const outOfTownCity = matchOutOfTownCity(query);
   if (outOfTownCity) {
     return {
       name: `${outOfTownCity.name}, ${outOfTownCity.state}`,
       lat: outOfTownCity.lat,
       lng: outOfTownCity.lng,
+      address: `${outOfTownCity.name}, ${outOfTownCity.state}`,
       landmarkType: 'out_of_town',
       isOutOfTown: true,
       cityName: outOfTownCity.name,
+      categoryLabel: 'Getaway Destination',
     };
   }
 
-  // Check PUNE_LANDMARKS with fuzzy matching
+  // 2. Perform live multi-provider search (finds Military Hospital Khadki, colleges, stations, etc.)
+  const results = await searchPuneLocations(query);
+  if (results && results.length > 0) {
+    return results[0];
+  }
+
+  // 3. Check PUNE_LANDMARKS with fuzzy matching
   const landmarkMatch = PUNE_LANDMARKS.find((p) =>
     matchesFuzzyToken(queryVariants, p.name, p.aliases)
   );
@@ -334,11 +656,13 @@ export async function resolveLocationQuery(query: string, fallbackDefault?: Loca
       name: landmarkMatch.name,
       lat: landmarkMatch.lat,
       lng: landmarkMatch.lng,
+      address: `${landmarkMatch.name}, Pune`,
       landmarkType: landmarkMatch.landmarkType,
+      categoryLabel: 'Landmark',
     };
   }
 
-  // Check Pune Metro stations
+  // 4. Check Pune Metro stations
   const metroMatch = PUNE_METRO_STATIONS.find((s) => {
     const sClean = cleanQuery(s.name);
     return queryVariants.some((qv) => sClean.includes(qv) || qv.includes(sClean));
@@ -348,13 +672,10 @@ export async function resolveLocationQuery(query: string, fallbackDefault?: Loca
       name: `${metroMatch.name} (${metroMatch.line === 'purple' ? 'Purple Line' : 'Aqua Line'})`,
       lat: metroMatch.lat,
       lng: metroMatch.lng,
+      address: `Pune Metro ${metroMatch.line === 'purple' ? 'Purple Line' : 'Aqua Line'}, Pune`,
       landmarkType: 'metro',
+      categoryLabel: 'Metro Station',
     };
-  }
-
-  const results = await searchPuneLocations(query);
-  if (results && results.length > 0) {
-    return results[0];
   }
 
   return safeFallback;

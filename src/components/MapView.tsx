@@ -11,6 +11,9 @@ interface MapViewProps {
   routes: RouteOption[];
   selectedRouteId: string | null;
   onSelectRoute: (id: string) => void;
+  focusedLocation?: LocationPoint | null;
+  onSetOrigin?: (loc: LocationPoint) => void;
+  onSetDestination?: (loc: LocationPoint) => void;
 }
 
 const MODE_COLORS: Record<string, string> = {
@@ -27,6 +30,9 @@ export const MapView: React.FC<MapViewProps> = ({
   routes,
   selectedRouteId,
   onSelectRoute,
+  focusedLocation,
+  onSetOrigin,
+  onSetDestination,
 }) => {
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const mapInstanceRef = useRef<L.Map | null>(null);
@@ -51,6 +57,14 @@ export const MapView: React.FC<MapViewProps> = ({
     }, 150);
     return () => clearTimeout(timer);
   }, [selectedRouteId]);
+
+  // Center and fly to focused location when selected from search
+  useEffect(() => {
+    if (!focusedLocation || !mapInstanceRef.current) return;
+    mapInstanceRef.current.flyTo([focusedLocation.lat, focusedLocation.lng], 15, {
+      duration: 1.2,
+    });
+  }, [focusedLocation]);
 
   useEffect(() => {
     if (!mapContainerRef.current) return;
@@ -82,7 +96,7 @@ export const MapView: React.FC<MapViewProps> = ({
     }
 
     renderMapData();
-  }, [origin, destination, routes, selectedRouteId]);
+  }, [origin, destination, routes, selectedRouteId, focusedLocation]);
 
   const renderMapData = () => {
     const map = mapInstanceRef.current;
@@ -156,7 +170,21 @@ export const MapView: React.FC<MapViewProps> = ({
     });
 
     const markerA = L.marker([origin.lat, origin.lng], { icon: iconStart }).addTo(group);
-    markerA.bindPopup(`<strong>Start:</strong><br/>${origin.name}`);
+    const startPopupContent = `
+      <div style="font-family: inherit; min-width: 170px;">
+        <div style="font-size: 10px; font-weight: 700; color: #059669; text-transform: uppercase; margin-bottom: 2px;">
+          📍 Starting Point
+        </div>
+        <div style="font-size: 13px; font-weight: 700; color: #18181b;">
+          ${origin.name}
+        </div>
+        ${origin.address ? `<div style="font-size: 11px; color: #71717a; margin-top: 2px;">${origin.address}</div>` : ''}
+        <div style="font-size: 10px; color: #a1a1aa; margin-top: 4px;">
+          ${origin.lat.toFixed(4)}° N, ${origin.lng.toFixed(4)}° E
+        </div>
+      </div>
+    `;
+    markerA.bindPopup(startPopupContent);
     allLatLngs.push([origin.lat, origin.lng]);
 
     // 3. Add Destination Marker with written label
@@ -200,8 +228,103 @@ export const MapView: React.FC<MapViewProps> = ({
     });
 
     const markerB = L.marker([destination.lat, destination.lng], { icon: iconDest }).addTo(group);
-    markerB.bindPopup(`<strong>Destination:</strong><br/>${destination.name}`);
+    const destPopupContent = `
+      <div style="font-family: inherit; min-width: 170px;">
+        <div style="font-size: 10px; font-weight: 700; color: #e11d48; text-transform: uppercase; margin-bottom: 2px;">
+          🏁 Destination
+        </div>
+        <div style="font-size: 13px; font-weight: 700; color: #18181b;">
+          ${destination.name}
+        </div>
+        ${destination.address ? `<div style="font-size: 11px; color: #71717a; margin-top: 2px;">${destination.address}</div>` : ''}
+        <div style="font-size: 10px; color: #a1a1aa; margin-top: 4px;">
+          ${destination.lat.toFixed(4)}° N, ${destination.lng.toFixed(4)}° E
+        </div>
+      </div>
+    `;
+    markerB.bindPopup(destPopupContent);
     allLatLngs.push([destination.lat, destination.lng]);
+
+    // 3.5. If user searched a separate place, render an inspection pin
+    if (
+      focusedLocation &&
+      (Math.abs(focusedLocation.lat - origin.lat) >= 0.001 || Math.abs(focusedLocation.lng - origin.lng) >= 0.001) &&
+      (Math.abs(focusedLocation.lat - destination.lat) >= 0.001 || Math.abs(focusedLocation.lng - destination.lng) >= 0.001)
+    ) {
+      const iconPreview = L.divIcon({
+        className: 'custom-pin-preview',
+        html: `
+          <div style="display: flex; flex-direction: column; align-items: center; pointer-events: auto;">
+            <div style="
+              background: #4f46e5; 
+              color: white; 
+              font-size: 11px; 
+              font-weight: 700; 
+              padding: 3px 8px; 
+              border-radius: 6px; 
+              box-shadow: 0 2px 6px rgba(0,0,0,0.25); 
+              white-space: nowrap;
+              margin-bottom: 3px;
+            ">
+              📍 ${focusedLocation.name.split(',')[0].slice(0, 22)}
+            </div>
+            <div style="
+              background-color: #4f46e5; 
+              color: white; 
+              width: 22px; 
+              height: 22px; 
+              border-radius: 50%; 
+              border: 2px solid white; 
+              box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.3);
+              display: flex;
+              align-items: center;
+              justify-content: center;
+            ">
+              <div style="width: 6px; height: 6px; background: white; border-radius: 50%;"></div>
+            </div>
+          </div>
+        `,
+        iconSize: [140, 52],
+        iconAnchor: [70, 52],
+      });
+      const markerPreview = L.marker([focusedLocation.lat, focusedLocation.lng], { icon: iconPreview }).addTo(group);
+      
+      const popupDiv = document.createElement('div');
+      popupDiv.style.fontFamily = 'inherit';
+      popupDiv.style.minWidth = '180px';
+      popupDiv.innerHTML = `
+        <div style="font-size: 10px; font-weight: 700; color: #4f46e5; text-transform: uppercase;">
+          📍 Selected Location
+        </div>
+        <div style="font-size: 13px; font-weight: 700; color: #18181b; margin-top: 2px;">
+          ${focusedLocation.name}
+        </div>
+        ${focusedLocation.address ? `<div style="font-size: 11px; color: #71717a; margin-top: 2px;">${focusedLocation.address}</div>` : ''}
+        <div style="font-size: 10px; color: #a1a1aa; margin-top: 3px; margin-bottom: 6px;">
+          ${focusedLocation.lat.toFixed(4)}° N, ${focusedLocation.lng.toFixed(4)}° E
+        </div>
+        <div style="display: flex; gap: 6px; margin-top: 6px;">
+          <button id="btn-use-start" style="flex: 1; padding: 5px 6px; font-size: 10px; font-weight: 700; background: #059669; color: white; border: none; border-radius: 4px; cursor: pointer;">Use as Start</button>
+          <button id="btn-use-dest" style="flex: 1; padding: 5px 6px; font-size: 10px; font-weight: 700; background: #e11d48; color: white; border: none; border-radius: 4px; cursor: pointer;">Use as Dest</button>
+        </div>
+      `;
+      const btnStart = popupDiv.querySelector('#btn-use-start');
+      if (btnStart) {
+        btnStart.addEventListener('click', () => {
+          onSetOrigin?.(focusedLocation);
+          markerPreview.closePopup();
+        });
+      }
+      const btnDest = popupDiv.querySelector('#btn-use-dest');
+      if (btnDest) {
+        btnDest.addEventListener('click', () => {
+          onSetDestination?.(focusedLocation);
+          markerPreview.closePopup();
+        });
+      }
+      markerPreview.bindPopup(popupDiv).openPopup();
+      allLatLngs.push([focusedLocation.lat, focusedLocation.lng]);
+    }
 
     // 4. Highlight Selected Route & Add Station Written Marks
     const selectedRoute = routes.find((r) => r.id === selectedRouteId) || routes[0];
@@ -349,8 +472,15 @@ export const MapView: React.FC<MapViewProps> = ({
       }
     }
 
-    // 6. Fit bounds to comfortably display all endpoints and path
-    if (allLatLngs.length > 0) {
+    // 6. Fit bounds to comfortably display all endpoints and path, or focus on selected point
+    if (focusedLocation) {
+      if (Math.abs(focusedLocation.lat - origin.lat) < 0.001 && Math.abs(focusedLocation.lng - origin.lng) < 0.001) {
+        markerA.openPopup();
+      } else if (Math.abs(focusedLocation.lat - destination.lat) < 0.001 && Math.abs(focusedLocation.lng - destination.lng) < 0.001) {
+        markerB.openPopup();
+      }
+      map.flyTo([focusedLocation.lat, focusedLocation.lng], 15, { duration: 1.0 });
+    } else if (allLatLngs.length > 0) {
       const bounds = L.latLngBounds(allLatLngs);
       map.fitBounds(bounds, { padding: [55, 55], maxZoom: 14 });
     }
@@ -362,12 +492,30 @@ export const MapView: React.FC<MapViewProps> = ({
       {/* Map Canvas */}
       <div ref={mapContainerRef} className="absolute inset-0 z-0" />
 
-      {/* Top Map Indicator */}
-      <div className="relative z-10 p-3 pointer-events-none flex items-center justify-between">
-        <div className="bg-white/95 backdrop-blur-md px-2.5 py-1 rounded-lg border border-zinc-200/90 shadow-2xs text-[11px] font-semibold text-zinc-800 flex items-center gap-1.5 pointer-events-auto">
-          <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
-          <span>Pune Interactive Map (Retina HD)</span>
+      {/* Top Map Indicator & Token Alert */}
+      <div className="relative z-10 p-3 pointer-events-none flex flex-col gap-2">
+        <div className="flex items-center justify-between w-full">
+          <div className="bg-white/95 backdrop-blur-md px-2.5 py-1 rounded-lg border border-zinc-200/90 shadow-2xs text-[11px] font-semibold text-zinc-800 flex items-center gap-1.5 pointer-events-auto">
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+            <span>Pune Interactive Map {hasValidMapboxToken() ? '(Retina HD)' : '(OSM Mode)'}</span>
+          </div>
+          {focusedLocation && (
+            <div className="bg-indigo-600 text-white px-2.5 py-1 rounded-lg shadow-2xs text-[11px] font-bold flex items-center gap-1 pointer-events-auto animate-in fade-in">
+              <span>📍 Focused:</span>
+              <span className="max-w-[130px] truncate">{focusedLocation.name.split(',')[0]}</span>
+            </div>
+          )}
         </div>
+
+        {/* Warning banner if Mapbox token is absent */}
+        {!hasValidMapboxToken() && (
+          <div className="bg-amber-500/95 text-white px-3 py-1.5 rounded-xl shadow-xs text-[11px] font-medium flex items-center justify-between gap-2 pointer-events-auto border border-amber-600/30">
+            <span className="flex items-center gap-1">
+              <span>⚠️</span>
+              <span>Mapbox token (VITE_MAPBOX_TOKEN) not set. Operating with OpenStreetMap fallback tiles.</span>
+            </span>
+          </div>
+        )}
       </div>
 
       {/* Bottom Mode Legend (Bike taxi removed per user instruction) */}

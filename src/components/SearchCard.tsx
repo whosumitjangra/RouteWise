@@ -14,12 +14,73 @@ import {
   Navigation,
   CheckCircle2,
   Plane,
-  Bus 
+  Bus,
+  HeartPulse,
+  Utensils,
+  Landmark,
+  AlertCircle 
 } from 'lucide-react';
 import { LocationPoint, PreferenceMode } from '../types';
-import { searchPuneLocations, resolveLocationQuery, getRoadRoute, haversineDistanceKm } from '../services/mapbox';
+import { 
+  searchPuneLocationsWithStatus, 
+  resolveLocationQuery, 
+  getRoadRoute, 
+  haversineDistanceKm,
+  hasValidMapboxToken 
+} from '../services/mapbox';
 import { PUNE_PRESET_TRIPS } from '../config/puneLandmarks';
 import { isLocationOutOfTown } from '../config/outOfTownCities';
+
+const POPULAR_SEARCH_PRESETS: LocationPoint[] = [
+  {
+    name: 'Military Hospital, Khadki, Pune',
+    lat: 18.5524,
+    lng: 73.8381,
+    landmarkType: 'hospital',
+    categoryLabel: 'Military Hospital',
+    address: 'Range Hill Road, Khadki Cantonment, Pune',
+  },
+  {
+    name: 'Army Institute of Technology (AIT), Dighi',
+    lat: 18.6069,
+    lng: 73.8745,
+    landmarkType: 'college',
+    categoryLabel: 'Engineering College',
+    address: 'Alandi Road, Dighi, Pune',
+  },
+  {
+    name: 'FC Road (Fergusson College Rd), Shivajinagar',
+    lat: 18.5204,
+    lng: 73.8415,
+    landmarkType: 'locality',
+    categoryLabel: 'Commercial Corridor',
+    address: 'Shivajinagar, Pune',
+  },
+  {
+    name: 'Pune Junction Railway Station',
+    lat: 18.5284,
+    lng: 73.8744,
+    landmarkType: 'transit_hub',
+    categoryLabel: 'Central Railway Station',
+    address: 'Agarkar Nagar, Pune',
+  },
+  {
+    name: 'Pune International Airport (PNQ)',
+    lat: 18.5822,
+    lng: 73.9197,
+    landmarkType: 'airport',
+    categoryLabel: 'Airport Terminal',
+    address: 'New Airport Rd, Lohegaon, Pune',
+  },
+  {
+    name: 'Swargate Bus Station & Metro Hub',
+    lat: 18.5018,
+    lng: 73.8586,
+    landmarkType: 'bus_stand',
+    categoryLabel: 'Intercity Bus Terminal',
+    address: 'Swargate, Pune',
+  },
+];
 
 interface SearchCardProps {
   origin: LocationPoint;
@@ -32,6 +93,7 @@ interface SearchCardProps {
   onBudgetChange: (val: number) => void;
   onPreferenceChange: (pref: PreferenceMode) => void;
   onSubmit: (resolvedOrigin?: LocationPoint, resolvedDestination?: LocationPoint) => Promise<void> | void;
+  onSelectLocation?: (loc: LocationPoint, field: 'origin' | 'destination') => void;
 }
 
 export const SearchCard: React.FC<SearchCardProps> = ({
@@ -45,6 +107,7 @@ export const SearchCard: React.FC<SearchCardProps> = ({
   onBudgetChange,
   onPreferenceChange,
   onSubmit,
+  onSelectLocation,
 }) => {
   const [fromQuery, setFromQuery] = useState(origin.name);
   const [toQuery, setToQuery] = useState(destination.name);
@@ -53,6 +116,19 @@ export const SearchCard: React.FC<SearchCardProps> = ({
   const [isFromOpen, setIsFromOpen] = useState(false);
   const [isToOpen, setIsToOpen] = useState(false);
   const [isResolving, setIsResolving] = useState(false);
+
+  // Search status states for proper UI feedback (loading, empty, no_token, error)
+  const [fromSearchState, setFromSearchState] = useState<{
+    isLoading: boolean;
+    status: 'idle' | 'ok' | 'no_results' | 'no_token' | 'api_error' | 'network_error';
+    errorMessage?: string;
+  }>({ isLoading: false, status: 'idle' });
+
+  const [toSearchState, setToSearchState] = useState<{
+    isLoading: boolean;
+    status: 'idle' | 'ok' | 'no_results' | 'no_token' | 'api_error' | 'network_error';
+    errorMessage?: string;
+  }>({ isLoading: false, status: 'idle' });
 
   // Direct reference cache for chosen points to avoid redundant network resolving
   const selectedFromPointRef = useRef<LocationPoint | null>(origin);
@@ -116,20 +192,23 @@ export const SearchCard: React.FC<SearchCardProps> = ({
     return () => document.removeEventListener('mousedown', handleOutside);
   }, []);
 
-  // Fast debounced predictive search
+  // Fast debounced predictive search with comprehensive status feedback
   const handleSearchFrom = (val: string) => {
     setFromQuery(val);
     clearTimeout(fromDebounceRef.current);
     
     if (val.trim().length >= 1) {
+      setFromSearchState({ isLoading: true, status: 'idle' });
+      setIsFromOpen(true);
       fromDebounceRef.current = setTimeout(async () => {
-        const results = await searchPuneLocations(val);
+        const { results, status, errorMessage } = await searchPuneLocationsWithStatus(val);
         setFromSuggestions(results);
-        setIsFromOpen(true);
-      }, 100);
+        setFromSearchState({ isLoading: false, status, errorMessage });
+      }, 150);
     } else {
       setFromSuggestions([]);
-      setIsFromOpen(false);
+      setFromSearchState({ isLoading: false, status: 'idle' });
+      setIsFromOpen(true);
     }
   };
 
@@ -138,14 +217,17 @@ export const SearchCard: React.FC<SearchCardProps> = ({
     clearTimeout(toDebounceRef.current);
 
     if (val.trim().length >= 1) {
+      setToSearchState({ isLoading: true, status: 'idle' });
+      setIsToOpen(true);
       toDebounceRef.current = setTimeout(async () => {
-        const results = await searchPuneLocations(val);
+        const { results, status, errorMessage } = await searchPuneLocationsWithStatus(val);
         setToSuggestions(results);
-        setIsToOpen(true);
-      }, 100);
+        setToSearchState({ isLoading: false, status, errorMessage });
+      }, 150);
     } else {
       setToSuggestions([]);
-      setIsToOpen(false);
+      setToSearchState({ isLoading: false, status: 'idle' });
+      setIsToOpen(true);
     }
   };
 
@@ -212,51 +294,123 @@ export const SearchCard: React.FC<SearchCardProps> = ({
         </span>
       );
     }
-    if (item.landmarkType === 'airport' || item.name.toLowerCase().includes('airport')) {
+    const nameLower = item.name.toLowerCase();
+    const catLower = (item.categoryLabel || '').toLowerCase();
+
+    if (
+      item.landmarkType === 'hospital' ||
+      catLower.includes('hospital') ||
+      catLower.includes('health') ||
+      nameLower.includes('hospital') ||
+      nameLower.includes('clinic') ||
+      nameLower.includes('dispensary')
+    ) {
+      return (
+        <span className="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded text-[10px] font-semibold bg-rose-50 text-rose-700 border border-rose-200">
+          <HeartPulse className="w-2.5 h-2.5" /> Hospital
+        </span>
+      );
+    }
+    if (item.landmarkType === 'airport' || nameLower.includes('airport')) {
       return (
         <span className="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded text-[10px] font-semibold bg-sky-50 text-sky-700 border border-sky-200">
           <Plane className="w-2.5 h-2.5" /> Airport
         </span>
       );
     }
-    if (item.landmarkType === 'metro') {
+    if (item.landmarkType === 'metro' || nameLower.includes('metro')) {
       return (
         <span className="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded text-[10px] font-semibold bg-indigo-50 text-indigo-700 border border-indigo-200">
           <Train className="w-2.5 h-2.5" /> Metro
         </span>
       );
     }
-    if (item.name.toLowerCase().includes('ait') || item.name.toLowerCase().includes('college') || item.name.toLowerCase().includes('university') || item.name.toLowerCase().includes('institute')) {
+    if (
+      item.landmarkType === 'college' ||
+      item.landmarkType === 'school' ||
+      catLower.includes('college') ||
+      catLower.includes('school') ||
+      catLower.includes('education') ||
+      nameLower.includes('ait') ||
+      nameLower.includes('college') ||
+      nameLower.includes('university') ||
+      nameLower.includes('institute') ||
+      nameLower.includes('school') ||
+      nameLower.includes('vidyalaya')
+    ) {
       return (
         <span className="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded text-[10px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
           <GraduationCap className="w-2.5 h-2.5" /> Institute
         </span>
       );
     }
-    if (item.landmarkType === 'bus_stand' || item.name.toLowerCase().includes('bus stand') || item.name.toLowerCase().includes('bus stop')) {
+    if (
+      item.landmarkType === 'bus_stand' ||
+      catLower.includes('bus') ||
+      nameLower.includes('bus stand') ||
+      nameLower.includes('bus stop') ||
+      nameLower.includes('swargate')
+    ) {
       return (
         <span className="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded text-[10px] font-semibold bg-amber-50 text-amber-700 border border-amber-200">
           <Bus className="w-2.5 h-2.5" /> Bus Stand
         </span>
       );
     }
-    if (item.name.toLowerCase().includes('station') || item.name.toLowerCase().includes('junction') || item.name.toLowerCase().includes('terminal')) {
+    if (
+      item.landmarkType === 'transit_hub' ||
+      catLower.includes('station') ||
+      nameLower.includes('station') ||
+      nameLower.includes('junction') ||
+      nameLower.includes('terminal') ||
+      nameLower.includes('terminus') ||
+      nameLower.includes('cst')
+    ) {
       return (
-        <span className="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded text-[10px] font-semibold bg-amber-50 text-amber-700 border border-amber-200">
-          Transit Hub
+        <span className="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded text-[10px] font-semibold bg-blue-50 text-blue-700 border border-blue-200">
+          <Train className="w-2.5 h-2.5" /> Transit Hub
+        </span>
+      );
+    }
+    if (
+      item.landmarkType === 'restaurant' ||
+      catLower.includes('restaurant') ||
+      catLower.includes('food') ||
+      catLower.includes('cafe') ||
+      nameLower.includes('hotel') ||
+      nameLower.includes('restaurant') ||
+      nameLower.includes('cafe') ||
+      nameLower.includes('pizza')
+    ) {
+      return (
+        <span className="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded text-[10px] font-semibold bg-orange-50 text-orange-700 border border-orange-200">
+          <Utensils className="w-2.5 h-2.5" /> Dining
+        </span>
+      );
+    }
+    if (
+      item.landmarkType === 'government' ||
+      catLower.includes('government') ||
+      nameLower.includes('court') ||
+      nameLower.includes('cantonment') ||
+      nameLower.includes('collector')
+    ) {
+      return (
+        <span className="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded text-[10px] font-semibold bg-purple-50 text-purple-700 border border-purple-200">
+          <Landmark className="w-2.5 h-2.5" /> Govt / Office
         </span>
       );
     }
     if (item.landmarkType === 'locality') {
       return (
-        <span className="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded text-[10px] font-semibold bg-purple-50 text-purple-700 border border-purple-200">
+        <span className="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded text-[10px] font-semibold bg-zinc-100 text-zinc-700 border border-zinc-200">
           <Building2 className="w-2.5 h-2.5" /> Locality
         </span>
       );
     }
     return (
       <span className="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded text-[10px] font-semibold bg-zinc-100 text-zinc-600">
-        <Building2 className="w-2.5 h-2.5" /> Pune
+        <Building2 className="w-2.5 h-2.5" /> Map POI
       </span>
     );
   };
@@ -361,27 +515,121 @@ export const SearchCard: React.FC<SearchCardProps> = ({
             </div>
 
             {/* Predictive Suggestions Dropdown */}
-            {isFromOpen && fromSuggestions.length > 0 && (
+            {isFromOpen && (
               <div className="absolute z-50 left-0 right-0 mt-1 bg-white rounded-xl shadow-xl border border-zinc-200 max-h-72 sm:max-h-80 overflow-y-auto divide-y divide-zinc-100 animate-in fade-in">
-                {fromSuggestions.map((item, i) => (
-                  <button
-                    key={i}
-                    type="button"
-                    onClick={() => {
-                      selectedFromPointRef.current = item;
-                      onOriginChange(item);
-                      setFromQuery(item.name);
-                      setIsFromOpen(false);
-                    }}
-                    className="w-full text-left px-3.5 py-2.5 text-xs text-zinc-800 hover:bg-emerald-50/60 transition-colors flex items-center justify-between gap-2"
-                  >
-                    <div className="flex items-center gap-2 min-w-0">
-                      <MapPin className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
-                      <span className="truncate font-medium text-zinc-900">{item.name}</span>
+                {/* 1. Loading State */}
+                {fromSearchState.isLoading && (
+                  <div className="p-4 text-center text-xs text-zinc-500 flex items-center justify-center gap-2">
+                    <Loader2 className="w-4 h-4 animate-spin text-zinc-400" />
+                    <span>Searching map locations & POIs across Pune...</span>
+                  </div>
+                )}
+
+                {/* 2. Missing Token Warning */}
+                {!fromSearchState.isLoading && fromSearchState.status === 'no_token' && (
+                  <div className="p-3 bg-amber-50 text-xs text-amber-900 border-b border-amber-200 flex items-start gap-2">
+                    <AlertCircle className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
+                    <div>
+                      <div className="font-bold text-[11px]">Mapbox Token Not Configured</div>
+                      <div className="text-[10px] text-amber-800 mt-0.5">
+                        Set <code className="bg-amber-100 px-1 py-0.5 rounded font-mono">VITE_MAPBOX_TOKEN</code> in your environment. Using OpenStreetMap & local POI fallback.
+                      </div>
                     </div>
-                    {renderBadge(item)}
-                  </button>
-                ))}
+                  </div>
+                )}
+
+                {/* 3. Network Failure */}
+                {!fromSearchState.isLoading && fromSearchState.status === 'network_error' && (
+                  <div className="p-3 text-center text-xs text-rose-600 flex items-center justify-center gap-1.5">
+                    <AlertCircle className="w-4 h-4 shrink-0" />
+                    <span>Network connection failed. Check your connection.</span>
+                  </div>
+                )}
+
+                {/* 4. API Error */}
+                {!fromSearchState.isLoading && fromSearchState.status === 'api_error' && (
+                  <div className="p-3 text-center text-xs text-rose-600 flex items-center justify-center gap-1.5">
+                    <AlertCircle className="w-4 h-4 shrink-0" />
+                    <span>{fromSearchState.errorMessage || 'Search service temporarily unavailable.'}</span>
+                  </div>
+                )}
+
+                {/* 5. Results List */}
+                {!fromSearchState.isLoading && fromSuggestions.length > 0 && (
+                  <div className="divide-y divide-zinc-100">
+                    {fromSuggestions.map((item, i) => (
+                      <button
+                        key={i}
+                        type="button"
+                        onClick={() => {
+                          selectedFromPointRef.current = item;
+                          onOriginChange(item);
+                          setFromQuery(item.name);
+                          setIsFromOpen(false);
+                          onSelectLocation?.(item, 'origin');
+                        }}
+                        className="w-full text-left px-3.5 py-2.5 text-xs text-zinc-800 hover:bg-emerald-50/70 transition-colors flex items-center justify-between gap-2 cursor-pointer"
+                      >
+                        <div className="flex items-start gap-2.5 min-w-0">
+                          <MapPin className="w-3.5 h-3.5 text-emerald-600 shrink-0 mt-0.5" />
+                          <div className="min-w-0">
+                            <div className="truncate font-semibold text-zinc-900">{item.name}</div>
+                            {item.address && (
+                              <div className="truncate text-[10px] text-zinc-500 mt-0.5">{item.address}</div>
+                            )}
+                          </div>
+                        </div>
+                        <div className="shrink-0">{renderBadge(item)}</div>
+                      </button>
+                    ))}
+                  </div>
+                )}
+
+                {/* 6. No Results Found */}
+                {!fromSearchState.isLoading && fromSuggestions.length === 0 && fromSearchState.status === 'no_results' && (
+                  <div className="p-4 text-center text-xs text-zinc-500">
+                    <p className="font-bold text-zinc-700">No places found for &quot;{fromQuery}&quot;</p>
+                    <p className="text-[11px] text-zinc-400 mt-0.5">
+                      Try searching for landmarks, hospitals, colleges, stations or roads (e.g. &quot;Military Hospital Khadki&quot;, &quot;FC Road&quot;).
+                    </p>
+                  </div>
+                )}
+
+                {/* 7. Empty Query - Popular Shortcuts */}
+                {!fromSearchState.isLoading && fromSuggestions.length === 0 && (!fromQuery || fromQuery.trim().length === 0) && (
+                  <div className="p-2.5 space-y-1.5">
+                    <div className="text-[10px] font-bold uppercase tracking-wider text-zinc-400 px-1.5">
+                      Popular Pune Locations
+                    </div>
+                    <div className="space-y-0.5">
+                      {POPULAR_SEARCH_PRESETS.map((item, i) => (
+                        <button
+                          key={i}
+                          type="button"
+                          onClick={() => {
+                            selectedFromPointRef.current = item;
+                            onOriginChange(item);
+                            setFromQuery(item.name);
+                            setIsFromOpen(false);
+                            onSelectLocation?.(item, 'origin');
+                          }}
+                          className="w-full text-left px-3 py-2 rounded-lg hover:bg-emerald-50/70 transition-colors flex items-center justify-between gap-2 cursor-pointer"
+                        >
+                          <div className="flex items-start gap-2.5 min-w-0">
+                            <MapPin className="w-3.5 h-3.5 text-emerald-600 shrink-0 mt-0.5" />
+                            <div className="min-w-0">
+                              <div className="truncate font-semibold text-zinc-900 text-xs">{item.name}</div>
+                              {item.address && (
+                                <div className="truncate text-[10px] text-zinc-500 mt-0.5">{item.address}</div>
+                              )}
+                            </div>
+                          </div>
+                          <div className="shrink-0">{renderBadge(item)}</div>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
               </div>
             )}
           </div>
@@ -417,6 +665,7 @@ export const SearchCard: React.FC<SearchCardProps> = ({
                 onFocus={() => {
                   if (toSuggestions.length > 0) setIsToOpen(true);
                   else if (toQuery.length >= 1) handleSearchTo(toQuery);
+                  else setIsToOpen(true);
                 }}
                 placeholder="Destination (e.g. FC Road, Pune Junction)..."
                 className="w-full pl-9 pr-8 py-2.5 rounded-xl border border-zinc-200 bg-zinc-50/50 hover:bg-white focus:bg-white text-zinc-900 placeholder:text-zinc-400 text-xs sm:text-sm font-medium focus:outline-none focus:ring-2 focus:ring-zinc-900 focus:border-transparent transition-all"
@@ -436,27 +685,121 @@ export const SearchCard: React.FC<SearchCardProps> = ({
             </div>
 
             {/* Predictive Suggestions Dropdown */}
-            {isToOpen && toSuggestions.length > 0 && (
+            {isToOpen && (
               <div className="absolute z-50 left-0 right-0 mt-1 bg-white rounded-xl shadow-xl border border-zinc-200 max-h-72 sm:max-h-80 overflow-y-auto divide-y divide-zinc-100 animate-in fade-in">
-                {toSuggestions.map((item, i) => (
-                  <button
-                    key={i}
-                    type="button"
-                    onClick={() => {
-                      selectedToPointRef.current = item;
-                      onDestinationChange(item);
-                      setToQuery(item.name);
-                      setIsToOpen(false);
-                    }}
-                    className="w-full text-left px-3.5 py-2.5 text-xs text-zinc-800 hover:bg-rose-50/60 transition-colors flex items-center justify-between gap-2"
-                  >
-                    <div className="flex items-center gap-2 min-w-0">
-                      <MapPin className="w-3.5 h-3.5 text-rose-500 shrink-0" />
-                      <span className="truncate font-medium text-zinc-900">{item.name}</span>
+                {/* 1. Loading State */}
+                {toSearchState.isLoading && (
+                  <div className="p-4 text-center text-xs text-zinc-500 flex items-center justify-center gap-2">
+                    <Loader2 className="w-4 h-4 animate-spin text-zinc-400" />
+                    <span>Searching map locations & POIs across Pune...</span>
+                  </div>
+                )}
+
+                {/* 2. Missing Token Warning */}
+                {!toSearchState.isLoading && toSearchState.status === 'no_token' && (
+                  <div className="p-3 bg-amber-50 text-xs text-amber-900 border-b border-amber-200 flex items-start gap-2">
+                    <AlertCircle className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
+                    <div>
+                      <div className="font-bold text-[11px]">Mapbox Token Not Configured</div>
+                      <div className="text-[10px] text-amber-800 mt-0.5">
+                        Set <code className="bg-amber-100 px-1 py-0.5 rounded font-mono">VITE_MAPBOX_TOKEN</code> in your environment. Using OpenStreetMap & local POI fallback.
+                      </div>
                     </div>
-                    {renderBadge(item)}
-                  </button>
-                ))}
+                  </div>
+                )}
+
+                {/* 3. Network Failure */}
+                {!toSearchState.isLoading && toSearchState.status === 'network_error' && (
+                  <div className="p-3 text-center text-xs text-rose-600 flex items-center justify-center gap-1.5">
+                    <AlertCircle className="w-4 h-4 shrink-0" />
+                    <span>Network connection failed. Check your connection.</span>
+                  </div>
+                )}
+
+                {/* 4. API Error */}
+                {!toSearchState.isLoading && toSearchState.status === 'api_error' && (
+                  <div className="p-3 text-center text-xs text-rose-600 flex items-center justify-center gap-1.5">
+                    <AlertCircle className="w-4 h-4 shrink-0" />
+                    <span>{toSearchState.errorMessage || 'Search service temporarily unavailable.'}</span>
+                  </div>
+                )}
+
+                {/* 5. Results List */}
+                {!toSearchState.isLoading && toSuggestions.length > 0 && (
+                  <div className="divide-y divide-zinc-100">
+                    {toSuggestions.map((item, i) => (
+                      <button
+                        key={i}
+                        type="button"
+                        onClick={() => {
+                          selectedToPointRef.current = item;
+                          onDestinationChange(item);
+                          setToQuery(item.name);
+                          setIsToOpen(false);
+                          onSelectLocation?.(item, 'destination');
+                        }}
+                        className="w-full text-left px-3.5 py-2.5 text-xs text-zinc-800 hover:bg-rose-50/70 transition-colors flex items-center justify-between gap-2 cursor-pointer"
+                      >
+                        <div className="flex items-start gap-2.5 min-w-0">
+                          <MapPin className="w-3.5 h-3.5 text-rose-500 shrink-0 mt-0.5" />
+                          <div className="min-w-0">
+                            <div className="truncate font-semibold text-zinc-900">{item.name}</div>
+                            {item.address && (
+                              <div className="truncate text-[10px] text-zinc-500 mt-0.5">{item.address}</div>
+                            )}
+                          </div>
+                        </div>
+                        <div className="shrink-0">{renderBadge(item)}</div>
+                      </button>
+                    ))}
+                  </div>
+                )}
+
+                {/* 6. No Results Found */}
+                {!toSearchState.isLoading && toSuggestions.length === 0 && toSearchState.status === 'no_results' && (
+                  <div className="p-4 text-center text-xs text-zinc-500">
+                    <p className="font-bold text-zinc-700">No places found for &quot;{toQuery}&quot;</p>
+                    <p className="text-[11px] text-zinc-400 mt-0.5">
+                      Try searching for landmarks, hospitals, colleges, stations or roads (e.g. &quot;Military Hospital Khadki&quot;, &quot;FC Road&quot;).
+                    </p>
+                  </div>
+                )}
+
+                {/* 7. Empty Query - Popular Shortcuts */}
+                {!toSearchState.isLoading && toSuggestions.length === 0 && (!toQuery || toQuery.trim().length === 0) && (
+                  <div className="p-2.5 space-y-1.5">
+                    <div className="text-[10px] font-bold uppercase tracking-wider text-zinc-400 px-1.5">
+                      Popular Pune Locations
+                    </div>
+                    <div className="space-y-0.5">
+                      {POPULAR_SEARCH_PRESETS.map((item, i) => (
+                        <button
+                          key={i}
+                          type="button"
+                          onClick={() => {
+                            selectedToPointRef.current = item;
+                            onDestinationChange(item);
+                            setToQuery(item.name);
+                            setIsToOpen(false);
+                            onSelectLocation?.(item, 'destination');
+                          }}
+                          className="w-full text-left px-3 py-2 rounded-lg hover:bg-rose-50/70 transition-colors flex items-center justify-between gap-2 cursor-pointer"
+                        >
+                          <div className="flex items-start gap-2.5 min-w-0">
+                            <MapPin className="w-3.5 h-3.5 text-rose-500 shrink-0 mt-0.5" />
+                            <div className="min-w-0">
+                              <div className="truncate font-semibold text-zinc-900 text-xs">{item.name}</div>
+                              {item.address && (
+                                <div className="truncate text-[10px] text-zinc-500 mt-0.5">{item.address}</div>
+                              )}
+                            </div>
+                          </div>
+                          <div className="shrink-0">{renderBadge(item)}</div>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
               </div>
             )}
           </div>

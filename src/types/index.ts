@@ -11,9 +11,27 @@ export interface LocationPoint {
   name: string;
   lat: number;
   lng: number;
-  landmarkType?: 'it_park' | 'station' | 'commercial' | 'suburb' | 'metro' | 'out_of_town' | 'airport' | 'bus_stand' | 'locality';
+  address?: string;
+  landmarkType?: 
+    | 'it_park' 
+    | 'station' 
+    | 'transit_hub'
+    | 'commercial' 
+    | 'suburb' 
+    | 'metro' 
+    | 'out_of_town' 
+    | 'airport' 
+    | 'bus_stand' 
+    | 'locality'
+    | 'hospital'
+    | 'college'
+    | 'school'
+    | 'government'
+    | 'restaurant'
+    | 'poi';
   isOutOfTown?: boolean;
   cityName?: string;
+  categoryLabel?: string;
 }
 
 export interface FareBreakdown {
