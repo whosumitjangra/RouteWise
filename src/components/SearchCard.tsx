@@ -12,7 +12,9 @@ import {
   Building2, 
   X,
   Navigation,
-  CheckCircle2 
+  CheckCircle2,
+  Plane,
+  Bus 
 } from 'lucide-react';
 import { LocationPoint, PreferenceMode } from '../types';
 import { searchPuneLocations, resolveLocationQuery, getRoadRoute, haversineDistanceKm } from '../services/mapbox';
@@ -210,29 +212,50 @@ export const SearchCard: React.FC<SearchCardProps> = ({
         </span>
       );
     }
+    if (item.landmarkType === 'airport' || item.name.toLowerCase().includes('airport')) {
+      return (
+        <span className="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded text-[10px] font-semibold bg-sky-50 text-sky-700 border border-sky-200">
+          <Plane className="w-2.5 h-2.5" /> Airport
+        </span>
+      );
+    }
     if (item.landmarkType === 'metro') {
       return (
-        <span className="inline-flex items-center gap-0.5 px-1.5 py-0.2 rounded text-[10px] font-semibold bg-indigo-50 text-indigo-700 border border-indigo-200">
+        <span className="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded text-[10px] font-semibold bg-indigo-50 text-indigo-700 border border-indigo-200">
           <Train className="w-2.5 h-2.5" /> Metro
         </span>
       );
     }
     if (item.name.toLowerCase().includes('ait') || item.name.toLowerCase().includes('college') || item.name.toLowerCase().includes('university') || item.name.toLowerCase().includes('institute')) {
       return (
-        <span className="inline-flex items-center gap-0.5 px-1.5 py-0.2 rounded text-[10px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
+        <span className="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded text-[10px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
           <GraduationCap className="w-2.5 h-2.5" /> Institute
+        </span>
+      );
+    }
+    if (item.landmarkType === 'bus_stand' || item.name.toLowerCase().includes('bus stand') || item.name.toLowerCase().includes('bus stop')) {
+      return (
+        <span className="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded text-[10px] font-semibold bg-amber-50 text-amber-700 border border-amber-200">
+          <Bus className="w-2.5 h-2.5" /> Bus Stand
         </span>
       );
     }
     if (item.name.toLowerCase().includes('station') || item.name.toLowerCase().includes('junction') || item.name.toLowerCase().includes('terminal')) {
       return (
-        <span className="inline-flex items-center gap-0.5 px-1.5 py-0.2 rounded text-[10px] font-semibold bg-amber-50 text-amber-700 border border-amber-200">
+        <span className="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded text-[10px] font-semibold bg-amber-50 text-amber-700 border border-amber-200">
           Transit Hub
         </span>
       );
     }
+    if (item.landmarkType === 'locality') {
+      return (
+        <span className="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded text-[10px] font-semibold bg-purple-50 text-purple-700 border border-purple-200">
+          <Building2 className="w-2.5 h-2.5" /> Locality
+        </span>
+      );
+    }
     return (
-      <span className="inline-flex items-center gap-0.5 px-1.5 py-0.2 rounded text-[10px] font-semibold bg-zinc-100 text-zinc-600">
+      <span className="inline-flex items-center gap-0.5 px-1.5 py-0.5 rounded text-[10px] font-semibold bg-zinc-100 text-zinc-600">
         <Building2 className="w-2.5 h-2.5" /> Pune
       </span>
     );
@@ -339,7 +362,7 @@ export const SearchCard: React.FC<SearchCardProps> = ({
 
             {/* Predictive Suggestions Dropdown */}
             {isFromOpen && fromSuggestions.length > 0 && (
-              <div className="absolute z-50 left-0 right-0 mt-1 bg-white rounded-xl shadow-xl border border-zinc-200 max-h-56 overflow-y-auto divide-y divide-zinc-100 animate-in fade-in">
+              <div className="absolute z-50 left-0 right-0 mt-1 bg-white rounded-xl shadow-xl border border-zinc-200 max-h-72 sm:max-h-80 overflow-y-auto divide-y divide-zinc-100 animate-in fade-in">
                 {fromSuggestions.map((item, i) => (
                   <button
                     key={i}
@@ -414,7 +437,7 @@ export const SearchCard: React.FC<SearchCardProps> = ({
 
             {/* Predictive Suggestions Dropdown */}
             {isToOpen && toSuggestions.length > 0 && (
-              <div className="absolute z-50 left-0 right-0 mt-1 bg-white rounded-xl shadow-xl border border-zinc-200 max-h-56 overflow-y-auto divide-y divide-zinc-100 animate-in fade-in">
+              <div className="absolute z-50 left-0 right-0 mt-1 bg-white rounded-xl shadow-xl border border-zinc-200 max-h-72 sm:max-h-80 overflow-y-auto divide-y divide-zinc-100 animate-in fade-in">
                 {toSuggestions.map((item, i) => (
                   <button
                     key={i}

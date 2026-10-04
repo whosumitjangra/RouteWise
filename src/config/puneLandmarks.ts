@@ -5,7 +5,7 @@ export interface PuneLandmarkWithAliases extends LocationPoint {
 }
 
 export const PUNE_LANDMARKS: PuneLandmarkWithAliases[] = [
-  // Colleges & Educational Institutes
+  // 1. Colleges & Educational Institutes
   {
     name: 'Army Institute of Technology (AIT), Alandi Road, Dighi',
     lat: 18.6069,
@@ -25,7 +25,7 @@ export const PUNE_LANDMARKS: PuneLandmarkWithAliases[] = [
     lat: 18.5178,
     lng: 73.8151,
     landmarkType: 'commercial',
-    aliases: ['mit', 'mit wpu', 'mit kothrud', 'mit college'],
+    aliases: ['mit', 'mit wpu', 'mit kothrud', 'mit college', 'paud road mit'],
   },
   {
     name: 'Pune Institute of Computer Technology (PICT), Dhankawadi',
@@ -55,8 +55,29 @@ export const PUNE_LANDMARKS: PuneLandmarkWithAliases[] = [
     landmarkType: 'commercial',
     aliases: ['symbiosis', 'symbi', 'symbiosis viman nagar'],
   },
+  {
+    name: 'Cummins College of Engineering for Women, Karve Nagar',
+    lat: 18.4895,
+    lng: 73.8185,
+    landmarkType: 'commercial',
+    aliases: ['cummins', 'cummins college', 'karve nagar cummins'],
+  },
+  {
+    name: 'Bharati Vidyapeeth Deemed University, Katraj',
+    lat: 18.4570,
+    lng: 73.8540,
+    landmarkType: 'commercial',
+    aliases: ['bharati vidyapeeth', 'bvp', 'bharati vidyapeeth katraj'],
+  },
+  {
+    name: 'Sinhgad College of Engineering (SCOE), Vadgaon Budruk',
+    lat: 18.4650,
+    lng: 73.8340,
+    landmarkType: 'commercial',
+    aliases: ['sinhgad', 'sinhgad college', 'scoe', 'vadgaon sinhgad'],
+  },
 
-  // Railway Stations & Transit Hubs
+  // 2. Railway Stations & Major Transit Terminals
   {
     name: 'Pune Junction Railway Station (Pune Station)',
     lat: 18.5285,
@@ -79,34 +100,243 @@ export const PUNE_LANDMARKS: PuneLandmarkWithAliases[] = [
     aliases: ['swargate', 'swargate bus stand', 'swargate metro'],
   },
   {
-    name: 'Pune Airport (PNQ), Lohegaon',
+    name: 'Deccan Gymkhana Bus Stand & PMPML Hub',
+    lat: 18.5175,
+    lng: 73.8440,
+    landmarkType: 'station',
+    aliases: ['deccan', 'deccan gymkhana', 'deccan bus stand'],
+  },
+  {
+    name: 'Kothrud Depot (PMPML Terminus)',
+    lat: 18.4995,
+    lng: 73.8010,
+    landmarkType: 'station',
+    aliases: ['kothrud depot', 'kothrud stand', 'kothrud bus stand'],
+  },
+  {
+    name: 'Hadapsar Gadital Bus Stand',
+    lat: 18.5020,
+    lng: 73.9280,
+    landmarkType: 'station',
+    aliases: ['hadapsar', 'gadital', 'hadapsar bus stand', 'gadital stand'],
+  },
+  {
+    name: 'Katraj Bus Depot & BRTS Terminal',
+    lat: 18.4510,
+    lng: 73.8580,
+    landmarkType: 'station',
+    aliases: ['katraj depot', 'katraj bus stand', 'katraj terminal'],
+  },
+  {
+    name: 'Nigdi Bus Terminal (Bhakti Shakti Chowk)',
+    lat: 18.6580,
+    lng: 73.7690,
+    landmarkType: 'station',
+    aliases: ['nigdi', 'nigdi bus stand', 'bhakti shakti', 'nigdi terminal'],
+  },
+  {
+    name: 'Bhosari Bus Terminal & Flyover',
+    lat: 18.6270,
+    lng: 73.8470,
+    landmarkType: 'station',
+    aliases: ['bhosari', 'bhosari bus stand', 'bhosari flyover', 'landewadi'],
+  },
+  {
+    name: 'Alandi Devachi ST Stand (Sant Dnyaneshwar Maharaj)',
+    lat: 18.6775,
+    lng: 73.8970,
+    landmarkType: 'station',
+    aliases: ['alandi', 'alandi devachi', 'alandi st stand', 'alandi bus stand', 'sant dnyaneshwar'],
+  },
+  {
+    name: 'Poolgate Bus Stand, Pune Camp',
+    lat: 18.5085,
+    lng: 73.8795,
+    landmarkType: 'station',
+    aliases: ['poolgate', 'poolgate bus stand', 'camp bus stand'],
+  },
+  {
+    name: 'Chinchwad Railway Station & Chowk',
+    lat: 18.6385,
+    lng: 73.7895,
+    landmarkType: 'station',
+    aliases: ['chinchwad', 'chinchwad station', 'chinchwad railway'],
+  },
+  {
+    name: 'Akurdi Railway Station & Chowk',
+    lat: 18.6495,
+    lng: 73.7745,
+    landmarkType: 'station',
+    aliases: ['akurdi', 'akurdi station', 'khandoba mal'],
+  },
+
+  // 3. Lohegaon Locations (Rich Sub-Localities & Landmarks)
+  {
+    name: 'Lohegaon Gaon (Bus Stand / PMT Chowk)',
+    lat: 18.5901,
+    lng: 73.9248,
+    landmarkType: 'station',
+    aliases: ['lohegaon', 'lheogaon', 'lohgaon', 'lohegaon gaon', 'lohegaon bus stand', 'lohegaon chowk', 'lohegaon village'],
+  },
+  {
+    name: 'Pune Airport (PNQ Terminal & Aeromall), Lohegaon',
     lat: 18.5821,
     lng: 73.9197,
     landmarkType: 'station',
-    aliases: ['pune airport', 'pnq', 'lohegaon airport', 'airport'],
+    aliases: ['pune airport', 'pnq', 'lohegaon airport', 'airport', 'aeromall', 'lheogaon', 'lohegaon'],
+  },
+  {
+    name: 'DY Patil Knowledge City / College of Engineering, Lohegaon',
+    lat: 18.6186,
+    lng: 73.9056,
+    landmarkType: 'commercial',
+    aliases: ['dy patil', 'dypdc', 'dy patil lohegaon', 'knowledge city', 'dy patil college', 'lheogaon', 'lohegaon'],
+  },
+  {
+    name: 'Porwal Road, Lohegaon',
+    lat: 18.5975,
+    lng: 73.9142,
+    landmarkType: 'suburb',
+    aliases: ['porwal road', 'porwal road lohegaon', 'porwal', 'lheogaon', 'lohegaon'],
+  },
+  {
+    name: 'Sant Nagar, Lohegaon',
+    lat: 18.5932,
+    lng: 73.9205,
+    landmarkType: 'suburb',
+    aliases: ['sant nagar', 'sant nagar lohegaon', 'lheogaon', 'lohegaon'],
+  },
+  {
+    name: 'Dadachi Wasti, Lohegaon',
+    lat: 18.6015,
+    lng: 73.9312,
+    landmarkType: 'suburb',
+    aliases: ['dadachi wasti', 'dadachi wasti lohegaon', 'lheogaon', 'lohegaon'],
+  },
+  {
+    name: 'Lohgaon - Wagholi Road, Lohegaon',
+    lat: 18.5875,
+    lng: 73.9482,
+    landmarkType: 'suburb',
+    aliases: ['lohegaon wagholi road', 'lohgaon wagholi', 'lheogaon', 'lohegaon'],
+  },
+  {
+    name: 'Dhanori - Lohegaon Road, Lohegaon',
+    lat: 18.5895,
+    lng: 73.9015,
+    landmarkType: 'suburb',
+    aliases: ['dhanori lohegaon road', 'dhanori road lohegaon', 'lheogaon', 'lohegaon'],
+  },
+  {
+    name: 'Vadgaon Shinde Road, Lohegaon',
+    lat: 18.6092,
+    lng: 73.9385,
+    landmarkType: 'suburb',
+    aliases: ['vadgaon shinde', 'vadgaon shinde road', 'lheogaon', 'lohegaon'],
+  },
+  {
+    name: 'Khandve Nagar, Lohegaon / Wagholi',
+    lat: 18.5810,
+    lng: 73.9450,
+    landmarkType: 'suburb',
+    aliases: ['khandve nagar', 'khandve nagar lohegaon', 'lheogaon', 'lohegaon'],
+  },
+  {
+    name: 'Moze College of Engineering, Lohegaon',
+    lat: 18.5990,
+    lng: 73.9180,
+    landmarkType: 'commercial',
+    aliases: ['moze college', 'genba sopanrao moze', 'moze college lohegaon', 'lheogaon', 'lohegaon'],
+  },
+  {
+    name: 'Sathe Vasti, Lohegaon',
+    lat: 18.5950,
+    lng: 73.9160,
+    landmarkType: 'suburb',
+    aliases: ['sathe vasti', 'sathe vasti lohegaon', 'lheogaon', 'lohegaon'],
   },
 
-  // IT Hubs & Business Parks
+  // 4. Dhanori & Tingre Nagar
+  {
+    name: 'Dhanori Jakat Naka / Chowk',
+    lat: 18.5880,
+    lng: 73.8960,
+    landmarkType: 'suburb',
+    aliases: ['dhanori', 'dhanori chowk', 'dhanori jakat naka', 'madhav nagar'],
+  },
+  {
+    name: 'Tingre Nagar (Lane 1 / PMT Bus Stop)',
+    lat: 18.5780,
+    lng: 73.8910,
+    landmarkType: 'suburb',
+    aliases: ['tingre nagar', 'tingre nagar chowk'],
+  },
+  {
+    name: 'Vishrantwadi Chowk / Bus Stand',
+    lat: 18.5630,
+    lng: 73.8790,
+    landmarkType: 'station',
+    aliases: ['vishrantwadi', 'vishrantwadi chowk', 'vishrantwadi bus stand'],
+  },
+
+  // 5. Dighi & Alandi Road
+  {
+    name: 'Dighi Gaon (Magazine Corner / Chowk)',
+    lat: 18.6140,
+    lng: 73.8710,
+    landmarkType: 'suburb',
+    aliases: ['dighi gaon', 'dighi', 'magazine chowk', 'magazine corner'],
+  },
+  {
+    name: 'Charholi Phata / Wadmukhwadi',
+    lat: 18.6350,
+    lng: 73.8820,
+    landmarkType: 'suburb',
+    aliases: ['charholi', 'charholi phata', 'wadmukhwadi'],
+  },
+
+  // 6. IT Hubs & Tech Parks
   {
     name: 'Hinjewadi Phase 1 (Rajiv Gandhi Infotech Park)',
     lat: 18.5913,
     lng: 73.7389,
     landmarkType: 'it_park',
-    aliases: ['hinjewadi', 'hinjewadi phase 1', 'hinjawadi', 'rgip'],
+    aliases: ['hinjewadi', 'hinjewadi phase 1', 'hinjawadi', 'rgip', 'shivaji chowk hinjewadi'],
+  },
+  {
+    name: 'Hinjewadi Phase 2 (Wipro Circle / Cognizant)',
+    lat: 18.5840,
+    lng: 73.7150,
+    landmarkType: 'it_park',
+    aliases: ['hinjewadi phase 2', 'wipro circle', 'hinjawadi phase 2'],
   },
   {
     name: 'Hinjewadi Phase 3 (Megapolis Circle)',
     lat: 18.5772,
     lng: 73.6890,
     landmarkType: 'it_park',
-    aliases: ['hinjewadi phase 3', 'megapolis', 'tech mahindra phase 3'],
+    aliases: ['hinjewadi phase 3', 'megapolis', 'tech mahindra phase 3', 'maan hinjewadi'],
   },
   {
     name: 'Magarpatta City (Cybercity), Hadapsar',
     lat: 18.5140,
     lng: 73.9310,
     landmarkType: 'it_park',
-    aliases: ['magarpatta', 'magarpatta city', 'cybercity', 'hadapsar'],
+    aliases: ['magarpatta', 'magarpatta city', 'cybercity', 'hadapsar', 'seasons mall'],
+  },
+  {
+    name: 'EON Free Zone IT Park, Kharadi',
+    lat: 18.5515,
+    lng: 73.9515,
+    landmarkType: 'it_park',
+    aliases: ['eon', 'eon it park', 'eon free zone', 'kharadi eon'],
+  },
+  {
+    name: 'World Trade Center (WTC), Kharadi',
+    lat: 18.5535,
+    lng: 73.9480,
+    landmarkType: 'it_park',
+    aliases: ['wtc', 'wtc kharadi', 'world trade center'],
   },
   {
     name: 'Kalyani Nagar (Cerebrum IT Park)',
@@ -115,70 +345,196 @@ export const PUNE_LANDMARKS: PuneLandmarkWithAliases[] = [
     landmarkType: 'it_park',
     aliases: ['kalyani nagar', 'cerebrum', 'cerebrum it park'],
   },
+  {
+    name: 'Commerzone IT Park, Yerawada',
+    lat: 18.5605,
+    lng: 73.8860,
+    landmarkType: 'it_park',
+    aliases: ['commerzone', 'commerzone yerawada'],
+  },
+  {
+    name: 'SP Infocity IT Park, Phursungi / Hadapsar',
+    lat: 18.4860,
+    lng: 73.9570,
+    landmarkType: 'it_park',
+    aliases: ['sp infocity', 'phursungi', 'saswad road sp'],
+  },
 
-  // Suburbs & Commercial Centers
+  // 7. Popular Suburbs & Commercial Corridors
+  {
+    name: 'FC Road (Fergusson College), Deccan',
+    lat: 18.5204,
+    lng: 73.8415,
+    landmarkType: 'commercial',
+    aliases: ['fc road', 'fergusson college', 'deccan', 'deccan gymkhana', 'goodluck chowk', 'jm road'],
+  },
+  {
+    name: 'Goodluck Chowk, FC Road',
+    lat: 18.5185,
+    lng: 73.8410,
+    landmarkType: 'commercial',
+    aliases: ['goodluck', 'goodluck chowk', 'cafe goodluck'],
+  },
+  {
+    name: 'JM Road (Jangali Maharaj Mandir & Sambhaji Park)',
+    lat: 18.5230,
+    lng: 73.8470,
+    landmarkType: 'commercial',
+    aliases: ['jm road', 'jangali maharaj', 'sambhaji park'],
+  },
   {
     name: 'Kothrud (Karve Statue & Chandani Chowk)',
     lat: 18.5074,
     lng: 73.8077,
     landmarkType: 'suburb',
-    aliases: ['kothrud', 'karve road', 'chandani chowk', 'paud road'],
+    aliases: ['kothrud', 'karve road', 'chandani chowk', 'paud road', 'karve statue'],
   },
   {
     name: 'Viman Nagar (Phoenix Marketcity)',
     lat: 18.5620,
     lng: 73.9168,
     landmarkType: 'commercial',
-    aliases: ['viman nagar', 'phoenix marketcity', 'phoenix mall'],
+    aliases: ['viman nagar', 'phoenix marketcity', 'phoenix mall', 'dutta mandir viman nagar'],
   },
   {
     name: 'PCMC (Pimpri Chinchwad Municipal Corp)',
     lat: 18.6288,
     lng: 73.8052,
     landmarkType: 'suburb',
-    aliases: ['pcmc', 'pimpri', 'chinchwad', 'pcmc bhavan'],
-  },
-  {
-    name: 'FC Road (Fergusson College), Deccan',
-    lat: 18.5204,
-    lng: 73.8415,
-    landmarkType: 'commercial',
-    aliases: ['fc road', 'fergusson college', 'deccan', 'deccan gymkhana', 'jm road'],
+    aliases: ['pcmc', 'pimpri', 'chinchwad', 'pcmc bhavan', 'pimpri market'],
   },
   {
     name: 'Baner (High Street)',
     lat: 18.5590,
     lng: 73.7788,
     landmarkType: 'commercial',
-    aliases: ['baner', 'baner high street', 'balewadi high street'],
+    aliases: ['baner', 'baner high street', 'balewadi high street', 'pan card club road'],
+  },
+  {
+    name: 'Balewadi Sports Complex (Shiv Chhatrapati Stadium)',
+    lat: 18.5775,
+    lng: 73.7690,
+    landmarkType: 'commercial',
+    aliases: ['balewadi', 'balewadi stadium', 'sports complex balewadi'],
+  },
+  {
+    name: 'Aundh (Parihar Chowk)',
+    lat: 18.5615,
+    lng: 73.8070,
+    landmarkType: 'commercial',
+    aliases: ['aundh', 'parihar chowk', 'bremen chowk', 'westend mall'],
   },
   {
     name: 'Wakad (Datta Mandir Road / Bridge)',
     lat: 18.5987,
     lng: 73.7635,
     landmarkType: 'suburb',
-    aliases: ['wakad', 'wakad bridge', 'dange chowk'],
+    aliases: ['wakad', 'wakad bridge', 'dange chowk', 'bhumkar chowk'],
+  },
+  {
+    name: 'Pimple Saudagar (Linear Garden & Kokane Chowk)',
+    lat: 18.5980,
+    lng: 73.7940,
+    landmarkType: 'suburb',
+    aliases: ['pimple saudagar', 'kokane chowk', 'linear garden'],
   },
   {
     name: 'Koregaon Park (North Main Road)',
     lat: 18.5362,
     lng: 73.8940,
     landmarkType: 'commercial',
-    aliases: ['koregaon park', 'kp', 'north main road'],
+    aliases: ['koregaon park', 'kp', 'north main road', 'south main road', 'osho ashram'],
   },
   {
-    name: 'Katraj (Snake Park & Wonder World)',
+    name: 'Katraj (Snake Park & Rajiv Gandhi Zoo)',
     lat: 18.4530,
     lng: 73.8640,
     landmarkType: 'suburb',
-    aliases: ['katraj', 'katraj zoo', 'katraj bus stand'],
+    aliases: ['katraj', 'katraj zoo', 'snake park', 'katraj snake park'],
   },
   {
-    name: 'Hadapsar (Gadital)',
+    name: 'Hadapsar (Gadital & Amanora)',
     lat: 18.5020,
     lng: 73.9280,
     landmarkType: 'suburb',
-    aliases: ['hadapsar', 'gadital', 'hadapsar bus stand'],
+    aliases: ['hadapsar', 'gadital', 'amanora', 'amanora mall'],
+  },
+  {
+    name: 'Kharadi Bypass Chowk',
+    lat: 18.5490,
+    lng: 73.9380,
+    landmarkType: 'suburb',
+    aliases: ['kharadi', 'kharadi bypass', 'chandan nagar'],
+  },
+  {
+    name: 'Wagholi (Wagheshwar Temple & Nagar Road)',
+    lat: 18.5810,
+    lng: 73.9800,
+    landmarkType: 'suburb',
+    aliases: ['wagholi', 'wagheshwar', 'wagholi chowk'],
+  },
+  {
+    name: 'Bavdhan (Maratha Mandir / Chandani Chowk)',
+    lat: 18.5150,
+    lng: 73.7770,
+    landmarkType: 'suburb',
+    aliases: ['bavdhan', 'bavdhan khurd', 'chandani chowk bavdhan'],
+  },
+  {
+    name: 'Pashan (Pashan Lake / Sus Road)',
+    lat: 18.5390,
+    lng: 73.7920,
+    landmarkType: 'suburb',
+    aliases: ['pashan', 'pashan circle', 'pashan lake', 'sus road'],
+  },
+  {
+    name: 'Sinhagad Road (Manik Baug & Anand Nagar)',
+    lat: 18.4790,
+    lng: 73.8240,
+    landmarkType: 'suburb',
+    aliases: ['sinhagad road', 'manik baug', 'anand nagar sinhagad', 'vadgaon budruk'],
+  },
+  {
+    name: 'Warje Flyover & Mai Mangeshkar Hospital',
+    lat: 18.4780,
+    lng: 73.7990,
+    landmarkType: 'suburb',
+    aliases: ['warje', 'warje flyover', 'ganpati matha', 'mai mangeshkar'],
+  },
+  {
+    name: 'Dhayari Phata / Dhayari Gaon',
+    lat: 18.4550,
+    lng: 73.8150,
+    landmarkType: 'suburb',
+    aliases: ['dhayari', 'dhayari phata', 'dhayari gaon'],
+  },
+  {
+    name: 'Kondhwa (NIBM Road & Kausar Baug)',
+    lat: 18.4830,
+    lng: 73.8930,
+    landmarkType: 'suburb',
+    aliases: ['kondhwa', 'nibm', 'nibm road', 'salunke vihar', 'kausar baug'],
+  },
+  {
+    name: 'Pune Camp (MG Road / East Street)',
+    lat: 18.5175,
+    lng: 73.8810,
+    landmarkType: 'commercial',
+    aliases: ['camp', 'pune camp', 'mg road', 'east street', 'wonderland'],
+  },
+  {
+    name: 'Shaniwar Wada & Kasba Peth',
+    lat: 18.5195,
+    lng: 73.8553,
+    landmarkType: 'commercial',
+    aliases: ['shaniwar wada', 'kasba peth', 'dagdusheth', 'budhwar peth', 'tulshibaug'],
+  },
+  {
+    name: 'Yerawada (Gunjan Talkies / Yerawada Metro)',
+    lat: 18.5525,
+    lng: 73.8860,
+    landmarkType: 'suburb',
+    aliases: ['yerawada', 'yerwada', 'gunjan talkies', 'shastri nagar yerawada'],
   },
 ];
 
@@ -187,28 +543,28 @@ export const PUNE_PRESET_TRIPS: PunePresetTrip[] = [
     id: 'ait-fc-road',
     label: 'AIT Pune ➔ FC Road',
     origin: PUNE_LANDMARKS[0], // AIT Pune
-    destination: PUNE_LANDMARKS.find((l) => l.aliases.includes('fc road')) || PUNE_LANDMARKS[18],
+    destination: PUNE_LANDMARKS.find((l) => l.aliases.includes('fc road')) || PUNE_LANDMARKS[24],
     budget: 100,
   },
   {
     id: 'ait-pune-junction',
     label: 'AIT Pune ➔ Pune Junction',
     origin: PUNE_LANDMARKS[0], // AIT Pune
-    destination: PUNE_LANDMARKS[7], // Pune Junction
+    destination: PUNE_LANDMARKS.find((l) => l.aliases.includes('pune junction')) || PUNE_LANDMARKS[10], // Pune Junction
     budget: 150,
   },
   {
     id: 'hinjewadi-shivajinagar',
     label: 'Hinjewadi ➔ Shivajinagar',
-    origin: PUNE_LANDMARKS[11], // Hinjewadi Phase 1
-    destination: PUNE_LANDMARKS[8], // Shivajinagar
+    origin: PUNE_LANDMARKS.find((l) => l.aliases.includes('hinjewadi')) || PUNE_LANDMARKS[21], // Hinjewadi Phase 1
+    destination: PUNE_LANDMARKS.find((l) => l.aliases.includes('shivajinagar')) || PUNE_LANDMARKS[11], // Shivajinagar
     budget: 150,
   },
   {
     id: 'swargate-pcmc',
     label: 'Swargate ➔ PCMC (Metro)',
-    origin: PUNE_LANDMARKS[9], // Swargate
-    destination: PUNE_LANDMARKS[17], // PCMC
+    origin: PUNE_LANDMARKS.find((l) => l.aliases.includes('swargate')) || PUNE_LANDMARKS[12], // Swargate
+    destination: PUNE_LANDMARKS.find((l) => l.aliases.includes('pcmc')) || PUNE_LANDMARKS[28], // PCMC
     budget: 60,
   },
 ];
