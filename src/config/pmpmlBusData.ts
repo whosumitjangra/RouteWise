@@ -1,5 +1,7 @@
 import { PMPMLBusRoute } from '../types';
 import pmpmlOfficialRoutesData from './pmpmlOfficialRoutes.json';
+import pmpmlGtfsRoutesData from './pmpmlGtfsRoutes.json';
+import pmpmlStopsData from './pmpmlStops.json';
 
 export interface OfficialPMPMLRouteRecord {
   routeId: string;
@@ -12,7 +14,34 @@ export interface OfficialPMPMLRouteRecord {
   km: number;
 }
 
+export interface PMPMLGtfsRouteRecord {
+  routeId: string;
+  busNumber: string;
+  routeName: string;
+  routeNameMr?: string;
+  origin: string;
+  dest: string;
+  originCoords: { lat: number; lon: number } | null;
+  destCoords: { lat: number; lon: number } | null;
+  headsigns: {
+    dir0: string[];
+    dir1: string[];
+  };
+  km: number;
+  tripsCount: number;
+  frequencyMinutes: number;
+}
+
+export interface PMPMLStopRecord {
+  id: string;
+  name: string;
+  lat: number;
+  lon: number;
+}
+
 export const OFFICIAL_PMPML_ROUTES: OfficialPMPMLRouteRecord[] = pmpmlOfficialRoutesData as OfficialPMPMLRouteRecord[];
+export const PMPML_GTFS_ROUTES: PMPMLGtfsRouteRecord[] = pmpmlGtfsRoutesData as PMPMLGtfsRouteRecord[];
+export const PMPML_STOPS: PMPMLStopRecord[] = pmpmlStopsData as PMPMLStopRecord[];
 
 /**
  * Curated PMPML (Pune Mahanagar Parivahan Mahamandal Limited) 
@@ -886,17 +915,171 @@ const MAJOR_HUBS = [
   { name: 'Deccan Gymkhana', key: 'deccan' },
 ];
 
+function haversineDistKm(lat1: number, lon1: number, lat2: number, lon2: number): number {
+  const R = 6371;
+  const dLat = ((lat2 - lat1) * Math.PI) / 180;
+  const dLon = ((lon2 - lon1) * Math.PI) / 180;
+  const a =
+    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.cos((lat1 * Math.PI) / 180) *
+      Math.cos((lat2 * Math.PI) / 180) *
+      Math.sin(dLon / 2) *
+      Math.sin(dLon / 2);
+  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+}
+
+function distToLineSegment(
+  p: { lat: number; lon: number },
+  a: { lat: number; lon: number },
+  b: { lat: number; lon: number }
+): number {
+  const l2 = (b.lat - a.lat) ** 2 + (b.lon - a.lon) ** 2;
+  if (l2 === 0) return haversineDistKm(p.lat, p.lon, a.lat, a.lon);
+  let t = ((p.lat - a.lat) * (b.lat - a.lat) + (p.lon - a.lon) * (b.lon - a.lon)) / l2;
+  t = Math.max(0, Math.min(1, t));
+  const proj = { lat: a.lat + t * (b.lat - a.lat), lon: a.lon + t * (b.lon - a.lon) };
+  return haversineDistKm(p.lat, p.lon, proj.lat, proj.lon);
+}
+
+const STOP_BY_NAME_MAP = new Map<string, PMPMLStopRecord>();
+PMPML_STOPS.forEach((s) => {
+  STOP_BY_NAME_MAP.set(s.name.toLowerCase().trim(), s);
+});
+
+export function getStopByName(name: string): PMPMLStopRecord | undefined {
+  const clean = name.toLowerCase().trim();
+  const direct = STOP_BY_NAME_MAP.get(clean);
+  if (direct) return direct;
+  return PMPML_STOPS.find(
+    (s) => s.name.toLowerCase().includes(clean) || clean.includes(s.name.toLowerCase())
+  );
+}
+
+export function getStopsAlongCorridor(
+  originName: string,
+  destName: string,
+  origCoords?: { lat: number; lng?: number; lon?: number } | null,
+  destCoords?: { lat: number; lng?: number; lon?: number } | null
+): string[] {
+  let a: { lat: number; lon: number } | null = null;
+  let b: { lat: number; lon: number } | null = null;
+
+  if (origCoords) {
+    a = { lat: origCoords.lat, lon: origCoords.lng ?? origCoords.lon ?? 0 };
+  } else if (originName) {
+    const s = getStopByName(originName);
+    if (s) a = { lat: s.lat, lon: s.lon };
+  }
+
+  if (destCoords) {
+    b = { lat: destCoords.lat, lon: destCoords.lng ?? destCoords.lon ?? 0 };
+  } else if (destName) {
+    const s = getStopByName(destName);
+    if (s) b = { lat: s.lat, lon: s.lon };
+  }
+
+  if (!a || !b) return [originName, destName];
+
+  const totalD = haversineDistKm(a.lat, a.lon, b.lat, b.lon);
+  const corridorWidth = Math.min(1.8, Math.max(0.6, totalD * 0.08));
+
+  const candidateStops = PMPML_STOPS.filter((s) => {
+    const da = haversineDistKm(s.lat, s.lon, a!.lat, a!.lon);
+    const db = haversineDistKm(s.lat, s.lon, b!.lat, b!.lon);
+    if (da > totalD + 2.0 || db > totalD + 2.0) return false;
+    return distToLineSegment(s, a!, b!) <= corridorWidth;
+  });
+
+  candidateStops.sort(
+    (x, y) =>
+      haversineDistKm(x.lat, x.lon, a!.lat, a!.lon) - haversineDistKm(y.lat, y.lon, a!.lat, a!.lon)
+  );
+
+  const res: string[] = [originName];
+  const step = Math.max(1, Math.floor(candidateStops.length / 7));
+  for (let i = step; i < candidateStops.length - 1; i += step) {
+    const sName = candidateStops[i].name;
+    if (!res.includes(sName) && sName !== destName && sName !== originName) {
+      res.push(sName);
+    }
+  }
+  if (!res.includes(destName)) res.push(destName);
+  return res;
+}
+
 /**
- * Searches the official 1,030 PMPML catalog to find a direct bus route or authentic 1-transfer connection
+ * Searches the official PMPML GTFS catalog (309 canonical routes + 1,030 full routes)
+ * to find a direct bus route or authentic 1-transfer connection
  */
 export function findMatchingPMPMLBusRoute(
   originName: string,
-  destName: string
+  destName: string,
+  originCoords?: { lat: number; lng?: number; lon?: number } | null,
+  destCoords?: { lat: number; lng?: number; lon?: number } | null
 ): MatchedPMPMLResult | null {
   const oKeys = extractLocalityKeys(originName);
   const dKeys = extractLocalityKeys(destName);
 
-  // 1. FIRST PRIORITY: Direct match from Official 1,030 PMPML Catalog
+  // 1. FIRST PRIORITY: Direct match from Official GTFS 309 Routes Catalog
+  const directGtfs = PMPML_GTFS_ROUTES.find((r) => {
+    const origMatch = terminalMatchesQuery(r.origin, originName, oKeys);
+    const destMatch = terminalMatchesQuery(r.dest, destName, dKeys);
+    if (origMatch && destMatch) return true;
+
+    // Check headsign match
+    const h0Match = r.headsigns.dir0.some((h) => terminalMatchesQuery(h, destName, dKeys));
+    const h1Match = r.headsigns.dir1.some((h) => terminalMatchesQuery(h, originName, oKeys));
+    if (h0Match && h1Match) return true;
+
+    // Check coordinate proximity if coordinates provided
+    if (originCoords && destCoords && r.originCoords && r.destCoords) {
+      const oLon = originCoords.lng ?? originCoords.lon ?? 0;
+      const dLon = destCoords.lng ?? destCoords.lon ?? 0;
+      const dOrigin = haversineDistKm(originCoords.lat, oLon, r.originCoords.lat, r.originCoords.lon);
+      const dDest = haversineDistKm(destCoords.lat, dLon, r.destCoords.lat, r.destCoords.lon);
+      if (dOrigin <= 1.8 && dDest <= 1.8) return true;
+    }
+
+    return false;
+  });
+
+  if (directGtfs) {
+    const stopsSegment = getStopsAlongCorridor(
+      directGtfs.origin,
+      directGtfs.dest,
+      originCoords || (directGtfs.originCoords ? { lat: directGtfs.originCoords.lat, lon: directGtfs.originCoords.lon } : null),
+      destCoords || (directGtfs.destCoords ? { lat: directGtfs.destCoords.lat, lon: directGtfs.destCoords.lon } : null)
+    );
+
+    const isNight = directGtfs.busNumber.toLowerCase().includes('ratrani') || directGtfs.routeName.toLowerCase().includes('night');
+    const isIntercity = directGtfs.km > 25 || directGtfs.routeName.toLowerCase().includes('intercity');
+
+    const matchedRoute: PMPMLBusRoute = {
+      busNumber: directGtfs.busNumber,
+      routeName: directGtfs.routeName,
+      routeNameMr: directGtfs.routeNameMr,
+      originTerminal: directGtfs.origin,
+      destinationTerminal: directGtfs.dest,
+      viaStops: stopsSegment,
+      frequencyMinutes: directGtfs.frequencyMinutes || 12,
+      operatingHours: isNight ? '11:00 PM – 05:00 AM' : '05:30 AM – 11:15 PM',
+      isIntercity,
+      approxDistanceKm: directGtfs.km,
+      officialRouteId: directGtfs.routeId,
+    };
+
+    return {
+      matchedRoute,
+      boardingStop: directGtfs.origin,
+      exitStop: directGtfs.dest,
+      stopsSegment,
+      officialKm: directGtfs.km,
+      officialRouteId: directGtfs.routeId,
+      marathiDescription: directGtfs.routeNameMr,
+    };
+  }
+
+  // 2. SECOND PRIORITY: Direct match from Official 1,030 PMPML Catalog
   const directOfficial = OFFICIAL_PMPML_ROUTES.find(
     (r) =>
       terminalMatchesQuery(r.origin, originName, oKeys) &&
@@ -904,20 +1087,18 @@ export function findMatchingPMPMLBusRoute(
   );
 
   if (directOfficial) {
-    // Check if we have curated fine-grained stop-by-stop data for this busNumber
     const curatedMatch = PMPML_BUS_ROUTES.find(
       (c) => c.busNumber.toLowerCase() === directOfficial.busNumber.toLowerCase()
     );
 
     const stopsSegment: string[] = curatedMatch
       ? curatedMatch.viaStops
-      : [
+      : getStopsAlongCorridor(
           directOfficial.origin,
-          `${directOfficial.origin} Chowk`,
-          directOfficial.desc.includes('(') ? directOfficial.desc.replace(/.*?\((.*?)\).*/, '$1') : 'Intermediate Stage Stop',
-          `${directOfficial.dest} Concourse`,
           directOfficial.dest,
-        ];
+          originCoords,
+          destCoords
+        );
 
     const isNight = directOfficial.routeId.includes('NGT') || directOfficial.desc.toLowerCase().includes('night');
     const isIntercity = directOfficial.km > 25 || directOfficial.desc.toLowerCase().includes('intercity');
@@ -947,7 +1128,7 @@ export function findMatchingPMPMLBusRoute(
     };
   }
 
-  // 2. SECOND PRIORITY: Check curated corridor routes with viaStops scoring
+  // 3. THIRD PRIORITY: Check curated corridor routes with viaStops scoring
   let bestCuratedMatch: {
     matchedRoute: PMPMLBusRoute;
     boardingStop: string;
@@ -1012,34 +1193,47 @@ export function findMatchingPMPMLBusRoute(
     };
   }
 
-  // 3. THIRD PRIORITY: 1-Transfer connection via Official PMPML Catalog
+  // 4. FOURTH PRIORITY: 1-Transfer connection via Official PMPML Catalog
   for (const hub of MAJOR_HUBS) {
     const hubKeys = extractLocalityKeys(hub.name);
-    const leg1 = OFFICIAL_PMPML_ROUTES.find(
-      (r) =>
-        terminalMatchesQuery(r.origin, originName, oKeys) &&
-        terminalMatchesQuery(r.dest, hub.name, hubKeys)
-    );
-    const leg2 = OFFICIAL_PMPML_ROUTES.find(
-      (r) =>
-        terminalMatchesQuery(r.origin, hub.name, hubKeys) &&
-        terminalMatchesQuery(r.dest, destName, dKeys)
-    );
+    const leg1 =
+      PMPML_GTFS_ROUTES.find(
+        (r) =>
+          terminalMatchesQuery(r.origin, originName, oKeys) &&
+          terminalMatchesQuery(r.dest, hub.name, hubKeys)
+      ) ||
+      OFFICIAL_PMPML_ROUTES.find(
+        (r) =>
+          terminalMatchesQuery(r.origin, originName, oKeys) &&
+          terminalMatchesQuery(r.dest, hub.name, hubKeys)
+      );
+
+    const leg2 =
+      PMPML_GTFS_ROUTES.find(
+        (r) =>
+          terminalMatchesQuery(r.origin, hub.name, hubKeys) &&
+          terminalMatchesQuery(r.dest, destName, dKeys)
+      ) ||
+      OFFICIAL_PMPML_ROUTES.find(
+        (r) =>
+          terminalMatchesQuery(r.origin, hub.name, hubKeys) &&
+          terminalMatchesQuery(r.dest, destName, dKeys)
+      );
 
     if (leg1 && leg2 && leg1.busNumber !== leg2.busNumber) {
-      const totalKm = +(leg1.km + leg2.km).toFixed(1);
+      const leg1Km = (leg1 as any).km || 10;
+      const leg2Km = (leg2 as any).km || 10;
+      const totalKm = +(leg1Km + leg2Km).toFixed(1);
       const combinedStops = [
         leg1.origin,
-        `${leg1.origin} Chowk`,
         `${hub.name} (Transfer: Bus ${leg1.busNumber} ➔ Bus ${leg2.busNumber})`,
-        `${leg2.dest} Concourse`,
         leg2.dest,
       ];
 
       const synthesizedRoute: PMPMLBusRoute = {
         busNumber: `${leg1.busNumber} ➔ ${leg2.busNumber}`,
         routeName: `${leg1.origin} ➔ ${leg2.dest} (via ${hub.name})`,
-        routeNameMr: `${leg1.descMr} + ${leg2.descMr}`,
+        routeNameMr: `${(leg1 as any).descMr || ''} + ${(leg2 as any).descMr || ''}`,
         originTerminal: leg1.origin,
         destinationTerminal: leg2.dest,
         viaStops: combinedStops,
@@ -1059,7 +1253,7 @@ export function findMatchingPMPMLBusRoute(
         firstBusNumber: leg1.busNumber,
         secondBusNumber: leg2.busNumber,
         officialKm: totalKm,
-        marathiDescription: `${leg1.descMr} + ${leg2.descMr}`,
+        marathiDescription: `${(leg1 as any).descMr || ''} + ${(leg2 as any).descMr || ''}`,
       };
     }
   }

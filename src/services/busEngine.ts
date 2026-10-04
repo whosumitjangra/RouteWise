@@ -1,5 +1,11 @@
-import { LocationPoint, RouteLeg, RouteOption } from '../types';
-import { PMPML_BUS_ROUTES, findMatchingPMPMLBusRoute, extractLocalityKeys } from '../config/pmpmlBusData';
+import { LocationPoint, RouteLeg, RouteOption, StationWaypoint } from '../types';
+import { 
+  PMPML_BUS_ROUTES, 
+  findMatchingPMPMLBusRoute, 
+  extractLocalityKeys,
+  getStopByName,
+  getStopsAlongCorridor
+} from '../config/pmpmlBusData';
 import { FARE_CONFIG } from '../config/fares';
 import { RoadRouteResult } from './mapbox';
 import { isLocationOutOfTown } from '../config/outOfTownCities';
@@ -63,7 +69,12 @@ export function buildPMPMLBusOption(
   }
 
   // 2. Search catalog for direct match or authentic 1-transfer connection
-  const catalogMatch = findMatchingPMPMLBusRoute(origin.name, destination.name);
+  const catalogMatch = findMatchingPMPMLBusRoute(
+    origin.name,
+    destination.name,
+    { lat: origin.lat, lng: origin.lng },
+    { lat: destination.lat, lng: destination.lng }
+  );
 
   let busNumber = '';
   let routeName = '';
@@ -658,6 +669,25 @@ export function buildPMPMLBusOption(
     coordinates: roadRoute.coordinates.slice(Math.max(0, roadRoute.coordinates.length - 6)),
   });
 
+  const stationWaypoints: StationWaypoint[] = stopsList
+    .map((sName, i) => {
+      const sRecord = getStopByName(sName);
+      if (!sRecord) return null;
+      return {
+        name: sRecord.name,
+        lat: sRecord.lat,
+        lng: sRecord.lon,
+        type: (i === 0 ? 'board' : i === stopsList.length - 1 ? 'deboard' : 'interchange') as 'board' | 'deboard' | 'interchange',
+        instruction:
+          i === 0
+            ? `Board PMPML Bus ${busNumber} at ${sRecord.name}`
+            : i === stopsList.length - 1
+            ? `Alight at ${sRecord.name}`
+            : `Via ${sRecord.name}`,
+      };
+    })
+    .filter((wp): wp is StationWaypoint => wp !== null);
+
   return {
     id: 'opt-bus',
     mode: 'bus',
@@ -680,6 +710,7 @@ export function buildPMPMLBusOption(
     isFeasible: true,
     coordinates: roadRoute.coordinates,
     legs,
+    stationWaypoints: stationWaypoints.length > 0 ? stationWaypoints : undefined,
     busNumber,
     busFrequency: `Every ${frequencyMinutes} mins`,
     busNameMr: busNameMr || undefined,

@@ -355,6 +355,46 @@ export const MapView: React.FC<MapViewProps> = ({
       polylinesRef.current[selectedRoute.id] = polyline;
     }
 
+    // 5b. Render Authentic Bus Stops / Station Waypoints along the selected route
+    if (selectedRoute && selectedRoute.stationWaypoints && selectedRoute.stationWaypoints.length > 0) {
+      selectedRoute.stationWaypoints.forEach((wp) => {
+        const isNearOrigin = Math.hypot(wp.lat - origin.lat, wp.lng - origin.lng) < 0.003;
+        const isNearDest = Math.hypot(wp.lat - destination.lat, wp.lng - destination.lng) < 0.003;
+        if (isNearOrigin || isNearDest) return;
+
+        const isBus = selectedRoute.mode === 'bus';
+        const stopIcon = L.divIcon({
+          className: 'custom-bus-stop-pin',
+          html: `
+            <div style="
+              width: 12px;
+              height: 12px;
+              border-radius: 50%;
+              background: ${isBus ? '#e11d48' : '#4f46e5'};
+              border: 2px solid white;
+              box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+              cursor: pointer;
+            "></div>
+          `,
+          iconSize: [12, 12],
+          iconAnchor: [6, 6],
+        });
+
+        const stopMarker = L.marker([wp.lat, wp.lng], { icon: stopIcon }).addTo(group);
+        stopMarker.bindPopup(`
+          <div style="font-family: inherit; font-size: 11px; min-width: 140px;">
+            <div style="font-weight: 800; color: ${isBus ? '#e11d48' : '#4f46e5'}; text-transform: uppercase; font-size: 9px;">
+              ${isBus ? '🚏 PMPML Bus Stop' : '🚉 Station'}
+            </div>
+            <div style="font-weight: 700; color: #18181b; margin-top: 2px;">${wp.name}</div>
+            <div style="color: #71717a; font-size: 10px; margin-top: 2px;">
+              ${isBus ? `Bus ${selectedRoute.busNumber || ''} Corridor` : 'Pune Metro'}
+            </div>
+          </div>
+        `);
+      });
+    }
+
     // 6. Draw Focused Location if inspecting another POI
     if (
       focusedLocation &&

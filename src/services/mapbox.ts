@@ -2,6 +2,8 @@ import { LocationPoint } from '../types';
 import { PUNE_LANDMARKS, PuneLandmarkWithAliases } from '../config/puneLandmarks';
 import { PUNE_METRO_STATIONS } from '../config/metroData';
 import { OUT_OF_TOWN_CITIES, matchOutOfTownCity } from '../config/outOfTownCities';
+import pmpmlStopsData from '../config/pmpmlStops.json';
+import pmpmlGtfsRoutesData from '../config/pmpmlGtfsRoutes.json';
 
 export interface RoadRouteResult {
   distanceKm: number;
@@ -358,6 +360,55 @@ export async function searchPuneLocationsWithStatus(rawQuery: string): Promise<S
           cityName: city.name,
           categoryLabel: 'Getaway Destination',
         });
+      }
+    }
+  }
+
+  // Tier 0B: PMPML Bus Route Numbers & Terminals (Instant search for "100", "Bus 158", "357", etc.)
+  const busNumMatch = cleanQuery(rawQuery).replace(/^bus\s*/i, '').trim();
+  if (busNumMatch.length >= 1) {
+    for (const r of pmpmlGtfsRoutesData) {
+      if (r.busNumber.toLowerCase() === busNumMatch.toLowerCase()) {
+        if (r.originCoords && !isDuplicate(r.originCoords.lat, r.originCoords.lon, `Bus ${r.busNumber}: ${r.origin}`)) {
+          matchedPoints.push({
+            name: `Bus ${r.busNumber} Origin: ${r.origin}`,
+            lat: r.originCoords.lat,
+            lng: r.originCoords.lon,
+            address: `PMPML Bus ${r.busNumber} • ${r.routeName}`,
+            landmarkType: 'bus_stand',
+            categoryLabel: `Bus ${r.busNumber} Terminal`,
+          });
+        }
+        if (r.destCoords && !isDuplicate(r.destCoords.lat, r.destCoords.lon, `Bus ${r.busNumber}: ${r.dest}`)) {
+          matchedPoints.push({
+            name: `Bus ${r.busNumber} Terminus: ${r.dest}`,
+            lat: r.destCoords.lat,
+            lng: r.destCoords.lon,
+            address: `PMPML Bus ${r.busNumber} • ${r.routeName}`,
+            landmarkType: 'bus_stand',
+            categoryLabel: `Bus ${r.busNumber} Terminal`,
+          });
+        }
+      }
+    }
+  }
+
+  // Tier 0C: Authentic PMPML Bus Stops Catalog (3,811 official stops across Pune & PCMC)
+  let stopsMatchedCount = 0;
+  for (const stop of pmpmlStopsData) {
+    const sName = cleanQuery(stop.name);
+    if (queryVariants.some((qv) => sName.includes(qv) || qv.includes(sName))) {
+      if (!isDuplicate(stop.lat, stop.lon, stop.name)) {
+        matchedPoints.push({
+          name: stop.name,
+          lat: stop.lat,
+          lng: stop.lon,
+          address: `${stop.name}, PMPML Bus Stop, Pune`,
+          landmarkType: 'bus_stand',
+          categoryLabel: 'PMPML Bus Stop',
+        });
+        stopsMatchedCount++;
+        if (stopsMatchedCount >= 10) break;
       }
     }
   }

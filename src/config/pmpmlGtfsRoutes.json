@@ -1,0 +1,8343 @@
+[
+  {
+    "routeId": "100",
+    "busNumber": "100",
+    "routeName": "Hinjawadi Maan Phase 3 ⇆ Ma Na Pa Dengle Pul Nadikathi",
+    "routeNameMr": "हिंजवडी माण फेज ३ ते मनपा",
+    "origin": "Hinjawadi Maan Phase 3",
+    "dest": "Ma Na Pa Dengle Pul Nadikathi",
+    "originCoords": {
+      "lat": 18.576699,
+      "lon": 73.688282
+    },
+    "destCoords": {
+      "lat": 18.5236219969565,
+      "lon": 73.8550657020796
+    },
+    "headsigns": {
+      "dir0": [
+        "Ma Na Pa Dengle Pul Nadikathi"
+      ],
+      "dir1": [
+        "Hinjawadi Maan Phase 3"
+      ]
+    },
+    "km": 26.4,
+    "tripsCount": 130,
+    "frequencyMinutes": 10
+  },
+  {
+    "routeId": "103",
+    "busNumber": "103",
+    "routeName": "Kothrud Depot ⇆ Katraj",
+    "routeNameMr": "कोथरुड डेपो ते कात्रज",
+    "origin": "Kothrud Depot",
+    "dest": "Katraj",
+    "originCoords": {
+      "lat": 18.507899,
+      "lon": 73.794949
+    },
+    "destCoords": {
+      "lat": 18.447356,
+      "lon": 73.858652
+    },
+    "headsigns": {
+      "dir0": [
+        "Katraj"
+      ],
+      "dir1": [
+        "Kothrud Depot"
+      ]
+    },
+    "km": 14.3,
+    "tripsCount": 160,
+    "frequencyMinutes": 10
+  },
+  {
+    "routeId": "104",
+    "busNumber": "104",
+    "routeName": "Dsk Vishwa ⇆ Shivaji Nagar",
+    "routeNameMr": "डि.एस.के. विश्व ते डेक्कन जिमखाना",
+    "origin": "Dsk Vishwa",
+    "dest": "Shivaji Nagar",
+    "originCoords": {
+      "lat": 18.4433,
+      "lon": 73.799103
+    },
+    "destCoords": {
+      "lat": 18.531756,
+      "lon": 73.84903
+    },
+    "headsigns": {
+      "dir0": [
+        "Shivaji Nagar"
+      ],
+      "dir1": [
+        "Dsk Vishwa"
+      ]
+    },
+    "km": 15.4,
+    "tripsCount": 40,
+    "frequencyMinutes": 15
+  },
+  {
+    "routeId": "107",
+    "busNumber": "107",
+    "routeName": "Pimplegurav ⇆ Ganpati Matha",
+    "routeNameMr": "पिंपळे गुरव ते डेक्कन जिमखाना",
+    "origin": "Pimplegurav",
+    "dest": "Ganpati Matha",
+    "originCoords": {
+      "lat": 18.5930126539084,
+      "lon": 73.8190997477793
+    },
+    "destCoords": {
+      "lat": 18.475765,
+      "lon": 73.795812
+    },
+    "headsigns": {
+      "dir0": [
+        "Ganpati Matha"
+      ],
+      "dir1": [
+        "Pimplegurav"
+      ]
+    },
+    "km": 14.4,
+    "tripsCount": 10,
+    "frequencyMinutes": 15
+  },
+  {
+    "routeId": "108",
+    "busNumber": "108",
+    "routeName": "Pune Station Moledina Road ⇆ Sutardara",
+    "routeNameMr": "पुणे स्टेशन ते सुतारदरा",
+    "origin": "Pune Station Moledina Road",
+    "dest": "Sutardara",
+    "originCoords": {
+      "lat": 18.5275752196755,
+      "lon": 73.8732451702751
+    },
+    "destCoords": {
+      "lat": 18.515459,
+      "lon": 73.807824
+    },
+    "headsigns": {
+      "dir0": [
+        "Sutardara"
+      ],
+      "dir1": [
+        "Pune Station Moledina Stand"
+      ]
+    },
+    "km": 12.3,
+    "tripsCount": 6,
+    "frequencyMinutes": 15
+  },
+  {
+    "routeId": "111M",
+    "busNumber": "111M",
+    "routeName": "Ma Na Pa Congress Bhavan ⇆ Bhekrai Nagar",
+    "routeNameMr": "",
+    "origin": "Ma Na Pa Congress Bhavan",
+    "dest": "Bhekrai Nagar",
+    "originCoords": {
+      "lat": 18.52227,
+      "lon": 73.852261
+    },
+    "destCoords": {
+      "lat": 18.483643,
+      "lon": 73.953885
+    },
+    "headsigns": {
+      "dir0": [
+        "Bhekrai Nagar"
+      ],
+      "dir1": [
+        "Ma Na Pa Congress Bhavan"
+      ]
+    },
+    "km": 15,
+    "tripsCount": 15,
+    "frequencyMinutes": 15
+  },
+  {
+    "routeId": "113",
+    "busNumber": "113",
+    "routeName": "Sangvi Vasantdada Putala ⇆ Vasant Talkies",
+    "routeNameMr": "वंसतदादा पुतळा सांगवी ते अप्पा बळवंत चौक",
+    "origin": "Sangvi Vasantdada Putala",
+    "dest": "Vasant Talkies",
+    "originCoords": {
+      "lat": 18.5752218675506,
+      "lon": 73.8257080264047
+    },
+    "destCoords": {
+      "lat": 18.5183095726825,
+      "lon": 73.8562166670321
+    },
+    "headsigns": {
+      "dir0": [
+        "Vasant Talkies"
+      ],
+      "dir1": [
+        "Sangvi Vasantdada Putala"
+      ]
+    },
+    "km": 10.9,
+    "tripsCount": 21,
+    "frequencyMinutes": 15
+  },
+  {
+    "routeId": "114",
+    "busNumber": "114",
+    "routeName": "Bajirao Padale Chowk Mhalunge ⇆ Ma Na Pa Main Gate",
+    "routeNameMr": "म्हाळुंगे गांव ते मनपा",
+    "origin": "Bajirao Padale Chowk Mhalunge",
+    "dest": "Ma Na Pa Main Gate",
+    "originCoords": {
+      "lat": 18.56485,
+      "lon": 73.735653
+    },
+    "destCoords": {
+      "lat": 18.523001,
+      "lon": 73.854202
+    },
+    "headsigns": {
+      "dir0": [
+        "Ma Na Pa Main Gate"
+      ],
+      "dir1": [
+        "Bajirao Padale Chowk Mhalunge"
+      ]
+    },
+    "km": 12.5,
+    "tripsCount": 115,
+    "frequencyMinutes": 10
+  },
+  {
+    "routeId": "115",
+    "busNumber": "115",
+    "routeName": "Hinjawadi Maan Phase 3 ⇆ Pune Station Moledina Stand",
+    "routeNameMr": "",
+    "origin": "Hinjawadi Maan Phase 3",
+    "dest": "Pune Station Moledina Stand",
+    "originCoords": {
+      "lat": 18.576699,
+      "lon": 73.688282
+    },
+    "destCoords": {
+      "lat": 18.5274938375007,
+      "lon": 73.8732022472692
+    },
+    "headsigns": {
+      "dir0": [
+        "Pune Station Moledina Stand"
+      ],
+      "dir1": [
+        "Hinjawadi Maan Phase 3"
+      ]
+    },
+    "km": 15,
+    "tripsCount": 102,
+    "frequencyMinutes": 10
+  },
+  {
+    "routeId": "117",
+    "busNumber": "117",
+    "routeName": "Dhayareshwar Mandir ⇆ Swargate Natraj Stand",
+    "routeNameMr": "धायरी मारूती मंदिर ते स्वारगेट",
+    "origin": "Dhayareshwar Mandir",
+    "dest": "Swargate Natraj Stand",
+    "originCoords": {
+      "lat": 18.44235,
+      "lon": 73.812699
+    },
+    "destCoords": {
+      "lat": 18.5005,
+      "lon": 73.857697
+    },
+    "headsigns": {
+      "dir0": [
+        "Swargate Natraj Stand"
+      ],
+      "dir1": [
+        "Dhayareshwar Mandir"
+      ]
+    },
+    "km": 12.2,
+    "tripsCount": 158,
+    "frequencyMinutes": 10
+  },
+  {
+    "routeId": "118A",
+    "busNumber": "118A",
+    "routeName": "Suncity ⇆ Swargate Natraj Stand",
+    "routeNameMr": "सनसिटी ते स्वारगेट",
+    "origin": "Suncity",
+    "dest": "Swargate Natraj Stand",
+    "originCoords": {
+      "lat": 18.47475,
+      "lon": 73.813999
+    },
+    "destCoords": {
+      "lat": 18.5005,
+      "lon": 73.857697
+    },
+    "headsigns": {
+      "dir0": [
+        "Swargate Natraj Stand"
+      ],
+      "dir1": [
+        "Suncity"
+      ]
+    },
+    "km": 6,
+    "tripsCount": 15,
+    "frequencyMinutes": 15
+  },
+  {
+    "routeId": "118",
+    "busNumber": "118",
+    "routeName": "Vadgaon Budruk Stand ⇆ Swargate Natraj Stand",
+    "routeNameMr": "वेणुताई कॉलेज ते स्वारगेट",
+    "origin": "Vadgaon Budruk Stand",
+    "dest": "Swargate Natraj Stand",
+    "originCoords": {
+      "lat": 18.46745,
+      "lon": 73.821999
+    },
+    "destCoords": {
+      "lat": 18.5005,
+      "lon": 73.857697
+    },
+    "headsigns": {
+      "dir0": [
+        "Swargate Natraj Stand"
+      ],
+      "dir1": [
+        "Vadgaon Budruk Stand"
+      ]
+    },
+    "km": 9.4,
+    "tripsCount": 29,
+    "frequencyMinutes": 15
+  },
+  {
+    "routeId": "119A",
+    "busNumber": "119A",
+    "routeName": "Charholigaon ⇆ Ma Na Pa Daphale Garage",
+    "routeNameMr": "आळंदी ते विश्रांतवाडी",
+    "origin": "Charholigaon",
+    "dest": "Ma Na Pa Daphale Garage",
+    "originCoords": {
+      "lat": 18.653609,
+      "lon": 73.907761
+    },
+    "destCoords": {
+      "lat": 18.523375,
+      "lon": 73.852923
+    },
+    "headsigns": {
+      "dir0": [
+        "Ma Na Pa Daphale Garage"
+      ],
+      "dir1": [
+        "Charholigaon"
+      ]
+    },
+    "km": 11,
+    "tripsCount": 10,
+    "frequencyMinutes": 15
+  },
+  {
+    "routeId": "119",
+    "busNumber": "119",
+    "routeName": "Alandi ⇆ Ma Na Pa Daphale Garage",
+    "routeNameMr": "आळंदी ते मनपा",
+    "origin": "Alandi",
+    "dest": "Ma Na Pa Daphale Garage",
+    "originCoords": {
+      "lat": 18.6748133205203,
+      "lon": 73.8971222018015
+    },
+    "destCoords": {
+      "lat": 18.523375,
+      "lon": 73.852923
+    },
+    "headsigns": {
+      "dir0": [
+        "Ma Na Pa Daphale Garage"
+      ],
+      "dir1": [
+        "Alandi"
+      ]
+    },
+    "km": 23.1,
+    "tripsCount": 136,
+    "frequencyMinutes": 10
+  },
+  {
+    "routeId": "11A",
+    "busNumber": "11A",
+    "routeName": "Kasarwadi Railway Station ⇆ Marketyard Depot",
+    "routeNameMr": "",
+    "origin": "Kasarwadi Railway Station",
+    "dest": "Marketyard Depot",
+    "originCoords": {
+      "lat": 18.6076874022078,
+      "lon": 73.8206925988197
+    },
+    "destCoords": {
+      "lat": 18.483624,
+      "lon": 73.871501
+    },
+    "headsigns": {
+      "dir0": [
+        "Marketyard Depot"
+      ],
+      "dir1": [
+        "Kasarwadi Railway Station"
+      ]
+    },
+    "km": 15,
+    "tripsCount": 4,
+    "frequencyMinutes": 15
+  },
+  {
+    "routeId": "11C",
+    "busNumber": "11C",
+    "routeName": "Pimplegurav ⇆ Katraj",
+    "routeNameMr": "",
+    "origin": "Pimplegurav",
+    "dest": "Katraj",
+    "originCoords": {
+      "lat": 18.5930126539084,
+      "lon": 73.8190997477793
+    },
+    "destCoords": {
+      "lat": 18.447356,
+      "lon": 73.858652
+    },
+    "headsigns": {
+      "dir0": [
+        "Katraj"
+      ],
+      "dir1": [
+        "Pimplegurav"
+      ]
+    },
+    "km": 15,
+    "tripsCount": 18,
+    "frequencyMinutes": 15
+  },
+  {
+    "routeId": "11",
+    "busNumber": "11",
+    "routeName": "Pimplegurav ⇆ Marketyard Depot",
+    "routeNameMr": "पिंपळे गुरव ते मार्केटयार्ड",
+    "origin": "Pimplegurav",
+    "dest": "Marketyard Depot",
+    "originCoords": {
+      "lat": 18.5930126539084,
+      "lon": 73.8190997477793
+    },
+    "destCoords": {
+      "lat": 18.483624,
+      "lon": 73.871501
+    },
+    "headsigns": {
+      "dir0": [
+        "Marketyard Depot"
+      ],
+      "dir1": [
+        "Pimplegurav"
+      ]
+    },
+    "km": 18.3,
+    "tripsCount": 69,
+    "frequencyMinutes": 10
+  },
+  {
+    "routeId": "120",
+    "busNumber": "120",
+    "routeName": "Endurance Systems Chakan Mahalunge ⇆ Bhosari Chakan Road",
+    "routeNameMr": "इनडूरन्स सिस्टिम चाकण म्हाळुंगे ते मनपा",
+    "origin": "Endurance Systems Chakan Mahalunge",
+    "dest": "Bhosari Chakan Road",
+    "originCoords": {
+      "lat": 18.741313,
+      "lon": 73.806854
+    },
+    "destCoords": {
+      "lat": 18.623893,
+      "lon": 73.851386
+    },
+    "headsigns": {
+      "dir0": [
+        "Bhosari Chakan Road"
+      ],
+      "dir1": [
+        "Endurance Systems Chakan Mahalunge"
+      ]
+    },
+    "km": 40.6,
+    "tripsCount": 84,
+    "frequencyMinutes": 10
+  },
+  {
+    "routeId": "121",
+    "busNumber": "121",
+    "routeName": "Bhosari Terminal ⇆ Ma Na Pa Main Stand",
+    "routeNameMr": "भोसरी टर्मिनल ते मनपा",
+    "origin": "Bhosari Terminal",
+    "dest": "Ma Na Pa Main Stand",
+    "originCoords": {
+      "lat": 18.624547,
+      "lon": 73.85154
+    },
+    "destCoords": {
+      "lat": 18.5229408192276,
+      "lon": 73.8536595982643
+    },
+    "headsigns": {
+      "dir0": [
+        "Ma Na Pa Main Stand"
+      ],
+      "dir1": [
+        "Bhosari Terminal"
+      ]
+    },
+    "km": 17.1,
+    "tripsCount": 138,
+    "frequencyMinutes": 10
+  },
+  {
+    "routeId": "122",
+    "busNumber": "122",
+    "routeName": "Chinchwadgaon ⇆ Ma Na Pa Main Stand",
+    "routeNameMr": "चिंचवडगांव ते मनपा",
+    "origin": "Chinchwadgaon",
+    "dest": "Ma Na Pa Main Stand",
+    "originCoords": {
+      "lat": 18.627678,
+      "lon": 73.782166
+    },
+    "destCoords": {
+      "lat": 18.5229408192276,
+      "lon": 73.8536595982643
+    },
+    "headsigns": {
+      "dir0": [
+        "Ma Na Pa Main Stand"
+      ],
+      "dir1": [
+        "Chinchwadgaon"
+      ]
+    },
+    "km": 18.7,
+    "tripsCount": 33,
+    "frequencyMinutes": 15
+  },
+  {
+    "routeId": "123",
+    "busNumber": "123",
+    "routeName": "Nigdi Bhakti Shakti ⇆ Ma Na Pa Main Stand",
+    "routeNameMr": "भक्ति शक्ति डेपो ते मनपा",
+    "origin": "Nigdi Bhakti Shakti",
+    "dest": "Ma Na Pa Main Stand",
+    "originCoords": {
+      "lat": 18.66601,
+      "lon": 73.771041
+    },
+    "destCoords": {
+      "lat": 18.5229408192276,
+      "lon": 73.8536595982643
+    },
+    "headsigns": {
+      "dir0": [
+        "Ma Na Pa Main Stand"
+      ],
+      "dir1": [
+        "Nigdi Bhakti Shakti"
+      ]
+    },
+    "km": 20.1,
+    "tripsCount": 101,
+    "frequencyMinutes": 10
+  },
+  {
+    "routeId": "124",
+    "busNumber": "124",
+    "routeName": "Neilsoft Company infosys Phase 3 ⇆ Aundhgaon",
+    "routeNameMr": "",
+    "origin": "Neilsoft Company infosys Phase 3",
+    "dest": "Aundhgaon",
+    "originCoords": {
+      "lat": 18.5882778655349,
+      "lon": 73.6758989778982
+    },
+    "destCoords": {
+      "lat": 18.566105,
+      "lon": 73.812045
+    },
+    "headsigns": {
+      "dir0": [
+        "Aundhgaon"
+      ],
+      "dir1": [
+        "Neilsoft Company infosys Phase 3"
+      ]
+    },
+    "km": 15,
+    "tripsCount": 15,
+    "frequencyMinutes": 15
+  },
+  {
+    "routeId": "126",
+    "busNumber": "126",
+    "routeName": "Pimple Nilakh ⇆ Bopkhel",
+    "routeNameMr": "पिंपळे निलख ते विश्रांतवाडी",
+    "origin": "Pimple Nilakh",
+    "dest": "Bopkhel",
+    "originCoords": {
+      "lat": 18.572483,
+      "lon": 73.791481
+    },
+    "destCoords": {
+      "lat": 18.586851,
+      "lon": 73.854401
+    },
+    "headsigns": {
+      "dir0": [
+        "Bopkhel"
+      ],
+      "dir1": [
+        "Pimple Nilakh"
+      ]
+    },
+    "km": 16.2,
+    "tripsCount": 55,
+    "frequencyMinutes": 10
+  },
+  {
+    "routeId": "12",
+    "busNumber": "12",
+    "routeName": "Shivaji Nagar ⇆ Upper Depot",
+    "routeNameMr": "भक्ति शक्ति डेपो ते अप्पर डेपो",
+    "origin": "Shivaji Nagar",
+    "dest": "Upper Depot",
+    "originCoords": {
+      "lat": 18.531756,
+      "lon": 73.84903
+    },
+    "destCoords": {
+      "lat": 18.4610450969899,
+      "lon": 73.8706265126975
+    },
+    "headsigns": {
+      "dir0": [
+        "Upper Depot"
+      ],
+      "dir1": [
+        "Shivaji Nagar"
+      ]
+    },
+    "km": 30.05,
+    "tripsCount": 8,
+    "frequencyMinutes": 15
+  },
+  {
+    "routeId": "130",
+    "busNumber": "130",
+    "routeName": "Swargate ⇆ Narhegaon",
+    "routeNameMr": "शिवाजीनगर ते येवलेवाडी",
+    "origin": "Swargate",
+    "dest": "Narhegaon",
+    "originCoords": {
+      "lat": 18.499524,
+      "lon": 73.858289
+    },
+    "destCoords": {
+      "lat": 18.447851,
+      "lon": 73.82965
+    },
+    "headsigns": {
+      "dir0": [
+        "Narhegaon"
+      ],
+      "dir1": [
+        "Swargate"
+      ]
+    },
+    "km": 16.1,
+    "tripsCount": 80,
+    "frequencyMinutes": 10
+  },
+  {
+    "routeId": "131",
+    "busNumber": "131",
+    "routeName": "Golegaon Gram Panchayat ⇆ Ma Na Pa Dengle Pul Nadikhathi",
+    "routeNameMr": "",
+    "origin": "Golegaon Gram Panchayat",
+    "dest": "Ma Na Pa Dengle Pul Nadikhathi",
+    "originCoords": {
+      "lat": 18.6346,
+      "lon": 73.970398
+    },
+    "destCoords": {
+      "lat": 18.5236320444055,
+      "lon": 73.8552944375313
+    },
+    "headsigns": {
+      "dir0": [
+        "Ma Na Pa Dengle Pul Nadikhathi"
+      ],
+      "dir1": [
+        "Golegaon Gram Panchayat"
+      ]
+    },
+    "km": 15,
+    "tripsCount": 11,
+    "frequencyMinutes": 15
+  },
+  {
+    "routeId": "132",
+    "busNumber": "132",
+    "routeName": "Shubham Society Nagar Road ⇆ Ma Na Pa Shramik Bhavan",
+    "routeNameMr": "शुभम सोसायटी नगर रोड ते मनपा",
+    "origin": "Shubham Society Nagar Road",
+    "dest": "Ma Na Pa Shramik Bhavan",
+    "originCoords": {
+      "lat": 18.554676,
+      "lon": 73.919419
+    },
+    "destCoords": {
+      "lat": 18.524682,
+      "lon": 73.856178
+    },
+    "headsigns": {
+      "dir0": [
+        "Ma Na Pa Shramik Bhavan"
+      ],
+      "dir1": [
+        "Shubham Society Nagar Road"
+      ]
+    },
+    "km": 11.1,
+    "tripsCount": 31,
+    "frequencyMinutes": 15
+  },
+  {
+    "routeId": "133A",
+    "busNumber": "133A",
+    "routeName": "Columbia Hospital ⇆ Ma Na Pa Shramik Bhavan",
+    "routeNameMr": "वडगावशेरी ते मनपा (मार्गे आनंद पार्क)",
+    "origin": "Columbia Hospital",
+    "dest": "Ma Na Pa Shramik Bhavan",
+    "originCoords": {
+      "lat": 18.541534,
+      "lon": 73.934941
+    },
+    "destCoords": {
+      "lat": 18.524682,
+      "lon": 73.856178
+    },
+    "headsigns": {
+      "dir0": [
+        "Ma Na Pa Shramik Bhavan"
+      ],
+      "dir1": [
+        "Columbia Hospital"
+      ]
+    },
+    "km": 14.8,
+    "tripsCount": 73,
+    "frequencyMinutes": 10
+  },
+  {
+    "routeId": "133",
+    "busNumber": "133",
+    "routeName": "Anand Park Vadgaon Sheri Road ⇆ Ma Na Pa Shramik Bhavan",
+    "routeNameMr": "आनंदपार्क ते मनपा",
+    "origin": "Anand Park Vadgaon Sheri Road",
+    "dest": "Ma Na Pa Shramik Bhavan",
+    "originCoords": {
+      "lat": 18.552799,
+      "lon": 73.925201
+    },
+    "destCoords": {
+      "lat": 18.524682,
+      "lon": 73.856178
+    },
+    "headsigns": {
+      "dir0": [
+        "Ma Na Pa Shramik Bhavan"
+      ],
+      "dir1": [
+        "Anand Park Vadgaon Sheri Road"
+      ]
+    },
+    "km": 12.8,
+    "tripsCount": 64,
+    "frequencyMinutes": 10
+  },
+  {
+    "routeId": "135",
+    "busNumber": "135",
+    "routeName": "Ranjangaon Sandas ⇆ Ma Na Pa Shramik Bhavan",
+    "routeNameMr": "वाडेबोल्हाई ते पुणे स्टेशन",
+    "origin": "Ranjangaon Sandas",
+    "dest": "Ma Na Pa Shramik Bhavan",
+    "originCoords": {
+      "lat": 18.572901,
+      "lon": 74.345497
+    },
+    "destCoords": {
+      "lat": 18.524682,
+      "lon": 73.856178
+    },
+    "headsigns": {
+      "dir0": [
+        "Ma Na Pa Shramik Bhavan"
+      ],
+      "dir1": [
+        "Ranjangaon Sandas"
+      ]
+    },
+    "km": 25.6,
+    "tripsCount": 2,
+    "frequencyMinutes": 15
+  },
+  {
+    "routeId": "136",
+    "busNumber": "136",
+    "routeName": "Vadegaon ⇆ Kesnand Phata Wagholi",
+    "routeNameMr": "वाडेगाव ते पुणे स्टेशन",
+    "origin": "Vadegaon",
+    "dest": "Kesnand Phata Wagholi",
+    "originCoords": {
+      "lat": 18.563299,
+      "lon": 74.067546
+    },
+    "destCoords": {
+      "lat": 18.581075,
+      "lon": 73.987541
+    },
+    "headsigns": {
+      "dir0": [
+        "Kesnand Phata Wagholi"
+      ],
+      "dir1": [
+        "Vadegaon"
+      ]
+    },
+    "km": 27.5,
+    "tripsCount": 12,
+    "frequencyMinutes": 15
+  },
+  {
+    "routeId": "137",
+    "busNumber": "137",
+    "routeName": "Pargaon Salu Malu ⇆ Ma Na Pa Shramik Bhavan",
+    "routeNameMr": "",
+    "origin": "Pargaon Salu Malu",
+    "dest": "Ma Na Pa Shramik Bhavan",
+    "originCoords": {
+      "lat": 18.559,
+      "lon": 74.378197
+    },
+    "destCoords": {
+      "lat": 18.524682,
+      "lon": 73.856178
+    },
+    "headsigns": {
+      "dir0": [
+        "Ma Na Pa Shramik Bhavan"
+      ],
+      "dir1": [
+        "Pargaon Salu Malu"
+      ]
+    },
+    "km": 15,
+    "tripsCount": 14,
+    "frequencyMinutes": 15
+  },
+  {
+    "routeId": "139A",
+    "busNumber": "139A",
+    "routeName": "Nigdi Bhakti Shakti Stand ⇆ Bhekrai Nagar",
+    "routeNameMr": "भक्ति शक्ति डेपो ते भेकराई नगर",
+    "origin": "Nigdi Bhakti Shakti Stand",
+    "dest": "Bhekrai Nagar",
+    "originCoords": {
+      "lat": 18.665281,
+      "lon": 73.771742
+    },
+    "destCoords": {
+      "lat": 18.483643,
+      "lon": 73.953885
+    },
+    "headsigns": {
+      "dir0": [
+        "Bhekrai Nagar"
+      ],
+      "dir1": [
+        "Nigdi Bhakti Shakti Stand"
+      ]
+    },
+    "km": 30.7,
+    "tripsCount": 75,
+    "frequencyMinutes": 10
+  },
+  {
+    "routeId": "139",
+    "busNumber": "139",
+    "routeName": "Nigdi Bhakti Shakti ⇆ Shewalewadi Depot",
+    "routeNameMr": "भक्ति शक्ति डेपो ते शेवाळवाडी",
+    "origin": "Nigdi Bhakti Shakti",
+    "dest": "Shewalewadi Depot",
+    "originCoords": {
+      "lat": 18.66601,
+      "lon": 73.771041
+    },
+    "destCoords": {
+      "lat": 18.4954746568572,
+      "lon": 73.9713656902313
+    },
+    "headsigns": {
+      "dir0": [
+        "Shewalewadi Depot"
+      ],
+      "dir1": [
+        "Nigdi Bhakti Shakti"
+      ]
+    },
+    "km": 31.6,
+    "tripsCount": 73,
+    "frequencyMinutes": 10
+  },
+  {
+    "routeId": "13",
+    "busNumber": "13",
+    "routeName": "Shivaji Nagar ⇆ Upper Depot",
+    "routeNameMr": "शिवाजीनगर ते अप्पर डेपो",
+    "origin": "Shivaji Nagar",
+    "dest": "Upper Depot",
+    "originCoords": {
+      "lat": 18.531756,
+      "lon": 73.84903
+    },
+    "destCoords": {
+      "lat": 18.4610450969899,
+      "lon": 73.8706265126975
+    },
+    "headsigns": {
+      "dir0": [
+        "Upper Depot"
+      ],
+      "dir1": [
+        "Shivaji Nagar"
+      ]
+    },
+    "km": 10,
+    "tripsCount": 157,
+    "frequencyMinutes": 10
+  },
+  {
+    "routeId": "140A",
+    "busNumber": "140A",
+    "routeName": "Pune Station Jayprakash Stand ⇆ Katraj Kondhwa Road",
+    "routeNameMr": "",
+    "origin": "Pune Station Jayprakash Stand",
+    "dest": "Katraj Kondhwa Road",
+    "originCoords": {
+      "lat": 18.527133,
+      "lon": 73.874306
+    },
+    "destCoords": {
+      "lat": 18.4475,
+      "lon": 73.85905
+    },
+    "headsigns": {
+      "dir0": [
+        "Katraj Kondhwa Road"
+      ],
+      "dir1": [
+        "Pune Station Jayprakash Stand"
+      ]
+    },
+    "km": 15,
+    "tripsCount": 4,
+    "frequencyMinutes": 15
+  },
+  {
+    "routeId": "140",
+    "busNumber": "140",
+    "routeName": "Pune Station Jayprakash Stand ⇆ Upper Depot",
+    "routeNameMr": "पुणे स्टेशन ते अप्पर डेपो",
+    "origin": "Pune Station Jayprakash Stand",
+    "dest": "Upper Depot",
+    "originCoords": {
+      "lat": 18.527133,
+      "lon": 73.874306
+    },
+    "destCoords": {
+      "lat": 18.4610450969899,
+      "lon": 73.8706265126975
+    },
+    "headsigns": {
+      "dir0": [
+        "Upper Depot"
+      ],
+      "dir1": [
+        "Pune Station Jayprakash Stand"
+      ]
+    },
+    "km": 11.3,
+    "tripsCount": 127,
+    "frequencyMinutes": 10
+  },
+  {
+    "routeId": "141",
+    "busNumber": "141",
+    "routeName": "Pune Station Jayprakash Stand ⇆ Kumar Pruthvi Kondhwa",
+    "routeNameMr": "पुणे स्टेशन ते खडोंबा मंदिर",
+    "origin": "Pune Station Jayprakash Stand",
+    "dest": "Kumar Pruthvi Kondhwa",
+    "originCoords": {
+      "lat": 18.527133,
+      "lon": 73.874306
+    },
+    "destCoords": {
+      "lat": 18.467068,
+      "lon": 73.879226
+    },
+    "headsigns": {
+      "dir0": [
+        "Kumar Pruthvi Kondhwa"
+      ],
+      "dir1": [
+        "Pune Station Jayprakash Stand"
+      ]
+    },
+    "km": 11.9,
+    "tripsCount": 17,
+    "frequencyMinutes": 15
+  },
+  {
+    "routeId": "142",
+    "busNumber": "142",
+    "routeName": "Ghotawade Phata ⇆ Pune Station Moledina Stand",
+    "routeNameMr": "घोटावडे फाटा ते पुणे स्टेशन",
+    "origin": "Ghotawade Phata",
+    "dest": "Pune Station Moledina Stand",
+    "originCoords": {
+      "lat": 18.512922,
+      "lon": 73.677991
+    },
+    "destCoords": {
+      "lat": 18.5274938375007,
+      "lon": 73.8732022472692
+    },
+    "headsigns": {
+      "dir0": [
+        "Pune Station Moledina Stand"
+      ],
+      "dir1": [
+        "Ghotawade Phata"
+      ]
+    },
+    "km": 31.8,
+    "tripsCount": 12,
+    "frequencyMinutes": 15
+  },
+  {
+    "routeId": "143",
+    "busNumber": "143",
+    "routeName": "Pune Station Moledina Stand ⇆ Galinde Path",
+    "routeNameMr": "पुणे स्टेशन ते गालिंदे पथ (मार्गे म्हात्रे पूल)",
+    "origin": "Pune Station Moledina Stand",
+    "dest": "Galinde Path",
+    "originCoords": {
+      "lat": 18.5274938375007,
+      "lon": 73.8732022472692
+    },
+    "destCoords": {
+      "lat": 18.4844,
+      "lon": 73.810303
+    },
+    "headsigns": {
+      "dir0": [
+        "Galinde Path"
+      ],
+      "dir1": [
+        "Pune Station Moledina Stand"
+      ]
+    },
+    "km": 11.3,
+    "tripsCount": 36,
+    "frequencyMinutes": 15
+  },
+  {
+    "routeId": "144A",
+    "busNumber": "144A",
+    "routeName": "Pune Station Moledina Stand ⇆ Aditya Garden City",
+    "routeNameMr": "पुणे स्टेशन ते साई सयाजी नगर",
+    "origin": "Pune Station Moledina Stand",
+    "dest": "Aditya Garden City",
+    "originCoords": {
+      "lat": 18.5274938375007,
+      "lon": 73.8732022472692
+    },
+    "destCoords": {
+      "lat": 18.487238,
+      "lon": 73.790315
+    },
+    "headsigns": {
+      "dir0": [
+        "Aditya Garden City"
+      ],
+      "dir1": [
+        "Pune Station Moledina Stand"
+      ]
+    },
+    "km": 13.9,
+    "tripsCount": 12,
+    "frequencyMinutes": 15
+  },
+  {
+    "routeId": "144",
+    "busNumber": "144",
+    "routeName": "Pune Station Moledina Stand ⇆ Nda 10 No. Gate",
+    "routeNameMr": "पुणे स्टेशन ते कोथरुड स्टॅन्ड",
+    "origin": "Pune Station Moledina Stand",
+    "dest": "Nda 10 No. Gate",
+    "originCoords": {
+      "lat": 18.5274938375007,
+      "lon": 73.8732022472692
+    },
+    "destCoords": {
+      "lat": 18.449328,
+      "lon": 73.763056
+    },
+    "headsigns": {
+      "dir0": [
+        "Nda 10 No. Gate"
+      ],
+      "dir1": [
+        "Pune Station Moledina Stand"
+      ]
+    },
+    "km": 9,
+    "tripsCount": 32,
+    "frequencyMinutes": 15
+  },
+  {
+    "routeId": "145",
+    "busNumber": "145",
+    "routeName": "Sutarwadi Depot ⇆ Pune Station Depot",
+    "routeNameMr": "एनडीए गोल मार्केट ते पुणे स्टेशन",
+    "origin": "Sutarwadi Depot",
+    "dest": "Pune Station Depot",
+    "originCoords": {
+      "lat": 18.541201,
+      "lon": 73.779404
+    },
+    "destCoords": {
+      "lat": 18.527228,
+      "lon": 73.876415
+    },
+    "headsigns": {
+      "dir0": [
+        "Pune Station Depot"
+      ],
+      "dir1": [
+        "Sutarwadi Depot"
+      ]
+    },
+    "km": 23.15,
+    "tripsCount": 12,
+    "frequencyMinutes": 15
+  },
+  {
+    "routeId": "146",
+    "busNumber": "146",
+    "routeName": "Gokhale Nagar Police Line ⇆ Pune Station Jayprakash Stand",
+    "routeNameMr": "गोखलेनगर ते पुणे स्टेशन",
+    "origin": "Gokhale Nagar Police Line",
+    "dest": "Pune Station Jayprakash Stand",
+    "originCoords": {
+      "lat": 18.523701,
+      "lon": 73.824997
+    },
+    "destCoords": {
+      "lat": 18.527133,
+      "lon": 73.874306
+    },
+    "headsigns": {
+      "dir0": [
+        "Pune Station Jayprakash Stand"
+      ],
+      "dir1": [
+        "Gokhale Nagar Police Line"
+      ]
+    },
+    "km": 8.45,
+    "tripsCount": 60,
+    "frequencyMinutes": 10
+  },
+  {
+    "routeId": "147",
+    "busNumber": "147",
+    "routeName": "Nhavi Sandas ⇆ Ma Na Pa Shramik Bhavan",
+    "routeNameMr": "न्हावी सांडस ते पुणे स्टेशन",
+    "origin": "Nhavi Sandas",
+    "dest": "Ma Na Pa Shramik Bhavan",
+    "originCoords": {
+      "lat": 18.608158,
+      "lon": 74.15627
+    },
+    "destCoords": {
+      "lat": 18.524682,
+      "lon": 73.856178
+    },
+    "headsigns": {
+      "dir0": [
+        "Ma Na Pa Shramik Bhavan"
+      ],
+      "dir1": [
+        "Nhavi Sandas"
+      ]
+    },
+    "km": 38,
+    "tripsCount": 6,
+    "frequencyMinutes": 15
+  },
+  {
+    "routeId": "148A",
+    "busNumber": "148A",
+    "routeName": "Bhosari Terminal ⇆ Bhekrai Nagar",
+    "routeNameMr": "भोसरी ते भेकराई नगर",
+    "origin": "Bhosari Terminal",
+    "dest": "Bhekrai Nagar",
+    "originCoords": {
+      "lat": 18.624547,
+      "lon": 73.85154
+    },
+    "destCoords": {
+      "lat": 18.483643,
+      "lon": 73.953885
+    },
+    "headsigns": {
+      "dir0": [
+        "Bhekrai Nagar"
+      ],
+      "dir1": [
+        "Bhosari Terminal"
+      ]
+    },
+    "km": 33.7,
+    "tripsCount": 50,
+    "frequencyMinutes": 10
+  },
+  {
+    "routeId": "148",
+    "busNumber": "148",
+    "routeName": "Pimplegurav ⇆ Shewalewadi Depot",
+    "routeNameMr": "पिंपळे गुरव ते शेवाळवाडी",
+    "origin": "Pimplegurav",
+    "dest": "Shewalewadi Depot",
+    "originCoords": {
+      "lat": 18.5930126539084,
+      "lon": 73.8190997477793
+    },
+    "destCoords": {
+      "lat": 18.4954746568572,
+      "lon": 73.9713656902313
+    },
+    "headsigns": {
+      "dir0": [
+        "Shewalewadi Depot"
+      ],
+      "dir1": [
+        "Pimplegurav"
+      ]
+    },
+    "km": 24.8,
+    "tripsCount": 100,
+    "frequencyMinutes": 10
+  },
+  {
+    "routeId": "149",
+    "busNumber": "149",
+    "routeName": "Nigdi Bhakti Shakti Stand ⇆ Hadapsar Gadital",
+    "routeNameMr": "पिंपरी ते शेवाळवाडी",
+    "origin": "Nigdi Bhakti Shakti Stand",
+    "dest": "Hadapsar Gadital",
+    "originCoords": {
+      "lat": 18.665281,
+      "lon": 73.771742
+    },
+    "destCoords": {
+      "lat": 18.500074,
+      "lon": 73.939214
+    },
+    "headsigns": {
+      "dir0": [
+        "Hadapsar Gadital"
+      ],
+      "dir1": [
+        "Nigdi Bhakti Shakti Stand"
+      ]
+    },
+    "km": 37.6,
+    "tripsCount": 154,
+    "frequencyMinutes": 10
+  },
+  {
+    "routeId": "151",
+    "busNumber": "151",
+    "routeName": "Alandi ⇆ Pune Station Moledina Stand",
+    "routeNameMr": "आळंदी ते पुणे स्टेशन",
+    "origin": "Alandi",
+    "dest": "Pune Station Moledina Stand",
+    "originCoords": {
+      "lat": 18.6748133205203,
+      "lon": 73.8971222018015
+    },
+    "destCoords": {
+      "lat": 18.5274938375007,
+      "lon": 73.8732022472692
+    },
+    "headsigns": {
+      "dir0": [
+        "Pune Station Moledina Stand"
+      ],
+      "dir1": [
+        "Alandi"
+      ]
+    },
+    "km": 22,
+    "tripsCount": 74,
+    "frequencyMinutes": 10
+  },
+  {
+    "routeId": "152",
+    "busNumber": "152",
+    "routeName": "Lohegaon ⇆ Ma Na Pa Daphale Garage",
+    "routeNameMr": "",
+    "origin": "Lohegaon",
+    "dest": "Ma Na Pa Daphale Garage",
+    "originCoords": {
+      "lat": 18.59504,
+      "lon": 73.924073
+    },
+    "destCoords": {
+      "lat": 18.523375,
+      "lon": 73.852923
+    },
+    "headsigns": {
+      "dir0": [
+        "Ma Na Pa Daphale Garage"
+      ],
+      "dir1": [
+        "Dimond Water Park"
+      ]
+    },
+    "km": 15,
+    "tripsCount": 73,
+    "frequencyMinutes": 10
+  },
+  {
+    "routeId": "153",
+    "busNumber": "153",
+    "routeName": "Alandi ⇆ Kharadi Gaon",
+    "routeNameMr": "",
+    "origin": "Alandi",
+    "dest": "Kharadi Gaon",
+    "originCoords": {
+      "lat": 18.6748133205203,
+      "lon": 73.8971222018015
+    },
+    "destCoords": {
+      "lat": 18.5483518382359,
+      "lon": 73.9459813117871
+    },
+    "headsigns": {
+      "dir0": [
+        "Kharadi Gaon"
+      ],
+      "dir1": [
+        "Alandi"
+      ]
+    },
+    "km": 15,
+    "tripsCount": 10,
+    "frequencyMinutes": 15
+  },
+  {
+    "routeId": "154",
+    "busNumber": "154",
+    "routeName": "Dimond Water Park ⇆ Pune Station Moledina Stand",
+    "routeNameMr": "विश्रांतवाडी ते पुणे स्टेशन",
+    "origin": "Dimond Water Park",
+    "dest": "Pune Station Moledina Stand",
+    "originCoords": {
+      "lat": 18.589186,
+      "lon": 73.956902
+    },
+    "destCoords": {
+      "lat": 18.5274938375007,
+      "lon": 73.8732022472692
+    },
+    "headsigns": {
+      "dir0": [
+        "Pune Station Moledina Stand"
+      ],
+      "dir1": [
+        "Dimond Water Park"
+      ]
+    },
+    "km": 8.5,
+    "tripsCount": 64,
+    "frequencyMinutes": 10
+  },
+  {
+    "routeId": "155",
+    "busNumber": "155",
+    "routeName": "Dimond Water Park ⇆ Pune Station Moledina Stand",
+    "routeNameMr": "लोहगांव ते पुणे स्टेशन (मार्गे धानोरी )",
+    "origin": "Dimond Water Park",
+    "dest": "Pune Station Moledina Stand",
+    "originCoords": {
+      "lat": 18.589186,
+      "lon": 73.956902
+    },
+    "destCoords": {
+      "lat": 18.5274938375007,
+      "lon": 73.8732022472692
+    },
+    "headsigns": {
+      "dir0": [
+        "Pune Station Moledina Stand"
+      ],
+      "dir1": [
+        "Dimond Water Park"
+      ]
+    },
+    "km": 15.7,
+    "tripsCount": 71,
+    "frequencyMinutes": 10
+  },
+  {
+    "routeId": "157",
+    "busNumber": "157",
+    "routeName": "JSPM Vidhyapith Wagholi ⇆ Ma Na Pa Shramik Bhavan",
+    "routeNameMr": "",
+    "origin": "JSPM Vidhyapith Wagholi",
+    "dest": "Ma Na Pa Shramik Bhavan",
+    "originCoords": {
+      "lat": 18.591057,
+      "lon": 74.00296
+    },
+    "destCoords": {
+      "lat": 18.524682,
+      "lon": 73.856178
+    },
+    "headsigns": {
+      "dir0": [
+        "Ma Na Pa Shramik Bhavan"
+      ],
+      "dir1": [
+        "JSPM Vidhyapith Wagholi"
+      ]
+    },
+    "km": 15,
+    "tripsCount": 14,
+    "frequencyMinutes": 15
+  },
+  {
+    "routeId": "158A",
+    "busNumber": "158A",
+    "routeName": "Dimond Water Park ⇆ Ma Na Pa Dengle Pul Nadikathi",
+    "routeNameMr": "दादाची पडळ ते मनपा",
+    "origin": "Dimond Water Park",
+    "dest": "Ma Na Pa Dengle Pul Nadikathi",
+    "originCoords": {
+      "lat": 18.589186,
+      "lon": 73.956902
+    },
+    "destCoords": {
+      "lat": 18.5236219969565,
+      "lon": 73.8550657020796
+    },
+    "headsigns": {
+      "dir0": [
+        "Ma Na Pa Dengle Pul Nadikathi"
+      ],
+      "dir1": [
+        "Dimond Water Park"
+      ]
+    },
+    "km": 15.5,
+    "tripsCount": 15,
+    "frequencyMinutes": 15
+  },
+  {
+    "routeId": "158",
+    "busNumber": "158",
+    "routeName": "Prime City Charholi ⇆ Ma Na Pa Dengle Pul Nadikathi",
+    "routeNameMr": "लोहगांव ते मनपा",
+    "origin": "Prime City Charholi",
+    "dest": "Ma Na Pa Dengle Pul Nadikathi",
+    "originCoords": {
+      "lat": 18.622801,
+      "lon": 73.915951
+    },
+    "destCoords": {
+      "lat": 18.5236219969565,
+      "lon": 73.8550657020796
+    },
+    "headsigns": {
+      "dir0": [
+        "Ma Na Pa Dengle Pul Nadikathi"
+      ],
+      "dir1": [
+        "Prime City Charholi"
+      ]
+    },
+    "km": 13.5,
+    "tripsCount": 105,
+    "frequencyMinutes": 10
+  },
+  {
+    "routeId": "159B",
+    "busNumber": "159B",
+    "routeName": "Loni Dhamni ⇆ Ma Na Pa Shramik Bhavan",
+    "routeNameMr": "",
+    "origin": "Loni Dhamni",
+    "dest": "Ma Na Pa Shramik Bhavan",
+    "originCoords": {
+      "lat": 18.892028,
+      "lon": 74.080764
+    },
+    "destCoords": {
+      "lat": 18.524682,
+      "lon": 73.856178
+    },
+    "headsigns": {
+      "dir0": [
+        "Ma Na Pa Shramik Bhavan"
+      ],
+      "dir1": [
+        "Loni Dhamni"
+      ]
+    },
+    "km": 15,
+    "tripsCount": 11,
+    "frequencyMinutes": 15
+  },
+  {
+    "routeId": "159",
+    "busNumber": "159",
+    "routeName": "Talegaon Dhamdhere Bazar ⇆ Ma Na Pa Shramik Bhavan",
+    "routeNameMr": "तळेगाव ढमढेरे ते मनपा",
+    "origin": "Talegaon Dhamdhere Bazar",
+    "dest": "Ma Na Pa Shramik Bhavan",
+    "originCoords": {
+      "lat": 18.666861,
+      "lon": 74.156718
+    },
+    "destCoords": {
+      "lat": 18.524682,
+      "lon": 73.856178
+    },
+    "headsigns": {
+      "dir0": [
+        "Ma Na Pa Shramik Bhavan"
+      ],
+      "dir1": [
+        "Talegaon Dhamdhere Bazar"
+      ]
+    },
+    "km": 40.5,
+    "tripsCount": 161,
+    "frequencyMinutes": 10
+  },
+  {
+    "routeId": "15",
+    "busNumber": "15",
+    "routeName": "Dsk Vishwa ⇆ Bhekrai Nagar",
+    "routeNameMr": "",
+    "origin": "Dsk Vishwa",
+    "dest": "Bhekrai Nagar",
+    "originCoords": {
+      "lat": 18.4433,
+      "lon": 73.799103
+    },
+    "destCoords": {
+      "lat": 18.483643,
+      "lon": 73.953885
+    },
+    "headsigns": {
+      "dir0": [
+        "Bhekrai Nagar"
+      ],
+      "dir1": [
+        "Dsk Vishwa"
+      ]
+    },
+    "km": 15,
+    "tripsCount": 95,
+    "frequencyMinutes": 10
+  },
+  {
+    "routeId": "160",
+    "busNumber": "160",
+    "routeName": "Manjari Budruk ⇆ Shaniwarwada Stand",
+    "routeNameMr": "मुंढवा गांव ते मनपा",
+    "origin": "Manjari Budruk",
+    "dest": "Shaniwarwada Stand",
+    "originCoords": {
+      "lat": 18.522499,
+      "lon": 73.984348
+    },
+    "destCoords": {
+      "lat": 18.5216501448677,
+      "lon": 73.8558543572099
+    },
+    "headsigns": {
+      "dir0": [
+        "Shaniwarwada Stand"
+      ],
+      "dir1": [
+        "Manjari Budruk"
+      ]
+    },
+    "km": 10.9,
+    "tripsCount": 32,
+    "frequencyMinutes": 15
+  },
+  {
+    "routeId": "161",
+    "busNumber": "161",
+    "routeName": "Zilla Parishad Shala Karegaon ⇆ Kesnand Phata Wagholi",
+    "routeNameMr": "विमान नगर ते वारजे माळवाडी",
+    "origin": "Zilla Parishad Shala Karegaon",
+    "dest": "Kesnand Phata Wagholi",
+    "originCoords": {
+      "lat": 18.784619,
+      "lon": 74.297486
+    },
+    "destCoords": {
+      "lat": 18.581075,
+      "lon": 73.987541
+    },
+    "headsigns": {
+      "dir0": [
+        "Kesnand Phata Wagholi"
+      ],
+      "dir1": [
+        "Zilla Parishad Shala Karegaon"
+      ]
+    },
+    "km": 23,
+    "tripsCount": 23,
+    "frequencyMinutes": 15
+  },
+  {
+    "routeId": "162",
+    "busNumber": "162",
+    "routeName": "Pabal Gaon ⇆ Ma Na Pa Shramik Bhavan",
+    "routeNameMr": "केंदूरगांव ते पुणे स्टेशन",
+    "origin": "Pabal Gaon",
+    "dest": "Ma Na Pa Shramik Bhavan",
+    "originCoords": {
+      "lat": 18.829795,
+      "lon": 74.051463
+    },
+    "destCoords": {
+      "lat": 18.524682,
+      "lon": 73.856178
+    },
+    "headsigns": {
+      "dir0": [
+        "Ma Na Pa Shramik Bhavan"
+      ],
+      "dir1": [
+        "Pabal Gaon"
+      ]
+    },
+    "km": 43,
+    "tripsCount": 9,
+    "frequencyMinutes": 15
+  },
+  {
+    "routeId": "163",
+    "busNumber": "163",
+    "routeName": "Dhole Patil Collage ⇆ Pune Station Ambedkar Putala",
+    "routeNameMr": "खराडी गाव ते पुणे स्टेशन",
+    "origin": "Dhole Patil Collage",
+    "dest": "Pune Station Ambedkar Putala",
+    "originCoords": {
+      "lat": 18.554651,
+      "lon": 73.961601
+    },
+    "destCoords": {
+      "lat": 18.526859,
+      "lon": 73.872857
+    },
+    "headsigns": {
+      "dir0": [
+        "Pune Station Ambedkar Putala"
+      ],
+      "dir1": [
+        "Dhole Patil Collage"
+      ]
+    },
+    "km": 11,
+    "tripsCount": 98,
+    "frequencyMinutes": 10
+  },
+  {
+    "routeId": "164",
+    "busNumber": "164",
+    "routeName": "Nhavare ⇆ Ma Na Pa Shramik Bhavan",
+    "routeNameMr": "विमान नगर ते स्वारगेट",
+    "origin": "Nhavare",
+    "dest": "Ma Na Pa Shramik Bhavan",
+    "originCoords": {
+      "lat": 18.662701,
+      "lon": 74.371597
+    },
+    "destCoords": {
+      "lat": 18.524682,
+      "lon": 73.856178
+    },
+    "headsigns": {
+      "dir0": [
+        "Ma Na Pa Shramik Bhavan"
+      ],
+      "dir1": [
+        "Nhavare"
+      ]
+    },
+    "km": 15.5,
+    "tripsCount": 8,
+    "frequencyMinutes": 15
+  },
+  {
+    "routeId": "165",
+    "busNumber": "165",
+    "routeName": "Vadgaon Sheri ⇆ Ma Na Pa Dengle Pul Nadikhathi",
+    "routeNameMr": "वडगावशेरी ते मनपा",
+    "origin": "Vadgaon Sheri",
+    "dest": "Ma Na Pa Dengle Pul Nadikhathi",
+    "originCoords": {
+      "lat": 18.543166,
+      "lon": 73.923284
+    },
+    "destCoords": {
+      "lat": 18.5236320444055,
+      "lon": 73.8552944375313
+    },
+    "headsigns": {
+      "dir0": [
+        "Ma Na Pa Dengle Pul Nadikhathi"
+      ],
+      "dir1": [
+        "Vadgaon Sheri"
+      ]
+    },
+    "km": 11.1,
+    "tripsCount": 110,
+    "frequencyMinutes": 10
+  },
+  {
+    "routeId": "166",
+    "busNumber": "166",
+    "routeName": "Lohgaon Airport ⇆ Pune Station Ambedkar Putala",
+    "routeNameMr": "विमान नगर ते पुणे स्टेशन",
+    "origin": "Lohgaon Airport",
+    "dest": "Pune Station Ambedkar Putala",
+    "originCoords": {
+      "lat": 18.5781670812298,
+      "lon": 73.907942222752
+    },
+    "destCoords": {
+      "lat": 18.526859,
+      "lon": 73.872857
+    },
+    "headsigns": {
+      "dir0": [
+        "Pune Station Ambedkar Putala"
+      ],
+      "dir1": [
+        "Lohegaon Airport"
+      ]
+    },
+    "km": 9.5,
+    "tripsCount": 56,
+    "frequencyMinutes": 10
+  },
+  {
+    "routeId": "167",
+    "busNumber": "167",
+    "routeName": "Kesnand Phata Wagholi ⇆ Bhekrai Nagar",
+    "routeNameMr": "केसनंद फाटा ते हडपसर गाडीतळ",
+    "origin": "Kesnand Phata Wagholi",
+    "dest": "Bhekrai Nagar",
+    "originCoords": {
+      "lat": 18.581075,
+      "lon": 73.987541
+    },
+    "destCoords": {
+      "lat": 18.483643,
+      "lon": 73.953885
+    },
+    "headsigns": {
+      "dir0": [
+        "Bhekrai Nagar"
+      ],
+      "dir1": [
+        "Wagholi Kesnand Phata"
+      ]
+    },
+    "km": 14.2,
+    "tripsCount": 193,
+    "frequencyMinutes": 10
+  },
+  {
+    "routeId": "168",
+    "busNumber": "168",
+    "routeName": "Keshav Nagar ⇆ Shaniwarwada Stand",
+    "routeNameMr": "केशवनगर ते मनपा",
+    "origin": "Keshav Nagar",
+    "dest": "Shaniwarwada Stand",
+    "originCoords": {
+      "lat": 18.534768,
+      "lon": 73.944521
+    },
+    "destCoords": {
+      "lat": 18.5216501448677,
+      "lon": 73.8558543572099
+    },
+    "headsigns": {
+      "dir0": [
+        "Shaniwarwada Stand"
+      ],
+      "dir1": [
+        "Keshav Nagar"
+      ]
+    },
+    "km": 11.6,
+    "tripsCount": 36,
+    "frequencyMinutes": 15
+  },
+  {
+    "routeId": "169",
+    "busNumber": "169",
+    "routeName": "Keshav Nagar ⇆ Shaniwarwada Stand",
+    "routeNameMr": "केशवनगर ते मनपा (मार्गे कोरेगाव पार्क )",
+    "origin": "Keshav Nagar",
+    "dest": "Shaniwarwada Stand",
+    "originCoords": {
+      "lat": 18.534768,
+      "lon": 73.944521
+    },
+    "destCoords": {
+      "lat": 18.5216501448677,
+      "lon": 73.8558543572099
+    },
+    "headsigns": {
+      "dir0": [
+        "Shaniwarwada Stand"
+      ],
+      "dir1": [
+        "Keshav Nagar"
+      ]
+    },
+    "km": 12,
+    "tripsCount": 112,
+    "frequencyMinutes": 10
+  },
+  {
+    "routeId": "172",
+    "busNumber": "172",
+    "routeName": "Pune Station Jayprakash Stand ⇆ Yewalewadi",
+    "routeNameMr": "",
+    "origin": "Pune Station Jayprakash Stand",
+    "dest": "Yewalewadi",
+    "originCoords": {
+      "lat": 18.527133,
+      "lon": 73.874306
+    },
+    "destCoords": {
+      "lat": 18.43715,
+      "lon": 73.896103
+    },
+    "headsigns": {
+      "dir0": [
+        "Yewalewadi"
+      ],
+      "dir1": [
+        "Pune Station Jayprakash Stand"
+      ]
+    },
+    "km": 15,
+    "tripsCount": 12,
+    "frequencyMinutes": 15
+  },
+  {
+    "routeId": "174",
+    "busNumber": "174",
+    "routeName": "Nda 10 No. Gate ⇆ Pune Station Moledina Stand",
+    "routeNameMr": "कोंढवा गेट ते पुणे स्टेशन",
+    "origin": "Nda 10 No. Gate",
+    "dest": "Pune Station Moledina Stand",
+    "originCoords": {
+      "lat": 18.449328,
+      "lon": 73.763056
+    },
+    "destCoords": {
+      "lat": 18.5274938375007,
+      "lon": 73.8732022472692
+    },
+    "headsigns": {
+      "dir0": [
+        "Pune Station Moledina Stand"
+      ],
+      "dir1": [
+        "Nda 10 No. Gate"
+      ]
+    },
+    "km": 18.8,
+    "tripsCount": 85,
+    "frequencyMinutes": 10
+  },
+  {
+    "routeId": "175",
+    "busNumber": "175",
+    "routeName": "Hadapsar Gadital ⇆ Shaniwarwada Stand",
+    "routeNameMr": "हडपसर गाडीतळ ते मनपा",
+    "origin": "Hadapsar Gadital",
+    "dest": "Shaniwarwada Stand",
+    "originCoords": {
+      "lat": 18.500074,
+      "lon": 73.939214
+    },
+    "destCoords": {
+      "lat": 18.5216501448677,
+      "lon": 73.8558543572099
+    },
+    "headsigns": {
+      "dir0": [
+        "Shaniwarwada Stand"
+      ],
+      "dir1": [
+        "Hadapsar Gadital"
+      ]
+    },
+    "km": 16,
+    "tripsCount": 3,
+    "frequencyMinutes": 15
+  },
+  {
+    "routeId": "176",
+    "busNumber": "176",
+    "routeName": "Vadachi Wadi ⇆ Pune Station Depot",
+    "routeNameMr": "महंमदवाडी ते स्वारगेट",
+    "origin": "Vadachi Wadi",
+    "dest": "Pune Station Depot",
+    "originCoords": {
+      "lat": 18.4366,
+      "lon": 73.918053
+    },
+    "destCoords": {
+      "lat": 18.527228,
+      "lon": 73.876415
+    },
+    "headsigns": {
+      "dir0": [
+        "Pune Station Depot"
+      ],
+      "dir1": [
+        "Vadachi Wadi"
+      ]
+    },
+    "km": 12.1,
+    "tripsCount": 8,
+    "frequencyMinutes": 15
+  },
+  {
+    "routeId": "177",
+    "busNumber": "177",
+    "routeName": "Bhangire Nagar Mahamadwadi ⇆ Pune Station Depot",
+    "routeNameMr": "साळुंकेविहार ते पुणे स्टेशन",
+    "origin": "Bhangire Nagar Mahamadwadi",
+    "dest": "Pune Station Depot",
+    "originCoords": {
+      "lat": 18.471001,
+      "lon": 73.915298
+    },
+    "destCoords": {
+      "lat": 18.527228,
+      "lon": 73.876415
+    },
+    "headsigns": {
+      "dir0": [
+        "Pune Station Depot"
+      ],
+      "dir1": [
+        "Bhangire Nagar Mahamadwadi"
+      ]
+    },
+    "km": 9.2,
+    "tripsCount": 56,
+    "frequencyMinutes": 10
+  },
+  {
+    "routeId": "179",
+    "busNumber": "179",
+    "routeName": "Lohegaon Khandoba Mal ⇆ Hadapsar Gadital",
+    "routeNameMr": "वडाची वाडी ते स्वारगेट",
+    "origin": "Lohegaon Khandoba Mal",
+    "dest": "Hadapsar Gadital",
+    "originCoords": {
+      "lat": 18.608457,
+      "lon": 73.927528
+    },
+    "destCoords": {
+      "lat": 18.500074,
+      "lon": 73.939214
+    },
+    "headsigns": {
+      "dir0": [
+        "Hadapsar Gadital"
+      ],
+      "dir1": [
+        "Lohegaon Khandoba Mal"
+      ]
+    },
+    "km": 14.2,
+    "tripsCount": 15,
+    "frequencyMinutes": 15
+  },
+  {
+    "routeId": "17",
+    "busNumber": "17",
+    "routeName": "Narhegaon ⇆ Shivaji Nagar",
+    "routeNameMr": "नऱ्हे आंबेगांव ते शनिवारवाडा",
+    "origin": "Narhegaon",
+    "dest": "Shivaji Nagar",
+    "originCoords": {
+      "lat": 18.447851,
+      "lon": 73.82965
+    },
+    "destCoords": {
+      "lat": 18.531756,
+      "lon": 73.84903
+    },
+    "headsigns": {
+      "dir0": [
+        "Shivaji Nagar"
+      ],
+      "dir1": [
+        "Narhegaon"
+      ]
+    },
+    "km": 13.2,
+    "tripsCount": 79,
+    "frequencyMinutes": 10
+  },
+  {
+    "routeId": "180",
+    "busNumber": "180",
+    "routeName": "Bhekrai Nagar ⇆ Na Ta Wadi",
+    "routeNameMr": "भेकराई नगर ते नतावाडी",
+    "origin": "Bhekrai Nagar",
+    "dest": "Na Ta Wadi",
+    "originCoords": {
+      "lat": 18.483643,
+      "lon": 73.953885
+    },
+    "destCoords": {
+      "lat": 18.5348,
+      "lon": 73.848701
+    },
+    "headsigns": {
+      "dir0": [
+        "Na Ta Wadi"
+      ],
+      "dir1": [
+        "Bhekrai Nagar"
+      ]
+    },
+    "km": 15.5,
+    "tripsCount": 22,
+    "frequencyMinutes": 15
+  },
+  {
+    "routeId": "183",
+    "busNumber": "183",
+    "routeName": "Wagholi Kesnand Phata ⇆ Hadapsar Gadital Solapur Road",
+    "routeNameMr": "थेऊर गांव ते हडपसर गाडीतळ",
+    "origin": "Wagholi Kesnand Phata",
+    "dest": "Hadapsar Gadital Solapur Road",
+    "originCoords": {
+      "lat": 18.581492,
+      "lon": 73.986465
+    },
+    "destCoords": {
+      "lat": 18.500904,
+      "lon": 73.939136
+    },
+    "headsigns": {
+      "dir0": [
+        "Hadapsar Gadital Solapur Road"
+      ],
+      "dir1": [
+        "Wagholi Kesnand Phata"
+      ]
+    },
+    "km": 17.4,
+    "tripsCount": 36,
+    "frequencyMinutes": 15
+  },
+  {
+    "routeId": "184",
+    "busNumber": "184",
+    "routeName": "Ramdara ⇆ Hadapsar Gadital Solapur Road",
+    "routeNameMr": "फुरूसूंगी ते पद्मावती",
+    "origin": "Ramdara",
+    "dest": "Hadapsar Gadital Solapur Road",
+    "originCoords": {
+      "lat": 18.464714,
+      "lon": 74.020879
+    },
+    "destCoords": {
+      "lat": 18.500904,
+      "lon": 73.939136
+    },
+    "headsigns": {
+      "dir0": [
+        "Hadapsar Gadital Solapur Road"
+      ],
+      "dir1": [
+        "Ramdara"
+      ]
+    },
+    "km": 19.6,
+    "tripsCount": 16,
+    "frequencyMinutes": 15
+  },
+  {
+    "routeId": "185",
+    "busNumber": "185",
+    "routeName": "Kesnand Phata Wagholi ⇆ Hadapsar Gadital",
+    "routeNameMr": "मांजरी खुर्द ते हडपसर गाडीतळ",
+    "origin": "Kesnand Phata Wagholi",
+    "dest": "Hadapsar Gadital",
+    "originCoords": {
+      "lat": 18.581075,
+      "lon": 73.987541
+    },
+    "destCoords": {
+      "lat": 18.500074,
+      "lon": 73.939214
+    },
+    "headsigns": {
+      "dir0": [
+        "Hadapsar Gadital"
+      ],
+      "dir1": [
+        "Wagholi Kesnand Phata"
+      ]
+    },
+    "km": 8.3,
+    "tripsCount": 24,
+    "frequencyMinutes": 15
+  },
+  {
+    "routeId": "188",
+    "busNumber": "188",
+    "routeName": "Katraj Kondhwa Road ⇆ Hadapsar Gadital",
+    "routeNameMr": "कात्रज ते हडपसर गाडीतळ",
+    "origin": "Katraj Kondhwa Road",
+    "dest": "Hadapsar Gadital",
+    "originCoords": {
+      "lat": 18.4475,
+      "lon": 73.85905
+    },
+    "destCoords": {
+      "lat": 18.500074,
+      "lon": 73.939214
+    },
+    "headsigns": {
+      "dir0": [
+        "Hadapsar Gadital"
+      ],
+      "dir1": [
+        "Katraj Kondhwa Road"
+      ]
+    },
+    "km": 18,
+    "tripsCount": 126,
+    "frequencyMinutes": 10
+  },
+  {
+    "routeId": "189",
+    "busNumber": "189",
+    "routeName": "Dhangar Vasti ⇆ Hadapsar Gadital",
+    "routeNameMr": "देवाची उरूळी ते हडपसर गाडीतळ",
+    "origin": "Dhangar Vasti",
+    "dest": "Hadapsar Gadital",
+    "originCoords": {
+      "lat": 18.449342,
+      "lon": 73.955891
+    },
+    "destCoords": {
+      "lat": 18.500074,
+      "lon": 73.939214
+    },
+    "headsigns": {
+      "dir0": [
+        "Hadapsar Gadital"
+      ],
+      "dir1": [
+        "Dhangar Vasti"
+      ]
+    },
+    "km": 6.7,
+    "tripsCount": 116,
+    "frequencyMinutes": 10
+  },
+  {
+    "routeId": "192",
+    "busNumber": "192",
+    "routeName": "Vadachi Wadi ⇆ Hadapsar Gadital",
+    "routeNameMr": "उंड्री गांव ते हडपसर गाडीतळ",
+    "origin": "Vadachi Wadi",
+    "dest": "Hadapsar Gadital",
+    "originCoords": {
+      "lat": 18.4366,
+      "lon": 73.918053
+    },
+    "destCoords": {
+      "lat": 18.500074,
+      "lon": 73.939214
+    },
+    "headsigns": {
+      "dir0": [
+        "Hadapsar Gadital"
+      ],
+      "dir1": [
+        "Vadachi Wadi"
+      ]
+    },
+    "km": 8,
+    "tripsCount": 75,
+    "frequencyMinutes": 10
+  },
+  {
+    "routeId": "193",
+    "busNumber": "193",
+    "routeName": "Khutbav Gaon ⇆ Hadapsar Gadital Solapur Road",
+    "routeNameMr": "ऊरूळी कांचन ते हडपसर गाडीतळ",
+    "origin": "Khutbav Gaon",
+    "dest": "Hadapsar Gadital Solapur Road",
+    "originCoords": {
+      "lat": 18.5366896986077,
+      "lon": 74.2485869500335
+    },
+    "destCoords": {
+      "lat": 18.500904,
+      "lon": 73.939136
+    },
+    "headsigns": {
+      "dir0": [
+        "Hadapsar Gadital Solapur Road"
+      ],
+      "dir1": [
+        "Khutbav Gaon"
+      ]
+    },
+    "km": 22.8,
+    "tripsCount": 6,
+    "frequencyMinutes": 15
+  },
+  {
+    "routeId": "195",
+    "busNumber": "195",
+    "routeName": "Holkarwadi ⇆ Hadapsar Gadital",
+    "routeNameMr": "होळकरवाडी ते हडपसर गाडीतळ",
+    "origin": "Holkarwadi",
+    "dest": "Hadapsar Gadital",
+    "originCoords": {
+      "lat": 18.438071,
+      "lon": 73.939169
+    },
+    "destCoords": {
+      "lat": 18.500074,
+      "lon": 73.939214
+    },
+    "headsigns": {
+      "dir0": [
+        "Hadapsar Gadital"
+      ],
+      "dir1": [
+        "Holkarwadi"
+      ]
+    },
+    "km": 8.5,
+    "tripsCount": 40,
+    "frequencyMinutes": 15
+  },
+  {
+    "routeId": "199",
+    "busNumber": "199",
+    "routeName": "Shewalewadi Depot ⇆ Kothrud Depot",
+    "routeNameMr": "",
+    "origin": "Shewalewadi Depot",
+    "dest": "Kothrud Depot",
+    "originCoords": {
+      "lat": 18.4954746568572,
+      "lon": 73.9713656902313
+    },
+    "destCoords": {
+      "lat": 18.507899,
+      "lon": 73.794949
+    },
+    "headsigns": {
+      "dir0": [
+        "Kothrud Depot"
+      ],
+      "dir1": [
+        "Shewalewadi Depot"
+      ]
+    },
+    "km": 15,
+    "tripsCount": 88,
+    "frequencyMinutes": 10
+  },
+  {
+    "routeId": "19A",
+    "busNumber": "19A",
+    "routeName": "Swargate ⇆ Yewalewadi",
+    "routeNameMr": "शिवाजीनगर ते मार्केटयार्ड",
+    "origin": "Swargate",
+    "dest": "Yewalewadi",
+    "originCoords": {
+      "lat": 18.499524,
+      "lon": 73.858289
+    },
+    "destCoords": {
+      "lat": 18.43715,
+      "lon": 73.896103
+    },
+    "headsigns": {
+      "dir0": [
+        "Yewalewadi"
+      ],
+      "dir1": [
+        "Swargate"
+      ]
+    },
+    "km": 7.6,
+    "tripsCount": 18,
+    "frequencyMinutes": 15
+  },
+  {
+    "routeId": "19",
+    "busNumber": "19",
+    "routeName": "Swargate ⇆ Yewalewadi",
+    "routeNameMr": "शिवाजीनगर ते कोंढवा हॉस्पिटल",
+    "origin": "Swargate",
+    "dest": "Yewalewadi",
+    "originCoords": {
+      "lat": 18.499524,
+      "lon": 73.858289
+    },
+    "destCoords": {
+      "lat": 18.43715,
+      "lon": 73.896103
+    },
+    "headsigns": {
+      "dir0": [
+        "Yewalewadi"
+      ],
+      "dir1": [
+        "Swargate"
+      ]
+    },
+    "km": 16.6,
+    "tripsCount": 77,
+    "frequencyMinutes": 10
+  },
+  {
+    "routeId": "200",
+    "busNumber": "200",
+    "routeName": "Alandi ⇆ Shewalewadi Depot",
+    "routeNameMr": "स्वारगेट ते साडेसतरानळी",
+    "origin": "Alandi",
+    "dest": "Shewalewadi Depot",
+    "originCoords": {
+      "lat": 18.6748133205203,
+      "lon": 73.8971222018015
+    },
+    "destCoords": {
+      "lat": 18.4954746568572,
+      "lon": 73.9713656902313
+    },
+    "headsigns": {
+      "dir0": [
+        "Shewalewadi Depot"
+      ],
+      "dir1": [
+        "Alandi"
+      ]
+    },
+    "km": 12.4,
+    "tripsCount": 62,
+    "frequencyMinutes": 10
+  },
+  {
+    "routeId": "201",
+    "busNumber": "201",
+    "routeName": "Alandi ⇆ Bhekrai Nagar",
+    "routeNameMr": "आळंदी ते भेकराई नगर",
+    "origin": "Alandi",
+    "dest": "Bhekrai Nagar",
+    "originCoords": {
+      "lat": 18.6748133205203,
+      "lon": 73.8971222018015
+    },
+    "destCoords": {
+      "lat": 18.483643,
+      "lon": 73.953885
+    },
+    "headsigns": {
+      "dir0": [
+        "Bhekrai Nagar"
+      ],
+      "dir1": [
+        "Alandi"
+      ]
+    },
+    "km": 34.3,
+    "tripsCount": 106,
+    "frequencyMinutes": 10
+  },
+  {
+    "routeId": "202",
+    "busNumber": "202",
+    "routeName": "Ganpati Matha ⇆ Shewalewadi Depot",
+    "routeNameMr": "वारजे माळवाडी ते हडपसर गाडीतळ",
+    "origin": "Ganpati Matha",
+    "dest": "Shewalewadi Depot",
+    "originCoords": {
+      "lat": 18.475765,
+      "lon": 73.795812
+    },
+    "destCoords": {
+      "lat": 18.4954746568572,
+      "lon": 73.9713656902313
+    },
+    "headsigns": {
+      "dir0": [
+        "Shewalewadi Depot"
+      ],
+      "dir1": [
+        "Ganpati Matha"
+      ]
+    },
+    "km": 19.2,
+    "tripsCount": 100,
+    "frequencyMinutes": 10
+  },
+  {
+    "routeId": "203",
+    "busNumber": "203",
+    "routeName": "Shewalewadi Depot ⇆ Pune Station Moledina Stand",
+    "routeNameMr": "पुणे स्टेशन ते भेकराई नगर",
+    "origin": "Shewalewadi Depot",
+    "dest": "Pune Station Moledina Stand",
+    "originCoords": {
+      "lat": 18.4954746568572,
+      "lon": 73.9713656902313
+    },
+    "destCoords": {
+      "lat": 18.5274938375007,
+      "lon": 73.8732022472692
+    },
+    "headsigns": {
+      "dir0": [],
+      "dir1": [
+        "Pune Station Moledina Stand"
+      ]
+    },
+    "km": 12.6,
+    "tripsCount": 10,
+    "frequencyMinutes": 15
+  },
+  {
+    "routeId": "204",
+    "busNumber": "204",
+    "routeName": "Chinchwadgaon ⇆ Bhekrai Nagar",
+    "routeNameMr": "चिंचवडगांव ते भेकराई नगर",
+    "origin": "Chinchwadgaon",
+    "dest": "Bhekrai Nagar",
+    "originCoords": {
+      "lat": 18.627678,
+      "lon": 73.782166
+    },
+    "destCoords": {
+      "lat": 18.483643,
+      "lon": 73.953885
+    },
+    "headsigns": {
+      "dir0": [
+        "Bhekrai Nagar"
+      ],
+      "dir1": [
+        "Chinchwadgaon Aundh Road / Chinchwadgaon"
+      ]
+    },
+    "km": 31.9,
+    "tripsCount": 138,
+    "frequencyMinutes": 10
+  },
+  {
+    "routeId": "205",
+    "busNumber": "205",
+    "routeName": "Sangvi Vasantdada Putala ⇆ Shewalewadi Depot",
+    "routeNameMr": "वंसतदादा पुतळा सांगवी ते हडपसर गाडीतळ",
+    "origin": "Sangvi Vasantdada Putala",
+    "dest": "Shewalewadi Depot",
+    "originCoords": {
+      "lat": 18.5752218675506,
+      "lon": 73.8257080264047
+    },
+    "destCoords": {
+      "lat": 18.4954746568572,
+      "lon": 73.9713656902313
+    },
+    "headsigns": {
+      "dir0": [
+        "Shewalewadi Depot"
+      ],
+      "dir1": [
+        "Sangvi Vasantdada Putala"
+      ]
+    },
+    "km": 26.5,
+    "tripsCount": 32,
+    "frequencyMinutes": 15
+  },
+  {
+    "routeId": "207A",
+    "busNumber": "207A",
+    "routeName": "Saswad ⇆ Hadapsar Gadital",
+    "routeNameMr": "सासवड ते हडपसर गाडीतळ",
+    "origin": "Saswad",
+    "dest": "Hadapsar Gadital",
+    "originCoords": {
+      "lat": 18.34521,
+      "lon": 74.03158
+    },
+    "destCoords": {
+      "lat": 18.500074,
+      "lon": 73.939214
+    },
+    "headsigns": {
+      "dir0": [
+        "Hadapsar Gadital"
+      ],
+      "dir1": [
+        "Saswad"
+      ]
+    },
+    "km": 23,
+    "tripsCount": 94,
+    "frequencyMinutes": 10
+  },
+  {
+    "routeId": "207",
+    "busNumber": "207",
+    "routeName": "Saswad ⇆ Swargate",
+    "routeNameMr": "सासवड ते स्वारगेट",
+    "origin": "Saswad",
+    "dest": "Swargate",
+    "originCoords": {
+      "lat": 18.34521,
+      "lon": 74.03158
+    },
+    "destCoords": {
+      "lat": 18.499524,
+      "lon": 73.858289
+    },
+    "headsigns": {
+      "dir0": [
+        "Swargate"
+      ],
+      "dir1": [
+        "Saswad"
+      ]
+    },
+    "km": 32.7,
+    "tripsCount": 23,
+    "frequencyMinutes": 15
+  },
+  {
+    "routeId": "208",
+    "busNumber": "208",
+    "routeName": "Hinjawadi Maan Phase 3 ⇆ Bhekrai Nagar",
+    "routeNameMr": "हिंजवडी माण फेज ३ ते हडपसर गाडीतळ",
+    "origin": "Hinjawadi Maan Phase 3",
+    "dest": "Bhekrai Nagar",
+    "originCoords": {
+      "lat": 18.576699,
+      "lon": 73.688282
+    },
+    "destCoords": {
+      "lat": 18.483643,
+      "lon": 73.953885
+    },
+    "headsigns": {
+      "dir0": [
+        "Bhekrai Nagar"
+      ],
+      "dir1": [
+        "Hinjawadi Maan Phase 3"
+      ]
+    },
+    "km": 36.3,
+    "tripsCount": 33,
+    "frequencyMinutes": 15
+  },
+  {
+    "routeId": "209A",
+    "busNumber": "209A",
+    "routeName": "Saswad ⇆ Swargate",
+    "routeNameMr": "",
+    "origin": "Saswad",
+    "dest": "Swargate",
+    "originCoords": {
+      "lat": 18.34521,
+      "lon": 74.03158
+    },
+    "destCoords": {
+      "lat": 18.499524,
+      "lon": 73.858289
+    },
+    "headsigns": {
+      "dir0": [
+        "Swargate"
+      ],
+      "dir1": [
+        "Saswad"
+      ]
+    },
+    "km": 15,
+    "tripsCount": 8,
+    "frequencyMinutes": 15
+  },
+  {
+    "routeId": "209",
+    "busNumber": "209",
+    "routeName": "Saswad ⇆ Katraj Kondhwa Road",
+    "routeNameMr": "",
+    "origin": "Saswad",
+    "dest": "Katraj Kondhwa Road",
+    "originCoords": {
+      "lat": 18.34521,
+      "lon": 74.03158
+    },
+    "destCoords": {
+      "lat": 18.4475,
+      "lon": 73.85905
+    },
+    "headsigns": {
+      "dir0": [
+        "Katraj Kondhwa Road"
+      ],
+      "dir1": [
+        "Saswad"
+      ]
+    },
+    "km": 15,
+    "tripsCount": 100,
+    "frequencyMinutes": 10
+  },
+  {
+    "routeId": "210",
+    "busNumber": "210",
+    "routeName": "Midc Jejuri ⇆ Hadapsar Gadital",
+    "routeNameMr": "",
+    "origin": "Midc Jejuri",
+    "dest": "Hadapsar Gadital",
+    "originCoords": {
+      "lat": 18.258566,
+      "lon": 74.174423
+    },
+    "destCoords": {
+      "lat": 18.500074,
+      "lon": 73.939214
+    },
+    "headsigns": {
+      "dir0": [
+        "Hadapsar Gadital"
+      ],
+      "dir1": [
+        "Midc Jejuri"
+      ]
+    },
+    "km": 15,
+    "tripsCount": 46,
+    "frequencyMinutes": 10
+  },
+  {
+    "routeId": "211",
+    "busNumber": "211",
+    "routeName": "Uruli Kanchan ⇆ Saswad",
+    "routeNameMr": "",
+    "origin": "Uruli Kanchan",
+    "dest": "Saswad",
+    "originCoords": {
+      "lat": 18.487453,
+      "lon": 74.13066
+    },
+    "destCoords": {
+      "lat": 18.34521,
+      "lon": 74.03158
+    },
+    "headsigns": {
+      "dir0": [
+        "Saswad"
+      ],
+      "dir1": [
+        "Uruli Kanchan"
+      ]
+    },
+    "km": 15,
+    "tripsCount": 10,
+    "frequencyMinutes": 15
+  },
+  {
+    "routeId": "212",
+    "busNumber": "212",
+    "routeName": "Morgaon St Stand ⇆ Hadapsar Gadital",
+    "routeNameMr": "",
+    "origin": "Morgaon St Stand",
+    "dest": "Hadapsar Gadital",
+    "originCoords": {
+      "lat": 18.2764,
+      "lon": 74.320999
+    },
+    "destCoords": {
+      "lat": 18.500074,
+      "lon": 73.939214
+    },
+    "headsigns": {
+      "dir0": [
+        "Hadapsar Gadital"
+      ],
+      "dir1": [
+        "Morgaon St Stand"
+      ]
+    },
+    "km": 15,
+    "tripsCount": 6,
+    "frequencyMinutes": 15
+  },
+  {
+    "routeId": "213",
+    "busNumber": "213",
+    "routeName": "Nira ⇆ Hadapsar Gadital",
+    "routeNameMr": "विमान नगर ते कात्रज",
+    "origin": "Nira",
+    "dest": "Hadapsar Gadital",
+    "originCoords": {
+      "lat": 18.102959,
+      "lon": 74.210472
+    },
+    "destCoords": {
+      "lat": 18.500074,
+      "lon": 73.939214
+    },
+    "headsigns": {
+      "dir0": [
+        "Hadapsar Gadital"
+      ],
+      "dir1": [
+        "Nira"
+      ]
+    },
+    "km": 21.9,
+    "tripsCount": 26,
+    "frequencyMinutes": 15
+  },
+  {
+    "routeId": "214",
+    "busNumber": "214",
+    "routeName": "Shingad Collage Ambegaon ⇆ Katraj",
+    "routeNameMr": "",
+    "origin": "Shingad Collage Ambegaon",
+    "dest": "Katraj",
+    "originCoords": {
+      "lat": 18.46287,
+      "lon": 73.836406
+    },
+    "destCoords": {
+      "lat": 18.447356,
+      "lon": 73.858652
+    },
+    "headsigns": {
+      "dir0": [
+        "Katraj"
+      ],
+      "dir1": [
+        "Shingad Collage Ambegaon"
+      ]
+    },
+    "km": 15,
+    "tripsCount": 42,
+    "frequencyMinutes": 10
+  },
+  {
+    "routeId": "215",
+    "busNumber": "215",
+    "routeName": "Swargate ⇆ Chintamani Dnyanpith",
+    "routeNameMr": "स्वारगेट ते चिंतामणी ज्ञानपीठ",
+    "origin": "Swargate",
+    "dest": "Chintamani Dnyanpith",
+    "originCoords": {
+      "lat": 18.499524,
+      "lon": 73.858289
+    },
+    "destCoords": {
+      "lat": 18.455749,
+      "lon": 73.839996
+    },
+    "headsigns": {
+      "dir0": [
+        "Chintamani Dnyanpith"
+      ],
+      "dir1": [
+        "Swargate"
+      ]
+    },
+    "km": 7.5,
+    "tripsCount": 42,
+    "frequencyMinutes": 10
+  },
+  {
+    "routeId": "216",
+    "busNumber": "216",
+    "routeName": "Shivaji Nagar ⇆ Bharati Vidyapeeth",
+    "routeNameMr": "भारती विद्यापीठ ते भारती विद्यापीठ",
+    "origin": "Shivaji Nagar",
+    "dest": "Bharati Vidyapeeth",
+    "originCoords": {
+      "lat": 18.531756,
+      "lon": 73.84903
+    },
+    "destCoords": {
+      "lat": 18.457249,
+      "lon": 73.851451
+    },
+    "headsigns": {
+      "dir0": [
+        "Bharati Vidyapeeth"
+      ],
+      "dir1": [
+        "Shivaji Nagar"
+      ]
+    },
+    "km": 15.5,
+    "tripsCount": 71,
+    "frequencyMinutes": 10
+  },
+  {
+    "routeId": "219",
+    "busNumber": "219",
+    "routeName": "Alandi ⇆ Kothrud Depot",
+    "routeNameMr": "",
+    "origin": "Alandi",
+    "dest": "Kothrud Depot",
+    "originCoords": {
+      "lat": 18.6748133205203,
+      "lon": 73.8971222018015
+    },
+    "destCoords": {
+      "lat": 18.507899,
+      "lon": 73.794949
+    },
+    "headsigns": {
+      "dir0": [
+        "Kothrud Depot"
+      ],
+      "dir1": [
+        "Alandi"
+      ]
+    },
+    "km": 15,
+    "tripsCount": 3,
+    "frequencyMinutes": 15
+  },
+  {
+    "routeId": "21",
+    "busNumber": "21",
+    "routeName": "Sangvi Vasantdada Putala ⇆ Swargate",
+    "routeNameMr": "वंसतदादा पुतळा सांगवी ते स्वारगेट",
+    "origin": "Sangvi Vasantdada Putala",
+    "dest": "Swargate",
+    "originCoords": {
+      "lat": 18.5752218675506,
+      "lon": 73.8257080264047
+    },
+    "destCoords": {
+      "lat": 18.499524,
+      "lon": 73.858289
+    },
+    "headsigns": {
+      "dir0": [
+        "Swargate"
+      ],
+      "dir1": [
+        "Sangvi Vasantdada Putala"
+      ]
+    },
+    "km": 14.85,
+    "tripsCount": 72,
+    "frequencyMinutes": 10
+  },
+  {
+    "routeId": "221",
+    "busNumber": "221",
+    "routeName": "I V Estate Wagholi ⇆ Wagholi Kesnand Phata",
+    "routeNameMr": "",
+    "origin": "I V Estate Wagholi",
+    "dest": "Wagholi Kesnand Phata",
+    "originCoords": {
+      "lat": 18.583063,
+      "lon": 74.007019
+    },
+    "destCoords": {
+      "lat": 18.581492,
+      "lon": 73.986465
+    },
+    "headsigns": {
+      "dir0": [
+        "Wagholi Kesnand Phata"
+      ],
+      "dir1": [
+        "IV VILLA LANE NO. 1"
+      ]
+    },
+    "km": 15,
+    "tripsCount": 16,
+    "frequencyMinutes": 15
+  },
+  {
+    "routeId": "225",
+    "busNumber": "225",
+    "routeName": "Hinjawadi Maan Phase 3 ⇆ Kharadi Gaon",
+    "routeNameMr": "",
+    "origin": "Hinjawadi Maan Phase 3",
+    "dest": "Kharadi Gaon",
+    "originCoords": {
+      "lat": 18.576699,
+      "lon": 73.688282
+    },
+    "destCoords": {
+      "lat": 18.5483518382359,
+      "lon": 73.9459813117871
+    },
+    "headsigns": {
+      "dir0": [
+        "Kharadi Gaon"
+      ],
+      "dir1": [
+        "Hinjawadi Maan Phase 3"
+      ]
+    },
+    "km": 15,
+    "tripsCount": 5,
+    "frequencyMinutes": 15
+  },
+  {
+    "routeId": "227A",
+    "busNumber": "227A",
+    "routeName": "Mhasoba Mandir Kharawade ⇆ Marketyard Depot",
+    "routeNameMr": "शिवाजीनगर ते मार्केटयार्ड",
+    "origin": "Mhasoba Mandir Kharawade",
+    "dest": "Marketyard Depot",
+    "originCoords": {
+      "lat": 18.454292,
+      "lon": 73.587205
+    },
+    "destCoords": {
+      "lat": 18.483624,
+      "lon": 73.871501
+    },
+    "headsigns": {
+      "dir0": [
+        "Marketyard Depot"
+      ],
+      "dir1": [
+        "Mhasoba Mandir Kharawade"
+      ]
+    },
+    "km": 7.6,
+    "tripsCount": 14,
+    "frequencyMinutes": 15
+  },
+  {
+    "routeId": "227",
+    "busNumber": "227",
+    "routeName": "Marnewadi ⇆ Marketyard Depot",
+    "routeNameMr": "मारणेवाडी ते मार्केटयार्ड",
+    "origin": "Marnewadi",
+    "dest": "Marketyard Depot",
+    "originCoords": {
+      "lat": 18.4737439972472,
+      "lon": 73.6385759553478
+    },
+    "destCoords": {
+      "lat": 18.483624,
+      "lon": 73.871501
+    },
+    "headsigns": {
+      "dir0": [
+        "Marketyard Depot"
+      ],
+      "dir1": [
+        "Marnewadi"
+      ]
+    },
+    "km": 33.5,
+    "tripsCount": 5,
+    "frequencyMinutes": 15
+  },
+  {
+    "routeId": "228",
+    "busNumber": "228",
+    "routeName": "Vadgaon Mawal ⇆ Katraj",
+    "routeNameMr": "",
+    "origin": "Vadgaon Mawal",
+    "dest": "Katraj",
+    "originCoords": {
+      "lat": 18.7439,
+      "lon": 73.630848
+    },
+    "destCoords": {
+      "lat": 18.447356,
+      "lon": 73.858652
+    },
+    "headsigns": {
+      "dir0": [
+        "Katraj"
+      ],
+      "dir1": [
+        "Vadgaon Mawal"
+      ]
+    },
+    "km": 15,
+    "tripsCount": 84,
+    "frequencyMinutes": 10
+  },
+  {
+    "routeId": "231",
+    "busNumber": "231",
+    "routeName": "Shilim Gaon ⇆ Marketyard Depot",
+    "routeNameMr": "",
+    "origin": "Shilim Gaon",
+    "dest": "Marketyard Depot",
+    "originCoords": {
+      "lat": 18.6149053941263,
+      "lon": 73.4682696384519
+    },
+    "destCoords": {
+      "lat": 18.483624,
+      "lon": 73.871501
+    },
+    "headsigns": {
+      "dir0": [
+        "Marketyard Depot"
+      ],
+      "dir1": [
+        "Shilim Gaon"
+      ]
+    },
+    "km": 15,
+    "tripsCount": 4,
+    "frequencyMinutes": 15
+  },
+  {
+    "routeId": "232",
+    "busNumber": "232",
+    "routeName": "Gram Panchayat Belawade ⇆ Marketyard Depot",
+    "routeNameMr": "",
+    "origin": "Gram Panchayat Belawade",
+    "dest": "Marketyard Depot",
+    "originCoords": {
+      "lat": 18.4882,
+      "lon": 73.602303
+    },
+    "destCoords": {
+      "lat": 18.483624,
+      "lon": 73.871501
+    },
+    "headsigns": {
+      "dir0": [
+        "Marketyard Depot"
+      ],
+      "dir1": [
+        "Gram Panchayat Belawade"
+      ]
+    },
+    "km": 15,
+    "tripsCount": 6,
+    "frequencyMinutes": 15
+  },
+  {
+    "routeId": "233A",
+    "busNumber": "233A",
+    "routeName": "Kolwan Gaon ⇆ Marketyard Depot",
+    "routeNameMr": "",
+    "origin": "Kolwan Gaon",
+    "dest": "Marketyard Depot",
+    "originCoords": {
+      "lat": 18.58185,
+      "lon": 73.533897
+    },
+    "destCoords": {
+      "lat": 18.483624,
+      "lon": 73.871501
+    },
+    "headsigns": {
+      "dir0": [
+        "Marketyard Depot"
+      ],
+      "dir1": [
+        "Kolwan Gaon"
+      ]
+    },
+    "km": 15,
+    "tripsCount": 18,
+    "frequencyMinutes": 15
+  },
+  {
+    "routeId": "233B",
+    "busNumber": "233B",
+    "routeName": "Bhadasgaon ⇆ Marketyard Depot",
+    "routeNameMr": "",
+    "origin": "Bhadasgaon",
+    "dest": "Marketyard Depot",
+    "originCoords": {
+      "lat": 18.547199,
+      "lon": 73.536102
+    },
+    "destCoords": {
+      "lat": 18.483624,
+      "lon": 73.871501
+    },
+    "headsigns": {
+      "dir0": [
+        "Marketyard Depot"
+      ],
+      "dir1": [
+        "Bhadasgaon"
+      ]
+    },
+    "km": 15,
+    "tripsCount": 6,
+    "frequencyMinutes": 15
+  },
+  {
+    "routeId": "233",
+    "busNumber": "233",
+    "routeName": "Paud Shashkiy Vishram Gruh ⇆ Marketyard Depot",
+    "routeNameMr": "पौडगाव ते मार्केटयार्ड",
+    "origin": "Paud Shashkiy Vishram Gruh",
+    "dest": "Marketyard Depot",
+    "originCoords": {
+      "lat": 18.5242,
+      "lon": 73.605401
+    },
+    "destCoords": {
+      "lat": 18.483624,
+      "lon": 73.871501
+    },
+    "headsigns": {
+      "dir0": [
+        "Marketyard Depot"
+      ],
+      "dir1": [
+        "Paud Shashkiy Vishram Gruh"
+      ]
+    },
+    "km": 35.6,
+    "tripsCount": 19,
+    "frequencyMinutes": 15
+  },
+  {
+    "routeId": "234",
+    "busNumber": "234",
+    "routeName": "Dhole Patil Collage ⇆ Ma Na Pa Shramik Bhavan",
+    "routeNameMr": "खराडी गाव ते मनपा",
+    "origin": "Dhole Patil Collage",
+    "dest": "Ma Na Pa Shramik Bhavan",
+    "originCoords": {
+      "lat": 18.554651,
+      "lon": 73.961601
+    },
+    "destCoords": {
+      "lat": 18.524682,
+      "lon": 73.856178
+    },
+    "headsigns": {
+      "dir0": [
+        "Ma Na Pa Shramik Bhavan"
+      ],
+      "dir1": [
+        "Dhole Patil Collage"
+      ]
+    },
+    "km": 14,
+    "tripsCount": 63,
+    "frequencyMinutes": 10
+  },
+  {
+    "routeId": "235",
+    "busNumber": "235",
+    "routeName": "Kharadi Gaon ⇆ Katraj",
+    "routeNameMr": "खराडी गाव ते कात्रज",
+    "origin": "Kharadi Gaon",
+    "dest": "Katraj",
+    "originCoords": {
+      "lat": 18.5483518382359,
+      "lon": 73.9459813117871
+    },
+    "destCoords": {
+      "lat": 18.447356,
+      "lon": 73.858652
+    },
+    "headsigns": {
+      "dir0": [
+        "Katraj"
+      ],
+      "dir1": [
+        "Kharadi Gaon"
+      ]
+    },
+    "km": 22.4,
+    "tripsCount": 85,
+    "frequencyMinutes": 10
+  },
+  {
+    "routeId": "236",
+    "busNumber": "236",
+    "routeName": "Kesnand Phata Wagholi ⇆ Katraj",
+    "routeNameMr": "खुळेवाडी ते मनपा",
+    "origin": "Kesnand Phata Wagholi",
+    "dest": "Katraj",
+    "originCoords": {
+      "lat": 18.581075,
+      "lon": 73.987541
+    },
+    "destCoords": {
+      "lat": 18.447356,
+      "lon": 73.858652
+    },
+    "headsigns": {
+      "dir0": [
+        "Katraj"
+      ],
+      "dir1": [
+        "Wagholi Kesnand Phata"
+      ]
+    },
+    "km": 13.5,
+    "tripsCount": 75,
+    "frequencyMinutes": 10
+  },
+  {
+    "routeId": "24A",
+    "busNumber": "24A",
+    "routeName": "Lohegaon ⇆ Katraj",
+    "routeNameMr": "महाराष्ट्र हौसिंग बोर्ड (समतानगर) ते कात्रज",
+    "origin": "Lohegaon",
+    "dest": "Katraj",
+    "originCoords": {
+      "lat": 18.59504,
+      "lon": 73.924073
+    },
+    "destCoords": {
+      "lat": 18.447356,
+      "lon": 73.858652
+    },
+    "headsigns": {
+      "dir0": [
+        "Katraj"
+      ],
+      "dir1": [
+        "Lohegaon"
+      ]
+    },
+    "km": 18,
+    "tripsCount": 158,
+    "frequencyMinutes": 10
+  },
+  {
+    "routeId": "24",
+    "busNumber": "24",
+    "routeName": "Maharashtra Housing Board Samta Nagar ⇆ Katraj",
+    "routeNameMr": "महाराष्ट्र हौसिंग बोर्ड (समतानगर) ते कात्रज",
+    "origin": "Maharashtra Housing Board Samta Nagar",
+    "dest": "Katraj",
+    "originCoords": {
+      "lat": 18.561701,
+      "lon": 73.896599
+    },
+    "destCoords": {
+      "lat": 18.447356,
+      "lon": 73.858652
+    },
+    "headsigns": {
+      "dir0": [
+        "Katraj"
+      ],
+      "dir1": [
+        "Maharashtra Housing Board Samta Nagar"
+      ]
+    },
+    "km": 18,
+    "tripsCount": 58,
+    "frequencyMinutes": 10
+  },
+  {
+    "routeId": "256",
+    "busNumber": "256",
+    "routeName": "Balewadi Depot ⇆ Pune Station Moledina Stand",
+    "routeNameMr": "बालेवाडी डेपो ते मनपा",
+    "origin": "Balewadi Depot",
+    "dest": "Pune Station Moledina Stand",
+    "originCoords": {
+      "lat": 18.572901,
+      "lon": 73.765503
+    },
+    "destCoords": {
+      "lat": 18.5274938375007,
+      "lon": 73.8732022472692
+    },
+    "headsigns": {
+      "dir0": [
+        "Pune Station Moledina Stand"
+      ],
+      "dir1": [
+        "Balewadi Depot"
+      ]
+    },
+    "km": 13.5,
+    "tripsCount": 96,
+    "frequencyMinutes": 10
+  },
+  {
+    "routeId": "257A",
+    "busNumber": "257A",
+    "routeName": "Indian Oil Petrol Pump Tulapur ⇆ Wagholi Kesnand Phata",
+    "routeNameMr": "",
+    "origin": "Indian Oil Petrol Pump Tulapur",
+    "dest": "Wagholi Kesnand Phata",
+    "originCoords": {
+      "lat": 18.6707195411343,
+      "lon": 73.9889509150451
+    },
+    "destCoords": {
+      "lat": 18.581492,
+      "lon": 73.986465
+    },
+    "headsigns": {
+      "dir0": [
+        "Wagholi Kesnand Phata"
+      ],
+      "dir1": [
+        "Indian Oil Petrol Pump Tulapur"
+      ]
+    },
+    "km": 15,
+    "tripsCount": 22,
+    "frequencyMinutes": 15
+  },
+  {
+    "routeId": "257",
+    "busNumber": "257",
+    "routeName": "Alandi ⇆ Panaychi Taki Markal",
+    "routeNameMr": "आळंदी ते केसनंद फाटा",
+    "origin": "Alandi",
+    "dest": "Panaychi Taki Markal",
+    "originCoords": {
+      "lat": 18.6748133205203,
+      "lon": 73.8971222018015
+    },
+    "destCoords": {
+      "lat": 18.670401,
+      "lon": 73.981201
+    },
+    "headsigns": {
+      "dir0": [
+        "Panaychi Taki Markal"
+      ],
+      "dir1": [
+        "Alandi"
+      ]
+    },
+    "km": 24,
+    "tripsCount": 36,
+    "frequencyMinutes": 15
+  },
+  {
+    "routeId": "258",
+    "busNumber": "258",
+    "routeName": "Nilanjan Society Soosgaon ⇆ Ma Na Pa Main Gate",
+    "routeNameMr": "",
+    "origin": "Nilanjan Society Soosgaon",
+    "dest": "Ma Na Pa Main Gate",
+    "originCoords": {
+      "lat": 18.563101,
+      "lon": 73.7556
+    },
+    "destCoords": {
+      "lat": 18.523001,
+      "lon": 73.854202
+    },
+    "headsigns": {
+      "dir0": [
+        "Ma Na Pa Main Gate"
+      ],
+      "dir1": [
+        "Nilanjan Society Soosgaon"
+      ]
+    },
+    "km": 15,
+    "tripsCount": 4,
+    "frequencyMinutes": 15
+  },
+  {
+    "routeId": "262",
+    "busNumber": "262",
+    "routeName": "Sant Tukaram Maharaj Krida Sankul Dehugaon ⇆ Pune Station Moledina Stand",
+    "routeNameMr": "देहू गांव ते मनपा",
+    "origin": "Sant Tukaram Maharaj Krida Sankul Dehugaon",
+    "dest": "Pune Station Moledina Stand",
+    "originCoords": {
+      "lat": 18.7188596958186,
+      "lon": 73.778278880263
+    },
+    "destCoords": {
+      "lat": 18.5274938375007,
+      "lon": 73.8732022472692
+    },
+    "headsigns": {
+      "dir0": [
+        "Pune Station Moledina Stand"
+      ],
+      "dir1": [
+        "Sant Tukaram Maharaj Krida Sankul Dehugaon"
+      ]
+    },
+    "km": 31.3,
+    "tripsCount": 12,
+    "frequencyMinutes": 15
+  },
+  {
+    "routeId": "264",
+    "busNumber": "264",
+    "routeName": "Pabal Gaon ⇆ Bhosari Pmt Chowk",
+    "routeNameMr": "बहुळ गाव ते मनपा",
+    "origin": "Pabal Gaon",
+    "dest": "Bhosari Pmt Chowk",
+    "originCoords": {
+      "lat": 18.829795,
+      "lon": 74.051463
+    },
+    "destCoords": {
+      "lat": 18.622399,
+      "lon": 73.851249
+    },
+    "headsigns": {
+      "dir0": [
+        "Bhosari Pmt Chowk"
+      ],
+      "dir1": [
+        "Pabal Gaon"
+      ]
+    },
+    "km": 38,
+    "tripsCount": 4,
+    "frequencyMinutes": 15
+  },
+  {
+    "routeId": "26",
+    "busNumber": "26",
+    "routeName": "Shivaji Nagar ⇆ Dhankawadi",
+    "routeNameMr": "शिवाजीनगर ते धनकवडी",
+    "origin": "Shivaji Nagar",
+    "dest": "Dhankawadi",
+    "originCoords": {
+      "lat": 18.531756,
+      "lon": 73.84903
+    },
+    "destCoords": {
+      "lat": 18.4655,
+      "lon": 73.850098
+    },
+    "headsigns": {
+      "dir0": [
+        "Dhankawadi"
+      ],
+      "dir1": [
+        "Shivaji Nagar"
+      ]
+    },
+    "km": 10.2,
+    "tripsCount": 14,
+    "frequencyMinutes": 15
+  },
+  {
+    "routeId": "276",
+    "busNumber": "276",
+    "routeName": "Chinchwadgaon ⇆ Ganpati Matha",
+    "routeNameMr": "चिंचवडगांव ते वारजे माळवाडी",
+    "origin": "Chinchwadgaon",
+    "dest": "Ganpati Matha",
+    "originCoords": {
+      "lat": 18.627678,
+      "lon": 73.782166
+    },
+    "destCoords": {
+      "lat": 18.475765,
+      "lon": 73.795812
+    },
+    "headsigns": {
+      "dir0": [
+        "Ganpati Matha"
+      ],
+      "dir1": [
+        "Chinchwadgaon Aundh Road / Chinchwadgaon"
+      ]
+    },
+    "km": 24.9,
+    "tripsCount": 57,
+    "frequencyMinutes": 10
+  },
+  {
+    "routeId": "277",
+    "busNumber": "277",
+    "routeName": "Bhosari Terminal ⇆ Kothrud Depot",
+    "routeNameMr": "खडकी बाजार ते कोंढवा गेट",
+    "origin": "Bhosari Terminal",
+    "dest": "Kothrud Depot",
+    "originCoords": {
+      "lat": 18.624547,
+      "lon": 73.85154
+    },
+    "destCoords": {
+      "lat": 18.507899,
+      "lon": 73.794949
+    },
+    "headsigns": {
+      "dir0": [
+        "Kothrud Depot"
+      ],
+      "dir1": [
+        "Bhosari Terminal"
+      ]
+    },
+    "km": 24,
+    "tripsCount": 30,
+    "frequencyMinutes": 15
+  },
+  {
+    "routeId": "279",
+    "busNumber": "279",
+    "routeName": "Katar Khadak ⇆ Marketyard Depot",
+    "routeNameMr": "खांबोली ते डेक्कन जिमखाना",
+    "origin": "Katar Khadak",
+    "dest": "Marketyard Depot",
+    "originCoords": {
+      "lat": 18.61205,
+      "lon": 73.5765
+    },
+    "destCoords": {
+      "lat": 18.483624,
+      "lon": 73.871501
+    },
+    "headsigns": {
+      "dir0": [
+        "Marketyard Depot"
+      ],
+      "dir1": [
+        "Katar Khadak"
+      ]
+    },
+    "km": 34.6,
+    "tripsCount": 5,
+    "frequencyMinutes": 15
+  },
+  {
+    "routeId": "281",
+    "busNumber": "281",
+    "routeName": "Nigdi Bhakti Shakti ⇆ Ganpati Matha",
+    "routeNameMr": "भक्ति शक्ति डेपो ते वारजे माळवाडी",
+    "origin": "Nigdi Bhakti Shakti",
+    "dest": "Ganpati Matha",
+    "originCoords": {
+      "lat": 18.66601,
+      "lon": 73.771041
+    },
+    "destCoords": {
+      "lat": 18.475765,
+      "lon": 73.795812
+    },
+    "headsigns": {
+      "dir0": [
+        "Ganpati Matha"
+      ],
+      "dir1": [
+        "Nigdi Bhakti Shakti"
+      ]
+    },
+    "km": 28.4,
+    "tripsCount": 47,
+    "frequencyMinutes": 10
+  },
+  {
+    "routeId": "282",
+    "busNumber": "282",
+    "routeName": "Bhosari Terminal ⇆ Ganpati Matha",
+    "routeNameMr": "भोसरीगाव ते वारजे माळवाडी",
+    "origin": "Bhosari Terminal",
+    "dest": "Ganpati Matha",
+    "originCoords": {
+      "lat": 18.624547,
+      "lon": 73.85154
+    },
+    "destCoords": {
+      "lat": 18.475765,
+      "lon": 73.795812
+    },
+    "headsigns": {
+      "dir0": [
+        "Ganpati Matha"
+      ],
+      "dir1": [
+        "Bhosari Terminal"
+      ]
+    },
+    "km": 25.6,
+    "tripsCount": 55,
+    "frequencyMinutes": 10
+  },
+  {
+    "routeId": "283",
+    "busNumber": "283",
+    "routeName": "Pune Station Moledina Stand ⇆ Kumbare Park",
+    "routeNameMr": "पुणे स्टेशन ते कुंबरेपार्क",
+    "origin": "Pune Station Moledina Stand",
+    "dest": "Kumbare Park",
+    "originCoords": {
+      "lat": 18.5274938375007,
+      "lon": 73.8732022472692
+    },
+    "destCoords": {
+      "lat": 18.503201,
+      "lon": 73.798203
+    },
+    "headsigns": {
+      "dir0": [
+        "Kumbare Park"
+      ],
+      "dir1": [
+        "Pune Station Moledina Stand"
+      ]
+    },
+    "km": 12.5,
+    "tripsCount": 4,
+    "frequencyMinutes": 15
+  },
+  {
+    "routeId": "290",
+    "busNumber": "290",
+    "routeName": "Swargate ⇆ Jambhulwadi",
+    "routeNameMr": "शिवाजीनगर ते शनिनगर",
+    "origin": "Swargate",
+    "dest": "Jambhulwadi",
+    "originCoords": {
+      "lat": 18.499524,
+      "lon": 73.858289
+    },
+    "destCoords": {
+      "lat": 18.428449,
+      "lon": 73.838352
+    },
+    "headsigns": {
+      "dir0": [
+        "Jambhulwadi"
+      ],
+      "dir1": [
+        "Swargate"
+      ]
+    },
+    "km": 11.6,
+    "tripsCount": 95,
+    "frequencyMinutes": 10
+  },
+  {
+    "routeId": "291",
+    "busNumber": "291",
+    "routeName": "Hadapsar Gadital ⇆ Katraj Kondhwa Road",
+    "routeNameMr": "हडपसर गाडीतळ ते कात्रज",
+    "origin": "Hadapsar Gadital",
+    "dest": "Katraj Kondhwa Road",
+    "originCoords": {
+      "lat": 18.500074,
+      "lon": 73.939214
+    },
+    "destCoords": {
+      "lat": 18.4475,
+      "lon": 73.85905
+    },
+    "headsigns": {
+      "dir0": [
+        "Katraj Kondhwa Road"
+      ],
+      "dir1": [
+        "Hadapsar Gadital"
+      ]
+    },
+    "km": 14.2,
+    "tripsCount": 170,
+    "frequencyMinutes": 10
+  },
+  {
+    "routeId": "292",
+    "busNumber": "292",
+    "routeName": "Kondhanpur ⇆ Balaji Nagar Corner Satara Road",
+    "routeNameMr": "कोंढणपुर ते स्वारगेट",
+    "origin": "Kondhanpur",
+    "dest": "Balaji Nagar Corner Satara Road",
+    "originCoords": {
+      "lat": 18.349626,
+      "lon": 73.796563
+    },
+    "destCoords": {
+      "lat": 18.464796,
+      "lon": 73.858114
+    },
+    "headsigns": {
+      "dir0": [
+        "Balaji Nagar Corner Satara Road"
+      ],
+      "dir1": [
+        "Kondhanpur"
+      ]
+    },
+    "km": 29,
+    "tripsCount": 19,
+    "frequencyMinutes": 15
+  },
+  {
+    "routeId": "293",
+    "busNumber": "293",
+    "routeName": "Saswad ⇆ Balaji Nagar Corner Satara Road",
+    "routeNameMr": "",
+    "origin": "Saswad",
+    "dest": "Balaji Nagar Corner Satara Road",
+    "originCoords": {
+      "lat": 18.34521,
+      "lon": 74.03158
+    },
+    "destCoords": {
+      "lat": 18.464796,
+      "lon": 73.858114
+    },
+    "headsigns": {
+      "dir0": [
+        "Balaji Nagar Corner Satara Road"
+      ],
+      "dir1": [
+        "Saswad"
+      ]
+    },
+    "km": 15,
+    "tripsCount": 6,
+    "frequencyMinutes": 15
+  },
+  {
+    "routeId": "296A",
+    "busNumber": "296A",
+    "routeName": "Vangniwadi ⇆ Balaji Nagar Corner Satara Road",
+    "routeNameMr": "जांभूळवाडी ते कात्रज",
+    "origin": "Vangniwadi",
+    "dest": "Balaji Nagar Corner Satara Road",
+    "originCoords": {
+      "lat": 18.31505,
+      "lon": 73.774051
+    },
+    "destCoords": {
+      "lat": 18.464796,
+      "lon": 73.858114
+    },
+    "headsigns": {
+      "dir0": [
+        "Balaji Nagar Corner Satara Road"
+      ],
+      "dir1": [
+        "Vangniwadi"
+      ]
+    },
+    "km": 5,
+    "tripsCount": 6,
+    "frequencyMinutes": 15
+  },
+  {
+    "routeId": "296",
+    "busNumber": "296",
+    "routeName": "Velhe ⇆ Balaji Nagar Corner Satara Road",
+    "routeNameMr": "शिवाजीनगर ते जांभूळवाडी",
+    "origin": "Velhe",
+    "dest": "Balaji Nagar Corner Satara Road",
+    "originCoords": {
+      "lat": 18.293041,
+      "lon": 73.637557
+    },
+    "destCoords": {
+      "lat": 18.464796,
+      "lon": 73.858114
+    },
+    "headsigns": {
+      "dir0": [
+        "Balaji Nagar Corner Satara Road"
+      ],
+      "dir1": [
+        "Velhe"
+      ]
+    },
+    "km": 13.3,
+    "tripsCount": 20,
+    "frequencyMinutes": 15
+  },
+  {
+    "routeId": "297",
+    "busNumber": "297",
+    "routeName": "Shivaji Nagar ⇆ Rajas Society",
+    "routeNameMr": "शिवाजीनगर ते राजेश सोसायटी",
+    "origin": "Shivaji Nagar",
+    "dest": "Rajas Society",
+    "originCoords": {
+      "lat": 18.531756,
+      "lon": 73.84903
+    },
+    "destCoords": {
+      "lat": 18.4529,
+      "lon": 73.864548
+    },
+    "headsigns": {
+      "dir0": [
+        "Rajas Society"
+      ],
+      "dir1": [
+        "Shivaji Nagar"
+      ]
+    },
+    "km": 11.5,
+    "tripsCount": 14,
+    "frequencyMinutes": 15
+  },
+  {
+    "routeId": "298",
+    "busNumber": "298",
+    "routeName": "Chinchwadgaon ⇆ Gujarwadi Pmt Bus Stand",
+    "routeNameMr": "चिंचवडगांव ते कात्रज",
+    "origin": "Chinchwadgaon",
+    "dest": "Gujarwadi Pmt Bus Stand",
+    "originCoords": {
+      "lat": 18.627678,
+      "lon": 73.782166
+    },
+    "destCoords": {
+      "lat": 18.4406339243371,
+      "lon": 73.8600848838702
+    },
+    "headsigns": {
+      "dir0": [
+        "Gujarwadi Pmt Bus Stand"
+      ],
+      "dir1": [
+        "Chinchwadgaon Aundh Road / Chinchwadgaon"
+      ]
+    },
+    "km": 26.75,
+    "tripsCount": 126,
+    "frequencyMinutes": 10
+  },
+  {
+    "routeId": "299",
+    "busNumber": "299",
+    "routeName": "Bhosari Terminal ⇆ Gujarwadi Pmt Bus Stand",
+    "routeNameMr": "भोसरीगाव ते कात्रज",
+    "origin": "Bhosari Terminal",
+    "dest": "Gujarwadi Pmt Bus Stand",
+    "originCoords": {
+      "lat": 18.624547,
+      "lon": 73.85154
+    },
+    "destCoords": {
+      "lat": 18.4406339243371,
+      "lon": 73.8600848838702
+    },
+    "headsigns": {
+      "dir0": [
+        "Gujarwadi Pmt Bus Stand"
+      ],
+      "dir1": [
+        "Bhosari Terminal"
+      ]
+    },
+    "km": 26.9,
+    "tripsCount": 132,
+    "frequencyMinutes": 10
+  },
+  {
+    "routeId": "29",
+    "busNumber": "29",
+    "routeName": "Alandi ⇆ Swargate",
+    "routeNameMr": "विश्रांतवाडी ते स्वारगेट",
+    "origin": "Alandi",
+    "dest": "Swargate",
+    "originCoords": {
+      "lat": 18.6748133205203,
+      "lon": 73.8971222018015
+    },
+    "destCoords": {
+      "lat": 18.499524,
+      "lon": 73.858289
+    },
+    "headsigns": {
+      "dir0": [
+        "Swargate"
+      ],
+      "dir1": [
+        "Alandi"
+      ]
+    },
+    "km": 12.6,
+    "tripsCount": 138,
+    "frequencyMinutes": 10
+  },
+  {
+    "routeId": "2A",
+    "busNumber": "2A",
+    "routeName": "Shivaji Nagar ⇆ Katraj",
+    "routeNameMr": "शिवाजीनगर ते कात्रज लेडीज स्पेशिअल",
+    "origin": "Shivaji Nagar",
+    "dest": "Katraj",
+    "originCoords": {
+      "lat": 18.531756,
+      "lon": 73.84903
+    },
+    "destCoords": {
+      "lat": 18.447356,
+      "lon": 73.858652
+    },
+    "headsigns": {
+      "dir0": [
+        "Katraj"
+      ],
+      "dir1": [
+        "Shivaji Nagar"
+      ]
+    },
+    "km": 10.5,
+    "tripsCount": 88,
+    "frequencyMinutes": 10
+  },
+  {
+    "routeId": "2",
+    "busNumber": "2",
+    "routeName": "Shivaji Nagar ⇆ Swargate",
+    "routeNameMr": "शिवाजीनगर ते कात्रज",
+    "origin": "Shivaji Nagar",
+    "dest": "Swargate",
+    "originCoords": {
+      "lat": 18.531756,
+      "lon": 73.84903
+    },
+    "destCoords": {
+      "lat": 18.499524,
+      "lon": 73.858289
+    },
+    "headsigns": {
+      "dir0": [
+        "Swargate"
+      ],
+      "dir1": [
+        "Shivaji Nagar"
+      ]
+    },
+    "km": 10.5,
+    "tripsCount": 56,
+    "frequencyMinutes": 10
+  },
+  {
+    "routeId": "301A",
+    "busNumber": "301A",
+    "routeName": "Bhekrai Nagar ⇆ Katraj",
+    "routeNameMr": "",
+    "origin": "Bhekrai Nagar",
+    "dest": "Katraj",
+    "originCoords": {
+      "lat": 18.483643,
+      "lon": 73.953885
+    },
+    "destCoords": {
+      "lat": 18.447356,
+      "lon": 73.858652
+    },
+    "headsigns": {
+      "dir0": [
+        "Katraj"
+      ],
+      "dir1": [
+        "Bhekrai Nagar"
+      ]
+    },
+    "km": 15,
+    "tripsCount": 36,
+    "frequencyMinutes": 15
+  },
+  {
+    "routeId": "301",
+    "busNumber": "301",
+    "routeName": "Shewalewadi Depot ⇆ Katraj",
+    "routeNameMr": "शेवाळवाडी ते कात्रज",
+    "origin": "Shewalewadi Depot",
+    "dest": "Katraj",
+    "originCoords": {
+      "lat": 18.4954746568572,
+      "lon": 73.9713656902313
+    },
+    "destCoords": {
+      "lat": 18.447356,
+      "lon": 73.858652
+    },
+    "headsigns": {
+      "dir0": [
+        "Katraj"
+      ],
+      "dir1": [
+        "Shewalewadi Depot"
+      ]
+    },
+    "km": 19,
+    "tripsCount": 194,
+    "frequencyMinutes": 10
+  },
+  {
+    "routeId": "302A",
+    "busNumber": "302A",
+    "routeName": "Alandi ⇆ Pimprigaon",
+    "routeNameMr": "आळंदी ते पिंपरी गाव",
+    "origin": "Alandi",
+    "dest": "Pimprigaon",
+    "originCoords": {
+      "lat": 18.6748133205203,
+      "lon": 73.8971222018015
+    },
+    "destCoords": {
+      "lat": 18.612,
+      "lon": 73.804298
+    },
+    "headsigns": {
+      "dir0": [
+        "Pimprigaon"
+      ],
+      "dir1": [
+        "Alandi"
+      ]
+    },
+    "km": 17.7,
+    "tripsCount": 4,
+    "frequencyMinutes": 15
+  },
+  {
+    "routeId": "302",
+    "busNumber": "302",
+    "routeName": "Bhosari Gavhane Vasti ⇆ Pimprigaon",
+    "routeNameMr": "गव्हाणे वस्ती भोसरी ते पिंपरी गाव",
+    "origin": "Bhosari Gavhane Vasti",
+    "dest": "Pimprigaon",
+    "originCoords": {
+      "lat": 18.6204992438522,
+      "lon": 73.849006033998
+    },
+    "destCoords": {
+      "lat": 18.612,
+      "lon": 73.804298
+    },
+    "headsigns": {
+      "dir0": [
+        "Pimprigaon"
+      ],
+      "dir1": [
+        "Bhosari Gavhane Vasti"
+      ]
+    },
+    "km": 8.65,
+    "tripsCount": 96,
+    "frequencyMinutes": 10
+  },
+  {
+    "routeId": "303A",
+    "busNumber": "303A",
+    "routeName": "Gahunjegaon ⇆ Nigdi Pawale Chowk",
+    "routeNameMr": "मुकईचौक ते निगडी",
+    "origin": "Gahunjegaon",
+    "dest": "Nigdi Pawale Chowk",
+    "originCoords": {
+      "lat": 18.6675,
+      "lon": 73.702152
+    },
+    "destCoords": {
+      "lat": 18.659678,
+      "lon": 73.776964
+    },
+    "headsigns": {
+      "dir0": [
+        "Nigdi Pawale Chowk"
+      ],
+      "dir1": [
+        "Gahunjegaon"
+      ]
+    },
+    "km": 8.6,
+    "tripsCount": 6,
+    "frequencyMinutes": 15
+  },
+  {
+    "routeId": "303",
+    "busNumber": "303",
+    "routeName": "Akurdi Railway Station ⇆ Nigdi Pawale Chowk",
+    "routeNameMr": "आकुर्डी रेल्वे स्टेशन ते निगडी",
+    "origin": "Akurdi Railway Station",
+    "dest": "Nigdi Pawale Chowk",
+    "originCoords": {
+      "lat": 18.649002,
+      "lon": 73.765306
+    },
+    "destCoords": {
+      "lat": 18.659678,
+      "lon": 73.776964
+    },
+    "headsigns": {
+      "dir0": [
+        "Nigdi Pawale Chowk"
+      ],
+      "dir1": [
+        "Akurdi Railway Station"
+      ]
+    },
+    "km": 6.2,
+    "tripsCount": 86,
+    "frequencyMinutes": 10
+  },
+  {
+    "routeId": "304",
+    "busNumber": "304",
+    "routeName": "Bhosari Gavhane Vasti ⇆ Chinchwadgaon",
+    "routeNameMr": "गव्हाणे वस्ती भोसरी ते चिंचवडगांव",
+    "origin": "Bhosari Gavhane Vasti",
+    "dest": "Chinchwadgaon",
+    "originCoords": {
+      "lat": 18.6204992438522,
+      "lon": 73.849006033998
+    },
+    "destCoords": {
+      "lat": 18.627678,
+      "lon": 73.782166
+    },
+    "headsigns": {
+      "dir0": [
+        "Chinchwadgaon"
+      ],
+      "dir1": [
+        "Bhosari Gavhane Vasti"
+      ]
+    },
+    "km": 10.2,
+    "tripsCount": 163,
+    "frequencyMinutes": 10
+  },
+  {
+    "routeId": "305A",
+    "busNumber": "305A",
+    "routeName": "Greenbase Industrial Park Navlakh Umbre ⇆ Nigdi Pawale Chowk",
+    "routeNameMr": "डी.वाय.पाटील कॉलेज ते निगडी",
+    "origin": "Greenbase Industrial Park Navlakh Umbre",
+    "dest": "Nigdi Pawale Chowk",
+    "originCoords": {
+      "lat": 18.8139,
+      "lon": 73.700798
+    },
+    "destCoords": {
+      "lat": 18.659678,
+      "lon": 73.776964
+    },
+    "headsigns": {
+      "dir0": [
+        "Nigdi Pawale Chowk"
+      ],
+      "dir1": [
+        "Greenbase Industrial Park Navlakh Umbre"
+      ]
+    },
+    "km": 22,
+    "tripsCount": 19,
+    "frequencyMinutes": 15
+  },
+  {
+    "routeId": "305B",
+    "busNumber": "305B",
+    "routeName": "Mindewadi Navlakh Umbre ⇆ Nigdi Pawale Chowk",
+    "routeNameMr": "नवलाख उंबरे ते निगडी",
+    "origin": "Mindewadi Navlakh Umbre",
+    "dest": "Nigdi Pawale Chowk",
+    "originCoords": {
+      "lat": 18.7959,
+      "lon": 73.7314
+    },
+    "destCoords": {
+      "lat": 18.659678,
+      "lon": 73.776964
+    },
+    "headsigns": {
+      "dir0": [
+        "Nigdi Pawale Chowk"
+      ],
+      "dir1": [
+        "Mindewadi Navlakh Umbre"
+      ]
+    },
+    "km": 26,
+    "tripsCount": 9,
+    "frequencyMinutes": 15
+  },
+  {
+    "routeId": "305",
+    "busNumber": "305",
+    "routeName": "Vadgaon Mawal ⇆ Nigdi Pawale Chowk",
+    "routeNameMr": "वडगांव मावळ ते निगडी",
+    "origin": "Vadgaon Mawal",
+    "dest": "Nigdi Pawale Chowk",
+    "originCoords": {
+      "lat": 18.7439,
+      "lon": 73.630848
+    },
+    "destCoords": {
+      "lat": 18.659678,
+      "lon": 73.776964
+    },
+    "headsigns": {
+      "dir0": [
+        "Nigdi Pawale Chowk"
+      ],
+      "dir1": [
+        "Vadgaon Mawal"
+      ]
+    },
+    "km": 22,
+    "tripsCount": 80,
+    "frequencyMinutes": 10
+  },
+  {
+    "routeId": "306A",
+    "busNumber": "306A",
+    "routeName": "Hinjewadi Hills Dattawadi ⇆ Dange Chowk",
+    "routeNameMr": "",
+    "origin": "Hinjewadi Hills Dattawadi",
+    "dest": "Dange Chowk",
+    "originCoords": {
+      "lat": 18.60445,
+      "lon": 73.688851
+    },
+    "destCoords": {
+      "lat": 18.615744,
+      "lon": 73.765722
+    },
+    "headsigns": {
+      "dir0": [
+        "Dange Chowk"
+      ],
+      "dir1": [
+        "Hinjewadi Hills Dattawadi"
+      ]
+    },
+    "km": 15,
+    "tripsCount": 8,
+    "frequencyMinutes": 15
+  },
+  {
+    "routeId": "306",
+    "busNumber": "306",
+    "routeName": "Megapolis Phase 3 ⇆ Dange Chowk",
+    "routeNameMr": "हिंजवडी माण फेज ३ ते डांगे चौक",
+    "origin": "Megapolis Phase 3",
+    "dest": "Dange Chowk",
+    "originCoords": {
+      "lat": 18.5769264795462,
+      "lon": 73.682341570363
+    },
+    "destCoords": {
+      "lat": 18.615744,
+      "lon": 73.765722
+    },
+    "headsigns": {
+      "dir0": [
+        "Dange Chowk"
+      ],
+      "dir1": [
+        "Megapolis Phase 3"
+      ]
+    },
+    "km": 13.3,
+    "tripsCount": 11,
+    "frequencyMinutes": 15
+  },
+  {
+    "routeId": "307",
+    "busNumber": "307",
+    "routeName": "ISKCON Mandir in Shindewasti Ravet ⇆ Chinchwadgaon",
+    "routeNameMr": "वाल्हेकरवाडी ते चिंचवडगांव",
+    "origin": "ISKCON Mandir in Shindewasti Ravet",
+    "dest": "Chinchwadgaon",
+    "originCoords": {
+      "lat": 18.6542,
+      "lon": 73.754898
+    },
+    "destCoords": {
+      "lat": 18.627678,
+      "lon": 73.782166
+    },
+    "headsigns": {
+      "dir0": [
+        "Chinchwadgaon"
+      ],
+      "dir1": [
+        "ISKCON Mandir in Shindewasti Ravet"
+      ]
+    },
+    "km": 2.3,
+    "tripsCount": 10,
+    "frequencyMinutes": 15
+  },
+  {
+    "routeId": "308",
+    "busNumber": "308",
+    "routeName": "Gharkul Vasahat Chikhali ⇆ Nigdi Pawale Chowk",
+    "routeNameMr": "घरकुल वसाहत चिखली ते भक्ति शक्ति डेपो",
+    "origin": "Gharkul Vasahat Chikhali",
+    "dest": "Nigdi Pawale Chowk",
+    "originCoords": {
+      "lat": 18.66545,
+      "lon": 73.805901
+    },
+    "destCoords": {
+      "lat": 18.659678,
+      "lon": 73.776964
+    },
+    "headsigns": {
+      "dir0": [
+        "Nigdi Pawale Chowk"
+      ],
+      "dir1": [
+        "Gharkul Vasahat Chikhali"
+      ]
+    },
+    "km": 5.4,
+    "tripsCount": 40,
+    "frequencyMinutes": 15
+  },
+  {
+    "routeId": "309",
+    "busNumber": "309",
+    "routeName": "Sant Tukaram Maharaj Krida Sankul Dehugaon ⇆ Alandi",
+    "routeNameMr": "देहू गांव ते आळंदी",
+    "origin": "Sant Tukaram Maharaj Krida Sankul Dehugaon",
+    "dest": "Alandi",
+    "originCoords": {
+      "lat": 18.7188596958186,
+      "lon": 73.778278880263
+    },
+    "destCoords": {
+      "lat": 18.6748133205203,
+      "lon": 73.8971222018015
+    },
+    "headsigns": {
+      "dir0": [
+        "Alandi"
+      ],
+      "dir1": [
+        "Sant Tukaram Maharaj Krida Sankul Dehugaon"
+      ]
+    },
+    "km": 16,
+    "tripsCount": 176,
+    "frequencyMinutes": 10
+  },
+  {
+    "routeId": "30",
+    "busNumber": "30",
+    "routeName": "Ghotawade Phata ⇆ Marketyard Depot",
+    "routeNameMr": "घोटावडे फाटा ते मार्केटयार्ड",
+    "origin": "Ghotawade Phata",
+    "dest": "Marketyard Depot",
+    "originCoords": {
+      "lat": 18.512922,
+      "lon": 73.677991
+    },
+    "destCoords": {
+      "lat": 18.483624,
+      "lon": 73.871501
+    },
+    "headsigns": {
+      "dir0": [
+        "Marketyard Depot"
+      ],
+      "dir1": [
+        "Ghotawade Phata"
+      ]
+    },
+    "km": 31.5,
+    "tripsCount": 37,
+    "frequencyMinutes": 15
+  },
+  {
+    "routeId": "312",
+    "busNumber": "312",
+    "routeName": "Chinchwadgaon ⇆ Pune Station Depot",
+    "routeNameMr": "चिंचवडगांव ते पुणे स्टेशन",
+    "origin": "Chinchwadgaon",
+    "dest": "Pune Station Depot",
+    "originCoords": {
+      "lat": 18.627678,
+      "lon": 73.782166
+    },
+    "destCoords": {
+      "lat": 18.527228,
+      "lon": 73.876415
+    },
+    "headsigns": {
+      "dir0": [
+        "Pune Station Depot"
+      ],
+      "dir1": [
+        "Chinchwadgaon"
+      ]
+    },
+    "km": 22.5,
+    "tripsCount": 21,
+    "frequencyMinutes": 15
+  },
+  {
+    "routeId": "313",
+    "busNumber": "313",
+    "routeName": "Chandkhed ⇆ Chinchwadgaon",
+    "routeNameMr": "चांदखेड ते चिंचवडगांव",
+    "origin": "Chandkhed",
+    "dest": "Chinchwadgaon",
+    "originCoords": {
+      "lat": 18.64715,
+      "lon": 73.650951
+    },
+    "destCoords": {
+      "lat": 18.627678,
+      "lon": 73.782166
+    },
+    "headsigns": {
+      "dir0": [
+        "Chinchwadgaon"
+      ],
+      "dir1": [
+        "Chandkhed"
+      ]
+    },
+    "km": 19.3,
+    "tripsCount": 90,
+    "frequencyMinutes": 10
+  },
+  {
+    "routeId": "314",
+    "busNumber": "314",
+    "routeName": "Chakan Ambethan Chowk ⇆ Nigdi Pawale Chowk",
+    "routeNameMr": "म्हाळुंगे एमआयडीसी ते भक्ति शक्ति डेपो",
+    "origin": "Chakan Ambethan Chowk",
+    "dest": "Nigdi Pawale Chowk",
+    "originCoords": {
+      "lat": 18.762929,
+      "lon": 73.861061
+    },
+    "destCoords": {
+      "lat": 18.659678,
+      "lon": 73.776964
+    },
+    "headsigns": {
+      "dir0": [
+        "Nigdi Pawale Chowk"
+      ],
+      "dir1": [
+        "Chakan Ambethan Chowk"
+      ]
+    },
+    "km": 11.2,
+    "tripsCount": 87,
+    "frequencyMinutes": 10
+  },
+  {
+    "routeId": "315",
+    "busNumber": "315",
+    "routeName": "Bhosari Pmt Chowk ⇆ Pune Station Sassoon Road",
+    "routeNameMr": "भोसरी ते पुणे स्टेशन (मार्गे आळंदी रोड )",
+    "origin": "Bhosari Pmt Chowk",
+    "dest": "Pune Station Sassoon Road",
+    "originCoords": {
+      "lat": 18.622399,
+      "lon": 73.851249
+    },
+    "destCoords": {
+      "lat": 18.52646,
+      "lon": 73.872636
+    },
+    "headsigns": {
+      "dir0": [
+        "Pune Station Sassoon Road"
+      ],
+      "dir1": [
+        "Bhosari Pmt Chowk"
+      ]
+    },
+    "km": 18.5,
+    "tripsCount": 121,
+    "frequencyMinutes": 10
+  },
+  {
+    "routeId": "316",
+    "busNumber": "316",
+    "routeName": "Katar Khadak ⇆ Chinchwadgaon",
+    "routeNameMr": "हिंजवडी माण फेज ३ ते चिंचवडगांव",
+    "origin": "Katar Khadak",
+    "dest": "Chinchwadgaon",
+    "originCoords": {
+      "lat": 18.61205,
+      "lon": 73.5765
+    },
+    "destCoords": {
+      "lat": 18.627678,
+      "lon": 73.782166
+    },
+    "headsigns": {
+      "dir0": [
+        "Chinchwadgaon"
+      ],
+      "dir1": [
+        "Katar Khadak"
+      ]
+    },
+    "km": 14.2,
+    "tripsCount": 8,
+    "frequencyMinutes": 15
+  },
+  {
+    "routeId": "317",
+    "busNumber": "317",
+    "routeName": "Sambhaji Nagar ⇆ Pune Station Depot",
+    "routeNameMr": "संभाजी नगर ते पुणे स्टेशन",
+    "origin": "Sambhaji Nagar",
+    "dest": "Pune Station Depot",
+    "originCoords": {
+      "lat": 18.65964,
+      "lon": 73.795463
+    },
+    "destCoords": {
+      "lat": 18.527228,
+      "lon": 73.876415
+    },
+    "headsigns": {
+      "dir0": [
+        "Pune Station Depot"
+      ],
+      "dir1": [
+        "Sambhaji Nagar"
+      ]
+    },
+    "km": 23.7,
+    "tripsCount": 30,
+    "frequencyMinutes": 15
+  },
+  {
+    "routeId": "320",
+    "busNumber": "320",
+    "routeName": "Hinjawadi Maan Phase 3 ⇆ Chinchwadgaon",
+    "routeNameMr": "महाळुंगेगाव ते आळंदी",
+    "origin": "Hinjawadi Maan Phase 3",
+    "dest": "Chinchwadgaon",
+    "originCoords": {
+      "lat": 18.576699,
+      "lon": 73.688282
+    },
+    "destCoords": {
+      "lat": 18.627678,
+      "lon": 73.782166
+    },
+    "headsigns": {
+      "dir0": [
+        "Chinchwadgaon"
+      ],
+      "dir1": [
+        "Hinjawadi Maan Phase 3"
+      ]
+    },
+    "km": 30.5,
+    "tripsCount": 7,
+    "frequencyMinutes": 15
+  },
+  {
+    "routeId": "322A",
+    "busNumber": "322A",
+    "routeName": "Akurdi Railway Station ⇆ Ma Na Pa Main Gate",
+    "routeNameMr": "आकुर्डी रेल्वे स्टेशन ते वारजे माळवाडी",
+    "origin": "Akurdi Railway Station",
+    "dest": "Ma Na Pa Main Gate",
+    "originCoords": {
+      "lat": 18.649002,
+      "lon": 73.765306
+    },
+    "destCoords": {
+      "lat": 18.523001,
+      "lon": 73.854202
+    },
+    "headsigns": {
+      "dir0": [
+        "Ma Na Pa Main Gate"
+      ],
+      "dir1": [
+        "Akurdi Railway Station"
+      ]
+    },
+    "km": 30.8,
+    "tripsCount": 10,
+    "frequencyMinutes": 15
+  },
+  {
+    "routeId": "322",
+    "busNumber": "322",
+    "routeName": "Akurdi Railway Station ⇆ Ma Na Pa Main Gate",
+    "routeNameMr": "",
+    "origin": "Akurdi Railway Station",
+    "dest": "Ma Na Pa Main Gate",
+    "originCoords": {
+      "lat": 18.649002,
+      "lon": 73.765306
+    },
+    "destCoords": {
+      "lat": 18.523001,
+      "lon": 73.854202
+    },
+    "headsigns": {
+      "dir0": [
+        "Ma Na Pa Main Gate"
+      ],
+      "dir1": [
+        "Akurdi Railway Station"
+      ]
+    },
+    "km": 15,
+    "tripsCount": 102,
+    "frequencyMinutes": 10
+  },
+  {
+    "routeId": "323A",
+    "busNumber": "323A",
+    "routeName": "Gharkul Vasahat Chikhali ⇆ Ma Na Pa Main Stand",
+    "routeNameMr": "घरकुल वसाहत चिखली ते मनपा",
+    "origin": "Gharkul Vasahat Chikhali",
+    "dest": "Ma Na Pa Main Stand",
+    "originCoords": {
+      "lat": 18.66545,
+      "lon": 73.805901
+    },
+    "destCoords": {
+      "lat": 18.5229408192276,
+      "lon": 73.8536595982643
+    },
+    "headsigns": {
+      "dir0": [
+        "Ma Na Pa Main Stand"
+      ],
+      "dir1": [
+        "Gharkul Vasahat Chikhali"
+      ]
+    },
+    "km": 23.4,
+    "tripsCount": 12,
+    "frequencyMinutes": 15
+  },
+  {
+    "routeId": "323",
+    "busNumber": "323",
+    "routeName": "Nageshwar Vidyalaya Chikhli ⇆ Ma Na Pa Main Stand",
+    "routeNameMr": "चिखली ते मनपा",
+    "origin": "Nageshwar Vidyalaya Chikhli",
+    "dest": "Ma Na Pa Main Stand",
+    "originCoords": {
+      "lat": 18.690947,
+      "lon": 73.808123
+    },
+    "destCoords": {
+      "lat": 18.5229408192276,
+      "lon": 73.8536595982643
+    },
+    "headsigns": {
+      "dir0": [
+        "Ma Na Pa Main Stand"
+      ],
+      "dir1": [
+        "Nageshwar Vidyalaya Chikhli"
+      ]
+    },
+    "km": 23.4,
+    "tripsCount": 50,
+    "frequencyMinutes": 10
+  },
+  {
+    "routeId": "324",
+    "busNumber": "324",
+    "routeName": "Hinjawadi Maan Phase 3 ⇆ Bhosari Terminal",
+    "routeNameMr": "हिंजवडी माण फेज ३ ते भोसरी",
+    "origin": "Hinjawadi Maan Phase 3",
+    "dest": "Bhosari Terminal",
+    "originCoords": {
+      "lat": 18.576699,
+      "lon": 73.688282
+    },
+    "destCoords": {
+      "lat": 18.624547,
+      "lon": 73.85154
+    },
+    "headsigns": {
+      "dir0": [
+        "Bhosari Terminal"
+      ],
+      "dir1": [
+        "Hinjawadi Maan Phase 3"
+      ]
+    },
+    "km": 25.3,
+    "tripsCount": 188,
+    "frequencyMinutes": 10
+  },
+  {
+    "routeId": "326",
+    "busNumber": "326",
+    "routeName": "Nageshwar Vidyalaya Chikhli ⇆ Pimprigaon",
+    "routeNameMr": "चिखली ते पिंपरी गाव",
+    "origin": "Nageshwar Vidyalaya Chikhli",
+    "dest": "Pimprigaon",
+    "originCoords": {
+      "lat": 18.690947,
+      "lon": 73.808123
+    },
+    "destCoords": {
+      "lat": 18.612,
+      "lon": 73.804298
+    },
+    "headsigns": {
+      "dir0": [
+        "Pimprigaon"
+      ],
+      "dir1": [
+        "Nageshwar Vidyalaya Chikhli"
+      ]
+    },
+    "km": 10.1,
+    "tripsCount": 19,
+    "frequencyMinutes": 15
+  },
+  {
+    "routeId": "327",
+    "busNumber": "327",
+    "routeName": "Hinjawadi Maan Phase 3 ⇆ Alandi",
+    "routeNameMr": "हिंजवडी माण फेज ३ ते आळंदी",
+    "origin": "Hinjawadi Maan Phase 3",
+    "dest": "Alandi",
+    "originCoords": {
+      "lat": 18.576699,
+      "lon": 73.688282
+    },
+    "destCoords": {
+      "lat": 18.6748133205203,
+      "lon": 73.8971222018015
+    },
+    "headsigns": {
+      "dir0": [
+        "Alandi"
+      ],
+      "dir1": [
+        "Hinjawadi Maan Phase 3"
+      ]
+    },
+    "km": 35.7,
+    "tripsCount": 56,
+    "frequencyMinutes": 10
+  },
+  {
+    "routeId": "329",
+    "busNumber": "329",
+    "routeName": "Siddhanta College Sudumbare ⇆ Pimpri Road",
+    "routeNameMr": "देहू गांव ते पुणे स्टेशन (मार्गे वाकडेवाडी)",
+    "origin": "Siddhanta College Sudumbare",
+    "dest": "Pimpri Road",
+    "originCoords": {
+      "lat": 18.75968,
+      "lon": 73.755005
+    },
+    "destCoords": {
+      "lat": 18.627017,
+      "lon": 73.806307
+    },
+    "headsigns": {
+      "dir0": [
+        "Pimpri Road"
+      ],
+      "dir1": [
+        "Siddhanta College Sudumbare"
+      ]
+    },
+    "km": 33,
+    "tripsCount": 33,
+    "frequencyMinutes": 15
+  },
+  {
+    "routeId": "330",
+    "busNumber": "330",
+    "routeName": "Talegaon Dhabhade Maruti Mandir ⇆ Sant Tukaram Maharaj Krida Sankul Wadacha Mal Dehugaon",
+    "routeNameMr": "",
+    "origin": "Talegaon Dhabhade Maruti Mandir",
+    "dest": "Sant Tukaram Maharaj Krida Sankul Wadacha Mal Dehugaon",
+    "originCoords": {
+      "lat": 18.720196,
+      "lon": 73.682957
+    },
+    "destCoords": {
+      "lat": 18.7190107513855,
+      "lon": 73.7782453013695
+    },
+    "headsigns": {
+      "dir0": [
+        "Sant Tukaram Maharaj Krida Sankul Wadacha Mal Dehugaon"
+      ],
+      "dir1": [
+        "Talegaon Dhabhade Maruti Mandir"
+      ]
+    },
+    "km": 15,
+    "tripsCount": 6,
+    "frequencyMinutes": 15
+  },
+  {
+    "routeId": "331A",
+    "busNumber": "331A",
+    "routeName": "Pimple Saudagar- Mahadev Mandir / Pimple Saudagar ⇆ Charholigaon Burde Vasti",
+    "routeNameMr": "रहाटणी गांव ते गव्हाणे वस्ती भोसरी",
+    "origin": "Pimple Saudagar- Mahadev Mandir / Pimple Saudagar",
+    "dest": "Charholigaon Burde Vasti",
+    "originCoords": {
+      "lat": 18.6020383938667,
+      "lon": 73.798825208097
+    },
+    "destCoords": {
+      "lat": 18.6478172517725,
+      "lon": 73.9252729880754
+    },
+    "headsigns": {
+      "dir0": [
+        "Charholigaon Burde Vasti"
+      ],
+      "dir1": [
+        "Pimple Saudagar"
+      ]
+    },
+    "km": 13,
+    "tripsCount": 9,
+    "frequencyMinutes": 15
+  },
+  {
+    "routeId": "331B",
+    "busNumber": "331B",
+    "routeName": "Pimple Saudagar- Mahadev Mandir / Pimple Saudagar ⇆ Charholigaon",
+    "routeNameMr": "रहाटणी गांव ते चऱ्होली गांव",
+    "origin": "Pimple Saudagar- Mahadev Mandir / Pimple Saudagar",
+    "dest": "Charholigaon",
+    "originCoords": {
+      "lat": 18.6020383938667,
+      "lon": 73.798825208097
+    },
+    "destCoords": {
+      "lat": 18.653609,
+      "lon": 73.907761
+    },
+    "headsigns": {
+      "dir0": [
+        "Charholigaon"
+      ],
+      "dir1": [
+        "Pimple Saudagar"
+      ]
+    },
+    "km": 22,
+    "tripsCount": 9,
+    "frequencyMinutes": 15
+  },
+  {
+    "routeId": "331",
+    "busNumber": "331",
+    "routeName": "Pimple Saudagar- Mahadev Mandir / Pimple Saudagar ⇆ Bhosari Gavhane Vasti",
+    "routeNameMr": "रहाटणी गांव ते चऱ्होली गांव",
+    "origin": "Pimple Saudagar- Mahadev Mandir / Pimple Saudagar",
+    "dest": "Bhosari Gavhane Vasti",
+    "originCoords": {
+      "lat": 18.6020383938667,
+      "lon": 73.798825208097
+    },
+    "destCoords": {
+      "lat": 18.6204992438522,
+      "lon": 73.849006033998
+    },
+    "headsigns": {
+      "dir0": [
+        "Bhosari Gavhane Vasti"
+      ],
+      "dir1": [
+        "Pimple Saudagar"
+      ]
+    },
+    "km": 22,
+    "tripsCount": 146,
+    "frequencyMinutes": 10
+  },
+  {
+    "routeId": "332",
+    "busNumber": "332",
+    "routeName": "Tata Motors Bebadohal ⇆ Nigdi Pawale Chowk",
+    "routeNameMr": "पिंपरी ते पुणे स्टेशन",
+    "origin": "Tata Motors Bebadohal",
+    "dest": "Nigdi Pawale Chowk",
+    "originCoords": {
+      "lat": 18.68419,
+      "lon": 73.64829
+    },
+    "destCoords": {
+      "lat": 18.659678,
+      "lon": 73.776964
+    },
+    "headsigns": {
+      "dir0": [
+        "Nigdi Pawale Chowk"
+      ],
+      "dir1": [
+        "Tata Motors Bebadohal"
+      ]
+    },
+    "km": 26.4,
+    "tripsCount": 8,
+    "frequencyMinutes": 15
+  },
+  {
+    "routeId": "333",
+    "busNumber": "333",
+    "routeName": "Hinjawadi Maan Phase 3 ⇆ Pune Station Moledina Stand",
+    "routeNameMr": "हिंजवडी माण फेज ३ ते पुणे स्टेशन",
+    "origin": "Hinjawadi Maan Phase 3",
+    "dest": "Pune Station Moledina Stand",
+    "originCoords": {
+      "lat": 18.576699,
+      "lon": 73.688282
+    },
+    "destCoords": {
+      "lat": 18.5274938375007,
+      "lon": 73.8732022472692
+    },
+    "headsigns": {
+      "dir0": [
+        "Pune Station Moledina Stand"
+      ],
+      "dir1": [
+        "Hinjawadi Maan Phase 3"
+      ]
+    },
+    "km": 26.6,
+    "tripsCount": 40,
+    "frequencyMinutes": 15
+  },
+  {
+    "routeId": "334",
+    "busNumber": "334",
+    "routeName": "Gharkul Vasahat Chikhali ⇆ Pimprigaon",
+    "routeNameMr": "घरकुल वासहत चिखली ते पिंपरी गाव",
+    "origin": "Gharkul Vasahat Chikhali",
+    "dest": "Pimprigaon",
+    "originCoords": {
+      "lat": 18.66545,
+      "lon": 73.805901
+    },
+    "destCoords": {
+      "lat": 18.612,
+      "lon": 73.804298
+    },
+    "headsigns": {
+      "dir0": [
+        "Pimprigaon"
+      ],
+      "dir1": [
+        "Gharkul Vasahat Chikhali"
+      ]
+    },
+    "km": 8.2,
+    "tripsCount": 8,
+    "frequencyMinutes": 15
+  },
+  {
+    "routeId": "336",
+    "busNumber": "336",
+    "routeName": "Nigdi Bhakti Shakti ⇆ Kesnand Phata Wagholi",
+    "routeNameMr": "भक्ति शक्ति डेपो ते केसनंद फाटा",
+    "origin": "Nigdi Bhakti Shakti",
+    "dest": "Kesnand Phata Wagholi",
+    "originCoords": {
+      "lat": 18.66601,
+      "lon": 73.771041
+    },
+    "destCoords": {
+      "lat": 18.581075,
+      "lon": 73.987541
+    },
+    "headsigns": {
+      "dir0": [
+        "Kesnand Phata Wagholi"
+      ],
+      "dir1": [
+        "Bhakti Shakti Stand"
+      ]
+    },
+    "km": 31,
+    "tripsCount": 77,
+    "frequencyMinutes": 10
+  },
+  {
+    "routeId": "337",
+    "busNumber": "337",
+    "routeName": "Dsk Vishwa ⇆ Nigdi Bhakti Shakti Stand",
+    "routeNameMr": "भक्ति शक्ति डेपो ते धायरी मारूती मंदिर",
+    "origin": "Dsk Vishwa",
+    "dest": "Nigdi Bhakti Shakti Stand",
+    "originCoords": {
+      "lat": 18.4433,
+      "lon": 73.799103
+    },
+    "destCoords": {
+      "lat": 18.665281,
+      "lon": 73.771742
+    },
+    "headsigns": {
+      "dir0": [
+        "Nigdi Bhakti Shakti Stand"
+      ],
+      "dir1": [
+        "Dsk Vishwa"
+      ]
+    },
+    "km": 37.7,
+    "tripsCount": 12,
+    "frequencyMinutes": 15
+  },
+  {
+    "routeId": "339",
+    "busNumber": "339",
+    "routeName": "Sant Nagar Rto Office ⇆ Gujarwadi Pmt Bus Stand",
+    "routeNameMr": "संत नगर एमआयडीसी पोलीस स्टेशन ते कात्रज",
+    "origin": "Sant Nagar Rto Office",
+    "dest": "Gujarwadi Pmt Bus Stand",
+    "originCoords": {
+      "lat": 18.655507,
+      "lon": 73.843904
+    },
+    "destCoords": {
+      "lat": 18.4406339243371,
+      "lon": 73.8600848838702
+    },
+    "headsigns": {
+      "dir0": [
+        "Gujarwadi Pmt Bus Stand"
+      ],
+      "dir1": [
+        "Sant Nagar Rto Office"
+      ]
+    },
+    "km": 32.5,
+    "tripsCount": 9,
+    "frequencyMinutes": 15
+  },
+  {
+    "routeId": "340",
+    "busNumber": "340",
+    "routeName": "Alandi ⇆ Nigdi Pawale Chowk",
+    "routeNameMr": "",
+    "origin": "Alandi",
+    "dest": "Nigdi Pawale Chowk",
+    "originCoords": {
+      "lat": 18.6748133205203,
+      "lon": 73.8971222018015
+    },
+    "destCoords": {
+      "lat": 18.659678,
+      "lon": 73.776964
+    },
+    "headsigns": {
+      "dir0": [
+        "Nigdi Pawale Chowk"
+      ],
+      "dir1": [
+        "Alandi"
+      ]
+    },
+    "km": 15,
+    "tripsCount": 52,
+    "frequencyMinutes": 10
+  },
+  {
+    "routeId": "341",
+    "busNumber": "341",
+    "routeName": "Urse Gaon Vasudev Aashram ⇆ Nigdi Pawale Chowk",
+    "routeNameMr": "मोहननगर ते मनपा",
+    "origin": "Urse Gaon Vasudev Aashram",
+    "dest": "Nigdi Pawale Chowk",
+    "originCoords": {
+      "lat": 18.704201,
+      "lon": 73.634804
+    },
+    "destCoords": {
+      "lat": 18.659678,
+      "lon": 73.776964
+    },
+    "headsigns": {
+      "dir0": [
+        "Nigdi Pawale Chowk"
+      ],
+      "dir1": [
+        "Urse Gaon Vasudev Aashram"
+      ]
+    },
+    "km": 22.2,
+    "tripsCount": 15,
+    "frequencyMinutes": 15
+  },
+  {
+    "routeId": "342",
+    "busNumber": "342",
+    "routeName": "Vasudev Aashram Ursegaon ⇆ Nigdi Pawale Chowk",
+    "routeNameMr": "",
+    "origin": "Vasudev Aashram Ursegaon",
+    "dest": "Nigdi Pawale Chowk",
+    "originCoords": {
+      "lat": 18.7041110359694,
+      "lon": 73.6348885878472
+    },
+    "destCoords": {
+      "lat": 18.659678,
+      "lon": 73.776964
+    },
+    "headsigns": {
+      "dir0": [
+        "Nigdi Pawale Chowk"
+      ],
+      "dir1": [
+        "Vasudev Aashram Ursegaon"
+      ]
+    },
+    "km": 15,
+    "tripsCount": 6,
+    "frequencyMinutes": 15
+  },
+  {
+    "routeId": "343",
+    "busNumber": "343",
+    "routeName": "Talegaon Dhabhade Maruti Mandir ⇆ Chakan Ambethan Chowk",
+    "routeNameMr": "",
+    "origin": "Talegaon Dhabhade Maruti Mandir",
+    "dest": "Chakan Ambethan Chowk",
+    "originCoords": {
+      "lat": 18.720196,
+      "lon": 73.682957
+    },
+    "destCoords": {
+      "lat": 18.762929,
+      "lon": 73.861061
+    },
+    "headsigns": {
+      "dir0": [
+        "Chakan Ambethan Chowk"
+      ],
+      "dir1": [
+        "Talegaon Dhabhade Maruti Mandir"
+      ]
+    },
+    "km": 15,
+    "tripsCount": 62,
+    "frequencyMinutes": 10
+  },
+  {
+    "routeId": "344",
+    "busNumber": "344",
+    "routeName": "Baner Depot ⇆ Alandi",
+    "routeNameMr": "पिपळे निलख ते आळंदी",
+    "origin": "Baner Depot",
+    "dest": "Alandi",
+    "originCoords": {
+      "lat": 18.5667,
+      "lon": 73.768997
+    },
+    "destCoords": {
+      "lat": 18.6748133205203,
+      "lon": 73.8971222018015
+    },
+    "headsigns": {
+      "dir0": [
+        "Alandi"
+      ],
+      "dir1": [
+        "Baner Depot"
+      ]
+    },
+    "km": 26.1,
+    "tripsCount": 28,
+    "frequencyMinutes": 15
+  },
+  {
+    "routeId": "345",
+    "busNumber": "345",
+    "routeName": "Hinjawadi Maan Phase 3 ⇆ Bhosari Terminal",
+    "routeNameMr": "थेरगाव ते पुणे स्टेशन",
+    "origin": "Hinjawadi Maan Phase 3",
+    "dest": "Bhosari Terminal",
+    "originCoords": {
+      "lat": 18.576699,
+      "lon": 73.688282
+    },
+    "destCoords": {
+      "lat": 18.624547,
+      "lon": 73.85154
+    },
+    "headsigns": {
+      "dir0": [
+        "Bhosari Terminal"
+      ],
+      "dir1": [
+        "Hinjawadi Maan Phase 3"
+      ]
+    },
+    "km": 19.3,
+    "tripsCount": 29,
+    "frequencyMinutes": 15
+  },
+  {
+    "routeId": "346",
+    "busNumber": "346",
+    "routeName": "Bhosari Pmt Chowk ⇆ Kesnand Phata Wagholi",
+    "routeNameMr": "",
+    "origin": "Bhosari Pmt Chowk",
+    "dest": "Kesnand Phata Wagholi",
+    "originCoords": {
+      "lat": 18.622399,
+      "lon": 73.851249
+    },
+    "destCoords": {
+      "lat": 18.581075,
+      "lon": 73.987541
+    },
+    "headsigns": {
+      "dir0": [
+        "Kesnand Phata Wagholi"
+      ],
+      "dir1": [
+        "Bhosari Pmt Chowk"
+      ]
+    },
+    "km": 15,
+    "tripsCount": 59,
+    "frequencyMinutes": 10
+  },
+  {
+    "routeId": "348",
+    "busNumber": "348",
+    "routeName": "Nigdi Bhakti Shakti ⇆ Pune Station Moledina Stand",
+    "routeNameMr": "निगडी ते पुणे स्टेशन",
+    "origin": "Nigdi Bhakti Shakti",
+    "dest": "Pune Station Moledina Stand",
+    "originCoords": {
+      "lat": 18.66601,
+      "lon": 73.771041
+    },
+    "destCoords": {
+      "lat": 18.5274938375007,
+      "lon": 73.8732022472692
+    },
+    "headsigns": {
+      "dir0": [
+        "Pune Station Moledina Stand"
+      ],
+      "dir1": [
+        "Nigdi Bhakti Shakti"
+      ]
+    },
+    "km": 24,
+    "tripsCount": 85,
+    "frequencyMinutes": 10
+  },
+  {
+    "routeId": "34",
+    "busNumber": "34",
+    "routeName": "Nigdi Pawale Chowk ⇆ Aundhgaon",
+    "routeNameMr": "",
+    "origin": "Nigdi Pawale Chowk",
+    "dest": "Aundhgaon",
+    "originCoords": {
+      "lat": 18.659678,
+      "lon": 73.776964
+    },
+    "destCoords": {
+      "lat": 18.566105,
+      "lon": 73.812045
+    },
+    "headsigns": {
+      "dir0": [
+        "Aundhgaon"
+      ],
+      "dir1": [
+        "Nigdi Pawale Chowk"
+      ]
+    },
+    "km": 15,
+    "tripsCount": 20,
+    "frequencyMinutes": 15
+  },
+  {
+    "routeId": "350",
+    "busNumber": "350",
+    "routeName": "Sant Tukaram Maharaj Krida Sankul Dehugaon ⇆ Nigdi Tilak Chowk",
+    "routeNameMr": "देहू गांव ते निगडी",
+    "origin": "Sant Tukaram Maharaj Krida Sankul Dehugaon",
+    "dest": "Nigdi Tilak Chowk",
+    "originCoords": {
+      "lat": 18.7188596958186,
+      "lon": 73.778278880263
+    },
+    "destCoords": {
+      "lat": 18.659632,
+      "lon": 73.778019
+    },
+    "headsigns": {
+      "dir0": [
+        "Nigdi Tilak Chowk"
+      ],
+      "dir1": [
+        "Sant Tukaram Maharaj Krida Sankul Dehugaon"
+      ]
+    },
+    "km": 8.8,
+    "tripsCount": 179,
+    "frequencyMinutes": 10
+  },
+  {
+    "routeId": "351",
+    "busNumber": "351",
+    "routeName": "Jambe ⇆ Alandi",
+    "routeNameMr": "जांबे ते आळंदी",
+    "origin": "Jambe",
+    "dest": "Alandi",
+    "originCoords": {
+      "lat": 18.6410974465321,
+      "lon": 73.722049678293
+    },
+    "destCoords": {
+      "lat": 18.6748133205203,
+      "lon": 73.8971222018015
+    },
+    "headsigns": {
+      "dir0": [
+        "Alandi"
+      ],
+      "dir1": [
+        "Jambe"
+      ]
+    },
+    "km": 32.5,
+    "tripsCount": 7,
+    "frequencyMinutes": 15
+  },
+  {
+    "routeId": "352",
+    "busNumber": "352",
+    "routeName": "Rajguru Nagar Low Collage ⇆ Pune Station Sassoon Road",
+    "routeNameMr": "",
+    "origin": "Rajguru Nagar Low Collage",
+    "dest": "Pune Station Sassoon Road",
+    "originCoords": {
+      "lat": 18.867541,
+      "lon": 73.895286
+    },
+    "destCoords": {
+      "lat": 18.52646,
+      "lon": 73.872636
+    },
+    "headsigns": {
+      "dir0": [
+        "Pune Station Sassoon Road"
+      ],
+      "dir1": [
+        "Rajguru Nagar Low Collage"
+      ]
+    },
+    "km": 15,
+    "tripsCount": 5,
+    "frequencyMinutes": 15
+  },
+  {
+    "routeId": "353",
+    "busNumber": "353",
+    "routeName": "Shikrapur Phata ⇆ Chakan Ambethan Chowk",
+    "routeNameMr": "",
+    "origin": "Shikrapur Phata",
+    "dest": "Chakan Ambethan Chowk",
+    "originCoords": {
+      "lat": 18.692321,
+      "lon": 74.132263
+    },
+    "destCoords": {
+      "lat": 18.762929,
+      "lon": 73.861061
+    },
+    "headsigns": {
+      "dir0": [
+        "Chakan Ambethan Chowk"
+      ],
+      "dir1": [
+        "Shikrapur Phata"
+      ]
+    },
+    "km": 15,
+    "tripsCount": 22,
+    "frequencyMinutes": 15
+  },
+  {
+    "routeId": "354",
+    "busNumber": "354",
+    "routeName": "Pimprigaon ⇆ Marketyard Depot",
+    "routeNameMr": "पिंपरी गाव ते मार्केटयार्ड",
+    "origin": "Pimprigaon",
+    "dest": "Marketyard Depot",
+    "originCoords": {
+      "lat": 18.612,
+      "lon": 73.804298
+    },
+    "destCoords": {
+      "lat": 18.483624,
+      "lon": 73.871501
+    },
+    "headsigns": {
+      "dir0": [
+        "Marketyard Depot"
+      ],
+      "dir1": [
+        "Pimprigaon"
+      ]
+    },
+    "km": 28.8,
+    "tripsCount": 40,
+    "frequencyMinutes": 15
+  },
+  {
+    "routeId": "355A",
+    "busNumber": "355A",
+    "routeName": "Nageshwar Vidyalaya Chikhli ⇆ Radha Hotel",
+    "routeNameMr": "",
+    "origin": "Nageshwar Vidyalaya Chikhli",
+    "dest": "Radha Hotel",
+    "originCoords": {
+      "lat": 18.690947,
+      "lon": 73.808123
+    },
+    "destCoords": {
+      "lat": 18.569089,
+      "lon": 73.765877
+    },
+    "headsigns": {
+      "dir0": [
+        "Radha Hotel"
+      ],
+      "dir1": [
+        "Nageshwar Vidyalaya Chikhli"
+      ]
+    },
+    "km": 15,
+    "tripsCount": 43,
+    "frequencyMinutes": 10
+  },
+  {
+    "routeId": "355",
+    "busNumber": "355",
+    "routeName": "Nageshwar Vidyalaya Chikhli ⇆ Radha Hotel",
+    "routeNameMr": "चिखली ते डांगे चौक",
+    "origin": "Nageshwar Vidyalaya Chikhli",
+    "dest": "Radha Hotel",
+    "originCoords": {
+      "lat": 18.690947,
+      "lon": 73.808123
+    },
+    "destCoords": {
+      "lat": 18.569089,
+      "lon": 73.765877
+    },
+    "headsigns": {
+      "dir0": [
+        "Radha Hotel"
+      ],
+      "dir1": [
+        "Nageshwar Vidyalaya Chikhli"
+      ]
+    },
+    "km": 13,
+    "tripsCount": 77,
+    "frequencyMinutes": 10
+  },
+  {
+    "routeId": "355M",
+    "busNumber": "355M",
+    "routeName": "Nageshwar Vidyalaya Chikhli ⇆ Dange Chowk",
+    "routeNameMr": "",
+    "origin": "Nageshwar Vidyalaya Chikhli",
+    "dest": "Dange Chowk",
+    "originCoords": {
+      "lat": 18.690947,
+      "lon": 73.808123
+    },
+    "destCoords": {
+      "lat": 18.615744,
+      "lon": 73.765722
+    },
+    "headsigns": {
+      "dir0": [
+        "Dange Chowk"
+      ],
+      "dir1": [
+        "Nageshwar Vidyalaya Chikhli"
+      ]
+    },
+    "km": 15,
+    "tripsCount": 6,
+    "frequencyMinutes": 15
+  },
+  {
+    "routeId": "356",
+    "busNumber": "356",
+    "routeName": "Sector no. 12 PM Awas Yojana Bhosari ⇆ Nashik Phata Metro Station",
+    "routeNameMr": "",
+    "origin": "Sector no. 12 PM Awas Yojana Bhosari",
+    "dest": "Nashik Phata Metro Station",
+    "originCoords": {
+      "lat": 18.652,
+      "lon": 73.827904
+    },
+    "destCoords": {
+      "lat": 18.608299,
+      "lon": 73.8209
+    },
+    "headsigns": {
+      "dir0": [
+        "Nashik Phata Metro Station"
+      ],
+      "dir1": [
+        "Sector no. 12 PM Awas Yojana Bhosari"
+      ]
+    },
+    "km": 15,
+    "tripsCount": 14,
+    "frequencyMinutes": 15
+  },
+  {
+    "routeId": "357",
+    "busNumber": "357",
+    "routeName": "Bhosari Terminal ⇆ Pune Station Sassoon Road",
+    "routeNameMr": "राजगुरूनगर ते पुणे स्टेशन",
+    "origin": "Bhosari Terminal",
+    "dest": "Pune Station Sassoon Road",
+    "originCoords": {
+      "lat": 18.624547,
+      "lon": 73.85154
+    },
+    "destCoords": {
+      "lat": 18.52646,
+      "lon": 73.872636
+    },
+    "headsigns": {
+      "dir0": [
+        "Pune Station Sassoon Road"
+      ],
+      "dir1": [
+        "Bhosari Terminal"
+      ]
+    },
+    "km": 46.6,
+    "tripsCount": 127,
+    "frequencyMinutes": 10
+  },
+  {
+    "routeId": "358A",
+    "busNumber": "358A",
+    "routeName": "Bhamchandra Vidhyalay Vasuli ⇆ Bhosari Chakan Road",
+    "routeNameMr": "",
+    "origin": "Bhamchandra Vidhyalay Vasuli",
+    "dest": "Bhosari Chakan Road",
+    "originCoords": {
+      "lat": 18.794154,
+      "lon": 73.767147
+    },
+    "destCoords": {
+      "lat": 18.623893,
+      "lon": 73.851386
+    },
+    "headsigns": {
+      "dir0": [
+        "Bhosari Chakan Road"
+      ],
+      "dir1": [
+        "Bhamchandra Vidhyalay Vasuli"
+      ]
+    },
+    "km": 15,
+    "tripsCount": 91,
+    "frequencyMinutes": 10
+  },
+  {
+    "routeId": "358",
+    "busNumber": "358",
+    "routeName": "Rajguru Nagar Low Collage ⇆ Bhosari Chakan Road",
+    "routeNameMr": "राजगुरूनगर ते भोसरी",
+    "origin": "Rajguru Nagar Low Collage",
+    "dest": "Bhosari Chakan Road",
+    "originCoords": {
+      "lat": 18.867541,
+      "lon": 73.895286
+    },
+    "destCoords": {
+      "lat": 18.623893,
+      "lon": 73.851386
+    },
+    "headsigns": {
+      "dir0": [
+        "Bhosari Chakan Road"
+      ],
+      "dir1": [
+        "Rajguru Nagar Low Collage"
+      ]
+    },
+    "km": 27.6,
+    "tripsCount": 141,
+    "frequencyMinutes": 10
+  },
+  {
+    "routeId": "359A",
+    "busNumber": "359A",
+    "routeName": "Rajguru Nagar Low Collage ⇆ Pimplegurav",
+    "routeNameMr": "",
+    "origin": "Rajguru Nagar Low Collage",
+    "dest": "Pimplegurav",
+    "originCoords": {
+      "lat": 18.867541,
+      "lon": 73.895286
+    },
+    "destCoords": {
+      "lat": 18.5930126539084,
+      "lon": 73.8190997477793
+    },
+    "headsigns": {
+      "dir0": [
+        "Pimplegurav"
+      ],
+      "dir1": [
+        "Rajguru Nagar Low Collage"
+      ]
+    },
+    "km": 15,
+    "tripsCount": 7,
+    "frequencyMinutes": 15
+  },
+  {
+    "routeId": "35",
+    "busNumber": "35",
+    "routeName": "Mukai Chowk ⇆ Ma Na Pa Dengle Pul Nadikathi",
+    "routeNameMr": "",
+    "origin": "Mukai Chowk",
+    "dest": "Ma Na Pa Dengle Pul Nadikathi",
+    "originCoords": {
+      "lat": 18.660434,
+      "lon": 73.731715
+    },
+    "destCoords": {
+      "lat": 18.5236219969565,
+      "lon": 73.8550657020796
+    },
+    "headsigns": {
+      "dir0": [
+        "Ma Na Pa Dengle Pul Nadikathi"
+      ],
+      "dir1": [
+        "Mukai Chowk"
+      ]
+    },
+    "km": 15,
+    "tripsCount": 185,
+    "frequencyMinutes": 10
+  },
+  {
+    "routeId": "360A",
+    "busNumber": "360A",
+    "routeName": "Aundhgaon ⇆ Alandi",
+    "routeNameMr": "",
+    "origin": "Aundhgaon",
+    "dest": "Alandi",
+    "originCoords": {
+      "lat": 18.566105,
+      "lon": 73.812045
+    },
+    "destCoords": {
+      "lat": 18.6748133205203,
+      "lon": 73.8971222018015
+    },
+    "headsigns": {
+      "dir0": [
+        "Alandi"
+      ],
+      "dir1": [
+        "Aundhgaon"
+      ]
+    },
+    "km": 15,
+    "tripsCount": 15,
+    "frequencyMinutes": 15
+  },
+  {
+    "routeId": "360",
+    "busNumber": "360",
+    "routeName": "Bajirao Padale Chowk Mhalunge ⇆ Alandi",
+    "routeNameMr": "बालेवाडी डेपो ते आळंदी",
+    "origin": "Bajirao Padale Chowk Mhalunge",
+    "dest": "Alandi",
+    "originCoords": {
+      "lat": 18.56485,
+      "lon": 73.735653
+    },
+    "destCoords": {
+      "lat": 18.6748133205203,
+      "lon": 73.8971222018015
+    },
+    "headsigns": {
+      "dir0": [
+        "Alandi"
+      ],
+      "dir1": [
+        "Bajirao Padale Chowk Mhalunge"
+      ]
+    },
+    "km": 35,
+    "tripsCount": 45,
+    "frequencyMinutes": 10
+  },
+  {
+    "routeId": "361",
+    "busNumber": "361",
+    "routeName": "Bhosari Pmt Chowk ⇆ Alandi",
+    "routeNameMr": "भोसरी टर्मिनल ते आळंदी",
+    "origin": "Bhosari Pmt Chowk",
+    "dest": "Alandi",
+    "originCoords": {
+      "lat": 18.622399,
+      "lon": 73.851249
+    },
+    "destCoords": {
+      "lat": 18.6748133205203,
+      "lon": 73.8971222018015
+    },
+    "headsigns": {
+      "dir0": [
+        "Alandi"
+      ],
+      "dir1": [
+        "Bhosari Pmt Chowk"
+      ]
+    },
+    "km": 8.5,
+    "tripsCount": 131,
+    "frequencyMinutes": 10
+  },
+  {
+    "routeId": "362",
+    "busNumber": "362",
+    "routeName": "Ycm Hospital ⇆ Alandi",
+    "routeNameMr": "वायसीएम हॉस्‍पीटल ते आळंदी",
+    "origin": "Ycm Hospital",
+    "dest": "Alandi",
+    "originCoords": {
+      "lat": 18.622147,
+      "lon": 73.818072
+    },
+    "destCoords": {
+      "lat": 18.6748133205203,
+      "lon": 73.8971222018015
+    },
+    "headsigns": {
+      "dir0": [
+        "Alandi"
+      ],
+      "dir1": [
+        "Ycm Hospital"
+      ]
+    },
+    "km": 14,
+    "tripsCount": 12,
+    "frequencyMinutes": 15
+  },
+  {
+    "routeId": "363",
+    "busNumber": "363",
+    "routeName": "Samir Lawns Ravet ⇆ Pimpri Road",
+    "routeNameMr": "आदर्शनगर ते निगडी",
+    "origin": "Samir Lawns Ravet",
+    "dest": "Pimpri Road",
+    "originCoords": {
+      "lat": 18.650299,
+      "lon": 73.734398
+    },
+    "destCoords": {
+      "lat": 18.627017,
+      "lon": 73.806307
+    },
+    "headsigns": {
+      "dir0": [
+        "Pimpri Road"
+      ],
+      "dir1": [
+        "Samir Lawns Ravet"
+      ]
+    },
+    "km": 9,
+    "tripsCount": 55,
+    "frequencyMinutes": 10
+  },
+  {
+    "routeId": "364",
+    "busNumber": "364",
+    "routeName": "Chakan Ambethan Chowk ⇆ Alandi",
+    "routeNameMr": "",
+    "origin": "Chakan Ambethan Chowk",
+    "dest": "Alandi",
+    "originCoords": {
+      "lat": 18.762929,
+      "lon": 73.861061
+    },
+    "destCoords": {
+      "lat": 18.6748133205203,
+      "lon": 73.8971222018015
+    },
+    "headsigns": {
+      "dir0": [
+        "Alandi"
+      ],
+      "dir1": [
+        "Chakan Ambethan Chowk"
+      ]
+    },
+    "km": 15,
+    "tripsCount": 12,
+    "frequencyMinutes": 15
+  },
+  {
+    "routeId": "366",
+    "busNumber": "366",
+    "routeName": "Nigdi Bhakti Shakti ⇆ Pune Station Depot",
+    "routeNameMr": "भक्ति शक्ति डेपो ते पुणे स्टेशन (मार्गे येरवडा)",
+    "origin": "Nigdi Bhakti Shakti",
+    "dest": "Pune Station Depot",
+    "originCoords": {
+      "lat": 18.66601,
+      "lon": 73.771041
+    },
+    "destCoords": {
+      "lat": 18.527228,
+      "lon": 73.876415
+    },
+    "headsigns": {
+      "dir0": [
+        "Pune Station Depot"
+      ],
+      "dir1": [
+        "Nigdi Bhakti Shakti"
+      ]
+    },
+    "km": 22.7,
+    "tripsCount": 43,
+    "frequencyMinutes": 10
+  },
+  {
+    "routeId": "367",
+    "busNumber": "367",
+    "routeName": "Mukai Chowk ⇆ Bhosari Gavhane Vasti",
+    "routeNameMr": "गव्हाणे वस्ती भोसरी ते निगडी",
+    "origin": "Mukai Chowk",
+    "dest": "Bhosari Gavhane Vasti",
+    "originCoords": {
+      "lat": 18.660434,
+      "lon": 73.731715
+    },
+    "destCoords": {
+      "lat": 18.6204992438522,
+      "lon": 73.849006033998
+    },
+    "headsigns": {
+      "dir0": [
+        "Bhosari Gavhane Vasti"
+      ],
+      "dir1": [
+        "Mukai Chowk"
+      ]
+    },
+    "km": 10.8,
+    "tripsCount": 62,
+    "frequencyMinutes": 10
+  },
+  {
+    "routeId": "367M",
+    "busNumber": "367M",
+    "routeName": "Mukai Chowk ⇆ Bhosari Gavhane Vasti",
+    "routeNameMr": "",
+    "origin": "Mukai Chowk",
+    "dest": "Bhosari Gavhane Vasti",
+    "originCoords": {
+      "lat": 18.660434,
+      "lon": 73.731715
+    },
+    "destCoords": {
+      "lat": 18.6204992438522,
+      "lon": 73.849006033998
+    },
+    "headsigns": {
+      "dir0": [
+        "Bhosari Gavhane Vasti"
+      ],
+      "dir1": [
+        "Mukai Chowk"
+      ]
+    },
+    "km": 15,
+    "tripsCount": 13,
+    "frequencyMinutes": 15
+  },
+  {
+    "routeId": "368",
+    "busNumber": "368",
+    "routeName": "Lonavala Railway Station ⇆ Nigdi Pawale Chowk",
+    "routeNameMr": "",
+    "origin": "Lonavala Railway Station",
+    "dest": "Nigdi Pawale Chowk",
+    "originCoords": {
+      "lat": 18.7528756462717,
+      "lon": 73.4081132142433
+    },
+    "destCoords": {
+      "lat": 18.659678,
+      "lon": 73.776964
+    },
+    "headsigns": {
+      "dir0": [
+        "Nigdi Pawale Chowk"
+      ],
+      "dir1": [
+        "Lonavala Railway Station"
+      ]
+    },
+    "km": 15,
+    "tripsCount": 48,
+    "frequencyMinutes": 10
+  },
+  {
+    "routeId": "369",
+    "busNumber": "369",
+    "routeName": "Bhamchandra Vidhyalay Vasuli ⇆ Nigdi Tilak Chowk",
+    "routeNameMr": "",
+    "origin": "Bhamchandra Vidhyalay Vasuli",
+    "dest": "Nigdi Tilak Chowk",
+    "originCoords": {
+      "lat": 18.794154,
+      "lon": 73.767147
+    },
+    "destCoords": {
+      "lat": 18.659632,
+      "lon": 73.778019
+    },
+    "headsigns": {
+      "dir0": [
+        "Nigdi Tilak Chowk"
+      ],
+      "dir1": [
+        "Bhamchandra Vidhyalay Vasuli"
+      ]
+    },
+    "km": 15,
+    "tripsCount": 80,
+    "frequencyMinutes": 10
+  },
+  {
+    "routeId": "370",
+    "busNumber": "370",
+    "routeName": "Davdigaon ⇆ Bhosari Chakan Road",
+    "routeNameMr": "पिंपरी ते पिंपरी",
+    "origin": "Davdigaon",
+    "dest": "Bhosari Chakan Road",
+    "originCoords": {
+      "lat": 18.788401,
+      "lon": 73.959
+    },
+    "destCoords": {
+      "lat": 18.623893,
+      "lon": 73.851386
+    },
+    "headsigns": {
+      "dir0": [
+        "Bhosari Chakan Road"
+      ],
+      "dir1": [
+        "Davdigaon"
+      ]
+    },
+    "km": 14.5,
+    "tripsCount": 8,
+    "frequencyMinutes": 15
+  },
+  {
+    "routeId": "371",
+    "busNumber": "371",
+    "routeName": "Takve Bhoyregaon ⇆ Nigdi Pawale Chowk",
+    "routeNameMr": "",
+    "origin": "Takve Bhoyregaon",
+    "dest": "Nigdi Pawale Chowk",
+    "originCoords": {
+      "lat": 18.8644874707297,
+      "lon": 73.5960608169006
+    },
+    "destCoords": {
+      "lat": 18.659678,
+      "lon": 73.776964
+    },
+    "headsigns": {
+      "dir0": [
+        "Nigdi Pawale Chowk"
+      ],
+      "dir1": [
+        "Takve Bhoyregaon"
+      ]
+    },
+    "km": 15,
+    "tripsCount": 8,
+    "frequencyMinutes": 15
+  },
+  {
+    "routeId": "372",
+    "busNumber": "372",
+    "routeName": "Megapolis Phase 3 ⇆ Nigdi Bhakti Shakti Stand",
+    "routeNameMr": "हिंजवडी माण फेज ३ ते भक्ति शक्ति डेपो",
+    "origin": "Megapolis Phase 3",
+    "dest": "Nigdi Bhakti Shakti Stand",
+    "originCoords": {
+      "lat": 18.5769264795462,
+      "lon": 73.682341570363
+    },
+    "destCoords": {
+      "lat": 18.665281,
+      "lon": 73.771742
+    },
+    "headsigns": {
+      "dir0": [
+        "Nigdi Bhakti Shakti Stand"
+      ],
+      "dir1": [
+        "Megapolis Phase 3"
+      ]
+    },
+    "km": 20.9,
+    "tripsCount": 155,
+    "frequencyMinutes": 10
+  },
+  {
+    "routeId": "372M",
+    "busNumber": "372M",
+    "routeName": "Megapolis Phase 3 ⇆ Nigdi Bhakti Shakti Stand",
+    "routeNameMr": "",
+    "origin": "Megapolis Phase 3",
+    "dest": "Nigdi Bhakti Shakti Stand",
+    "originCoords": {
+      "lat": 18.5769264795462,
+      "lon": 73.682341570363
+    },
+    "destCoords": {
+      "lat": 18.665281,
+      "lon": 73.771742
+    },
+    "headsigns": {
+      "dir0": [
+        "Nigdi Bhakti Shakti Stand"
+      ],
+      "dir1": [
+        "Megapolis Phase 3"
+      ]
+    },
+    "km": 15,
+    "tripsCount": 4,
+    "frequencyMinutes": 15
+  },
+  {
+    "routeId": "373",
+    "busNumber": "373",
+    "routeName": "Neilsoft Company infosys Phase 3 ⇆ Sangvi Vasantdada Putala",
+    "routeNameMr": "हिंजवडी माण फेज ३ ते वाकड पूल",
+    "origin": "Neilsoft Company infosys Phase 3",
+    "dest": "Sangvi Vasantdada Putala",
+    "originCoords": {
+      "lat": 18.5882778655349,
+      "lon": 73.6758989778982
+    },
+    "destCoords": {
+      "lat": 18.5752218675506,
+      "lon": 73.8257080264047
+    },
+    "headsigns": {
+      "dir0": [
+        "Sangvi Vasantdada Putala"
+      ],
+      "dir1": [
+        "Neilsoft Company infosys Phase 3"
+      ]
+    },
+    "km": 10,
+    "tripsCount": 4,
+    "frequencyMinutes": 15
+  },
+  {
+    "routeId": "374A",
+    "busNumber": "374A",
+    "routeName": "Gahunjegaon ⇆ Nigdi Pawale Chowk",
+    "routeNameMr": "",
+    "origin": "Gahunjegaon",
+    "dest": "Nigdi Pawale Chowk",
+    "originCoords": {
+      "lat": 18.6675,
+      "lon": 73.702152
+    },
+    "destCoords": {
+      "lat": 18.659678,
+      "lon": 73.776964
+    },
+    "headsigns": {
+      "dir0": [
+        "Nigdi Pawale Chowk"
+      ],
+      "dir1": [
+        "Gahunjegaon"
+      ]
+    },
+    "km": 15,
+    "tripsCount": 13,
+    "frequencyMinutes": 15
+  },
+  {
+    "routeId": "374",
+    "busNumber": "374",
+    "routeName": "Virbaba Chowk Sai Nagar ⇆ Nigdi Pawale Chowk",
+    "routeNameMr": "",
+    "origin": "Virbaba Chowk Sai Nagar",
+    "dest": "Nigdi Pawale Chowk",
+    "originCoords": {
+      "lat": 18.68335,
+      "lon": 73.714351
+    },
+    "destCoords": {
+      "lat": 18.659678,
+      "lon": 73.776964
+    },
+    "headsigns": {
+      "dir0": [
+        "Nigdi Pawale Chowk"
+      ],
+      "dir1": [
+        "Virbaba Chowk Sai Nagar"
+      ]
+    },
+    "km": 15,
+    "tripsCount": 57,
+    "frequencyMinutes": 10
+  },
+  {
+    "routeId": "375",
+    "busNumber": "375",
+    "routeName": "Neilsoft Company infosys Phase 3 ⇆ Nigdi Pawale Chowk",
+    "routeNameMr": "",
+    "origin": "Neilsoft Company infosys Phase 3",
+    "dest": "Nigdi Pawale Chowk",
+    "originCoords": {
+      "lat": 18.5882778655349,
+      "lon": 73.6758989778982
+    },
+    "destCoords": {
+      "lat": 18.659678,
+      "lon": 73.776964
+    },
+    "headsigns": {
+      "dir0": [
+        "Nigdi Pawale Chowk"
+      ],
+      "dir1": [
+        "Neilsoft Company infosys Phase 3"
+      ]
+    },
+    "km": 15,
+    "tripsCount": 4,
+    "frequencyMinutes": 15
+  },
+  {
+    "routeId": "376",
+    "busNumber": "376",
+    "routeName": "Pimprigaon ⇆ Ma Na Pa Main Stand",
+    "routeNameMr": "भक्ति शक्ति डेपो ते कात्रज (मार्गे वायसीएम)",
+    "origin": "Pimprigaon",
+    "dest": "Ma Na Pa Main Stand",
+    "originCoords": {
+      "lat": 18.612,
+      "lon": 73.804298
+    },
+    "destCoords": {
+      "lat": 18.5229408192276,
+      "lon": 73.8536595982643
+    },
+    "headsigns": {
+      "dir0": [
+        "Ma Na Pa Main Stand"
+      ],
+      "dir1": [
+        "Pimprigaon"
+      ]
+    },
+    "km": 30.9,
+    "tripsCount": 8,
+    "frequencyMinutes": 15
+  },
+  {
+    "routeId": "37",
+    "busNumber": "37",
+    "routeName": "Wakdewadi Navin ST Stand ⇆ Sahakar Nagar",
+    "routeNameMr": "नतावाडी ते सहकारनगर",
+    "origin": "Wakdewadi Navin ST Stand",
+    "dest": "Sahakar Nagar",
+    "originCoords": {
+      "lat": 18.5432354807414,
+      "lon": 73.8518304090473
+    },
+    "destCoords": {
+      "lat": 18.48483,
+      "lon": 73.845268
+    },
+    "headsigns": {
+      "dir0": [
+        "Sahakar Nagar"
+      ],
+      "dir1": [
+        "Wakdewadi Navin ST Stand"
+      ]
+    },
+    "km": 7,
+    "tripsCount": 15,
+    "frequencyMinutes": 15
+  },
+  {
+    "routeId": "380",
+    "busNumber": "380",
+    "routeName": "Hinjawadi Maan Phase 3 ⇆ Bhosari Terminal",
+    "routeNameMr": "",
+    "origin": "Hinjawadi Maan Phase 3",
+    "dest": "Bhosari Terminal",
+    "originCoords": {
+      "lat": 18.576699,
+      "lon": 73.688282
+    },
+    "destCoords": {
+      "lat": 18.624547,
+      "lon": 73.85154
+    },
+    "headsigns": {
+      "dir0": [
+        "Bhosari Terminal"
+      ],
+      "dir1": [
+        "Hinjawadi Maan Phase 3"
+      ]
+    },
+    "km": 15,
+    "tripsCount": 4,
+    "frequencyMinutes": 15
+  },
+  {
+    "routeId": "381",
+    "busNumber": "381",
+    "routeName": "Megapolis Phase 3 ⇆ Nageshwar Vidyalaya Chikhli",
+    "routeNameMr": "",
+    "origin": "Megapolis Phase 3",
+    "dest": "Nageshwar Vidyalaya Chikhli",
+    "originCoords": {
+      "lat": 18.5769264795462,
+      "lon": 73.682341570363
+    },
+    "destCoords": {
+      "lat": 18.690947,
+      "lon": 73.808123
+    },
+    "headsigns": {
+      "dir0": [
+        "Nageshwar Vidyalaya Chikhli"
+      ],
+      "dir1": [
+        "Megapolis Phase 3"
+      ]
+    },
+    "km": 15,
+    "tripsCount": 49,
+    "frequencyMinutes": 10
+  },
+  {
+    "routeId": "38",
+    "busNumber": "38",
+    "routeName": "Na Ta Wadi ⇆ Dhankawadi",
+    "routeNameMr": "नतावाडी ते धनकवडी",
+    "origin": "Na Ta Wadi",
+    "dest": "Dhankawadi",
+    "originCoords": {
+      "lat": 18.5348,
+      "lon": 73.848701
+    },
+    "destCoords": {
+      "lat": 18.4655,
+      "lon": 73.850098
+    },
+    "headsigns": {
+      "dir0": [
+        "Dhankawadi"
+      ],
+      "dir1": [
+        "Na Ta Wadi"
+      ]
+    },
+    "km": 9,
+    "tripsCount": 107,
+    "frequencyMinutes": 10
+  },
+  {
+    "routeId": "39",
+    "busNumber": "39",
+    "routeName": "Pune Station Jayprakash Stand ⇆ Dhankawadi",
+    "routeNameMr": "पुणे स्टेशन ते धनकवडी",
+    "origin": "Pune Station Jayprakash Stand",
+    "dest": "Dhankawadi",
+    "originCoords": {
+      "lat": 18.527133,
+      "lon": 73.874306
+    },
+    "destCoords": {
+      "lat": 18.4655,
+      "lon": 73.850098
+    },
+    "headsigns": {
+      "dir0": [
+        "Dhankawadi"
+      ],
+      "dir1": [
+        "Pune Station Jayprakash Stand"
+      ]
+    },
+    "km": 10.5,
+    "tripsCount": 39,
+    "frequencyMinutes": 15
+  },
+  {
+    "routeId": "41",
+    "busNumber": "41",
+    "routeName": "Sangvi Vasantdada Putala ⇆ Upper Depot",
+    "routeNameMr": "अप्पर डेपो ते सांगवी",
+    "origin": "Sangvi Vasantdada Putala",
+    "dest": "Upper Depot",
+    "originCoords": {
+      "lat": 18.5752218675506,
+      "lon": 73.8257080264047
+    },
+    "destCoords": {
+      "lat": 18.4610450969899,
+      "lon": 73.8706265126975
+    },
+    "headsigns": {
+      "dir0": [
+        "Upper Depot"
+      ],
+      "dir1": [
+        "Sangvi Vasantdada Putala"
+      ]
+    },
+    "km": 19,
+    "tripsCount": 4,
+    "frequencyMinutes": 15
+  },
+  {
+    "routeId": "42",
+    "busNumber": "42",
+    "routeName": "Nigdi Bhakti Shakti ⇆ Gujarwadi Pmt Bus Stand",
+    "routeNameMr": "भक्ति शक्ति डेपो ते कात्रज",
+    "origin": "Nigdi Bhakti Shakti",
+    "dest": "Gujarwadi Pmt Bus Stand",
+    "originCoords": {
+      "lat": 18.66601,
+      "lon": 73.771041
+    },
+    "destCoords": {
+      "lat": 18.4406339243371,
+      "lon": 73.8600848838702
+    },
+    "headsigns": {
+      "dir0": [
+        "Gujarwadi Pmt Bus Stand"
+      ],
+      "dir1": [
+        "Nigdi Bhakti Shakti"
+      ]
+    },
+    "km": 28.95,
+    "tripsCount": 141,
+    "frequencyMinutes": 10
+  },
+  {
+    "routeId": "43A",
+    "busNumber": "43A",
+    "routeName": "Hinjawadi Maan Phase 3 ⇆ Katraj",
+    "routeNameMr": "हिंजवडी माण फेज ३ ते कात्रज",
+    "origin": "Hinjawadi Maan Phase 3",
+    "dest": "Katraj",
+    "originCoords": {
+      "lat": 18.576699,
+      "lon": 73.688282
+    },
+    "destCoords": {
+      "lat": 18.447356,
+      "lon": 73.858652
+    },
+    "headsigns": {
+      "dir0": [
+        "Katraj"
+      ],
+      "dir1": [
+        "Hinjawadi Maan Phase 3"
+      ]
+    },
+    "km": 33.7,
+    "tripsCount": 117,
+    "frequencyMinutes": 10
+  },
+  {
+    "routeId": "43",
+    "busNumber": "43",
+    "routeName": "Nigdi Bhakti Shakti Stand ⇆ Katraj",
+    "routeNameMr": "भक्ति शक्ति डेपो ते कात्रज",
+    "origin": "Nigdi Bhakti Shakti Stand",
+    "dest": "Katraj",
+    "originCoords": {
+      "lat": 18.665281,
+      "lon": 73.771742
+    },
+    "destCoords": {
+      "lat": 18.447356,
+      "lon": 73.858652
+    },
+    "headsigns": {
+      "dir0": [
+        "Katraj"
+      ],
+      "dir1": [
+        "Nigdi Bhakti Shakti"
+      ]
+    },
+    "km": 33.7,
+    "tripsCount": 158,
+    "frequencyMinutes": 10
+  },
+  {
+    "routeId": "44",
+    "busNumber": "44",
+    "routeName": "Akurdi Railway Station ⇆ Katraj",
+    "routeNameMr": "",
+    "origin": "Akurdi Railway Station",
+    "dest": "Katraj",
+    "originCoords": {
+      "lat": 18.649002,
+      "lon": 73.765306
+    },
+    "destCoords": {
+      "lat": 18.447356,
+      "lon": 73.858652
+    },
+    "headsigns": {
+      "dir0": [
+        "Katraj"
+      ],
+      "dir1": [
+        "Akurdi Railway Station"
+      ]
+    },
+    "km": 15,
+    "tripsCount": 33,
+    "frequencyMinutes": 15
+  },
+  {
+    "routeId": "47",
+    "busNumber": "47",
+    "routeName": "Sanaswadi Nandoshi ⇆ Swargate",
+    "routeNameMr": "सणस वाडी ते शनिवारवाडा",
+    "origin": "Sanaswadi Nandoshi",
+    "dest": "Swargate",
+    "originCoords": {
+      "lat": 18.4171,
+      "lon": 73.802952
+    },
+    "destCoords": {
+      "lat": 18.499524,
+      "lon": 73.858289
+    },
+    "headsigns": {
+      "dir0": [
+        "Swargate"
+      ],
+      "dir1": [
+        "Sanaswadi Nandoshi"
+      ]
+    },
+    "km": 17.7,
+    "tripsCount": 12,
+    "frequencyMinutes": 15
+  },
+  {
+    "routeId": "4",
+    "busNumber": "4",
+    "routeName": "Shivaji Nagar ⇆ Swargate",
+    "routeNameMr": "",
+    "origin": "Shivaji Nagar",
+    "dest": "Swargate",
+    "originCoords": {
+      "lat": 18.531756,
+      "lon": 73.84903
+    },
+    "destCoords": {
+      "lat": 18.499524,
+      "lon": 73.858289
+    },
+    "headsigns": {
+      "dir0": [
+        "Swargate"
+      ],
+      "dir1": [
+        "Shivaji Nagar"
+      ]
+    },
+    "km": 15,
+    "tripsCount": 139,
+    "frequencyMinutes": 10
+  },
+  {
+    "routeId": "50",
+    "busNumber": "50",
+    "routeName": "Sinhgad ⇆ Shaniwarwada Stand",
+    "routeNameMr": "सिंहगड ते शनिवारवाडा",
+    "origin": "Sinhgad",
+    "dest": "Shaniwarwada Stand",
+    "originCoords": {
+      "lat": 18.379904,
+      "lon": 73.768233
+    },
+    "destCoords": {
+      "lat": 18.5216501448677,
+      "lon": 73.8558543572099
+    },
+    "headsigns": {
+      "dir0": [
+        "Shaniwarwada Stand"
+      ],
+      "dir1": [
+        "Sinhgad"
+      ]
+    },
+    "km": 24.8,
+    "tripsCount": 36,
+    "frequencyMinutes": 15
+  },
+  {
+    "routeId": "51",
+    "busNumber": "51",
+    "routeName": "Dsk Vishwa ⇆ Shivaji Nagar",
+    "routeNameMr": "धायरी मारूती मंदिर ते शिवाजीनगर",
+    "origin": "Dsk Vishwa",
+    "dest": "Shivaji Nagar",
+    "originCoords": {
+      "lat": 18.4433,
+      "lon": 73.799103
+    },
+    "destCoords": {
+      "lat": 18.531756,
+      "lon": 73.84903
+    },
+    "headsigns": {
+      "dir0": [
+        "Shivaji Nagar"
+      ],
+      "dir1": [
+        "Dsk Vishwa"
+      ]
+    },
+    "km": 13.2,
+    "tripsCount": 71,
+    "frequencyMinutes": 10
+  },
+  {
+    "routeId": "52A",
+    "busNumber": "52A",
+    "routeName": "Varasgaon Goradwadi ⇆ Swargate",
+    "routeNameMr": "ओसाडे फाटा ते स्वारगेट",
+    "origin": "Varasgaon Goradwadi",
+    "dest": "Swargate",
+    "originCoords": {
+      "lat": 18.3979,
+      "lon": 73.617351
+    },
+    "destCoords": {
+      "lat": 18.499524,
+      "lon": 73.858289
+    },
+    "headsigns": {
+      "dir0": [
+        "Swargate"
+      ],
+      "dir1": [
+        "Varasgaon Goradwadi"
+      ]
+    },
+    "km": 30.1,
+    "tripsCount": 14,
+    "frequencyMinutes": 15
+  },
+  {
+    "routeId": "52",
+    "busNumber": "52",
+    "routeName": "Khanapur ⇆ Swargate",
+    "routeNameMr": "खानापूर ते स्वारगेट",
+    "origin": "Khanapur",
+    "dest": "Swargate",
+    "originCoords": {
+      "lat": 18.3993,
+      "lon": 73.732853
+    },
+    "destCoords": {
+      "lat": 18.499524,
+      "lon": 73.858289
+    },
+    "headsigns": {
+      "dir0": [
+        "Swargate"
+      ],
+      "dir1": [
+        "Khanapur"
+      ]
+    },
+    "km": 23.2,
+    "tripsCount": 57,
+    "frequencyMinutes": 10
+  },
+  {
+    "routeId": "55",
+    "busNumber": "55",
+    "routeName": "Shanipar Stand ⇆ Suncity",
+    "routeNameMr": "महात्मा फुले मंडई ते सनसिटी",
+    "origin": "Shanipar Stand",
+    "dest": "Suncity",
+    "originCoords": {
+      "lat": 18.5128,
+      "lon": 73.852898
+    },
+    "destCoords": {
+      "lat": 18.47475,
+      "lon": 73.813999
+    },
+    "headsigns": {
+      "dir0": [
+        "Suncity"
+      ],
+      "dir1": [
+        "Shanipar Stand"
+      ]
+    },
+    "km": 7.8,
+    "tripsCount": 54,
+    "frequencyMinutes": 10
+  },
+  {
+    "routeId": "57",
+    "busNumber": "57",
+    "routeName": "Vadgaon Budruk Stand ⇆ Pune Station Jayprakash Stand",
+    "routeNameMr": "वडगाव बु. ते पुणे स्टेशन",
+    "origin": "Vadgaon Budruk Stand",
+    "dest": "Pune Station Jayprakash Stand",
+    "originCoords": {
+      "lat": 18.46745,
+      "lon": 73.821999
+    },
+    "destCoords": {
+      "lat": 18.527133,
+      "lon": 73.874306
+    },
+    "headsigns": {
+      "dir0": [
+        "Pune Station Jayprakash Stand"
+      ],
+      "dir1": [
+        "Vadgaon Budruk Stand"
+      ]
+    },
+    "km": 12.3,
+    "tripsCount": 32,
+    "frequencyMinutes": 15
+  },
+  {
+    "routeId": "58",
+    "busNumber": "58",
+    "routeName": "Gokhale Nagar Police Line ⇆ Shanipar Stand",
+    "routeNameMr": "गोखलेनगर ते शनिपार",
+    "origin": "Gokhale Nagar Police Line",
+    "dest": "Shanipar Stand",
+    "originCoords": {
+      "lat": 18.523701,
+      "lon": 73.824997
+    },
+    "destCoords": {
+      "lat": 18.5128,
+      "lon": 73.852898
+    },
+    "headsigns": {
+      "dir0": [
+        "Shanipar Stand"
+      ],
+      "dir1": [
+        "Gokhale Nagar Police Line"
+      ]
+    },
+    "km": 5.6,
+    "tripsCount": 72,
+    "frequencyMinutes": 10
+  },
+  {
+    "routeId": "59",
+    "busNumber": "59",
+    "routeName": "Niljyoti Society ⇆ Shanipar Stand",
+    "routeNameMr": "निलज्योती सोसायटी ते शनिपार",
+    "origin": "Niljyoti Society",
+    "dest": "Shanipar Stand",
+    "originCoords": {
+      "lat": 18.532801,
+      "lon": 73.821148
+    },
+    "destCoords": {
+      "lat": 18.5128,
+      "lon": 73.852898
+    },
+    "headsigns": {
+      "dir0": [
+        "Shanipar Stand"
+      ],
+      "dir1": [
+        "Niljyoti Society"
+      ]
+    },
+    "km": 6.2,
+    "tripsCount": 72,
+    "frequencyMinutes": 10
+  },
+  {
+    "routeId": "5",
+    "busNumber": "5",
+    "routeName": "Pune Station Moledina Stand ⇆ Swargate",
+    "routeNameMr": "पुणे स्टेशन ते स्वारगेट",
+    "origin": "Pune Station Moledina Stand",
+    "dest": "Swargate",
+    "originCoords": {
+      "lat": 18.5274938375007,
+      "lon": 73.8732022472692
+    },
+    "destCoords": {
+      "lat": 18.499524,
+      "lon": 73.858289
+    },
+    "headsigns": {
+      "dir0": [
+        "Swargate"
+      ],
+      "dir1": [
+        "Pune Station Moledina Stand"
+      ]
+    },
+    "km": 5.45,
+    "tripsCount": 283,
+    "frequencyMinutes": 10
+  },
+  {
+    "routeId": "60",
+    "busNumber": "60",
+    "routeName": "Ghule Nagar Vadgaon Budruk ⇆ Swargate",
+    "routeNameMr": "घुलेनगर ते शनिवारवाडा स्‍टॅण्ड",
+    "origin": "Ghule Nagar Vadgaon Budruk",
+    "dest": "Swargate",
+    "originCoords": {
+      "lat": 18.4609014742577,
+      "lon": 73.8251283184143
+    },
+    "destCoords": {
+      "lat": 18.499524,
+      "lon": 73.858289
+    },
+    "headsigns": {
+      "dir0": [
+        "Swargate"
+      ],
+      "dir1": [
+        "Ghule Nagar Vadgaon Budruk"
+      ]
+    },
+    "km": 12,
+    "tripsCount": 8,
+    "frequencyMinutes": 15
+  },
+  {
+    "routeId": "61",
+    "busNumber": "61",
+    "routeName": "Sarola ⇆ Balaji Nagar Corner Satara Road",
+    "routeNameMr": "नसरापुर ते स्वारगेट",
+    "origin": "Sarola",
+    "dest": "Balaji Nagar Corner Satara Road",
+    "originCoords": {
+      "lat": 18.1778,
+      "lon": 73.955002
+    },
+    "destCoords": {
+      "lat": 18.464796,
+      "lon": 73.858114
+    },
+    "headsigns": {
+      "dir0": [
+        "Balaji Nagar Corner Satara Road"
+      ],
+      "dir1": [
+        "Sarola"
+      ]
+    },
+    "km": 32,
+    "tripsCount": 36,
+    "frequencyMinutes": 15
+  },
+  {
+    "routeId": "64",
+    "busNumber": "64",
+    "routeName": "Nda 10 No. Gate ⇆ Bhekrai Nagar",
+    "routeNameMr": "वारजे माळवाडी ते हडपसर गाडीतळ",
+    "origin": "Nda 10 No. Gate",
+    "dest": "Bhekrai Nagar",
+    "originCoords": {
+      "lat": 18.449328,
+      "lon": 73.763056
+    },
+    "destCoords": {
+      "lat": 18.483643,
+      "lon": 73.953885
+    },
+    "headsigns": {
+      "dir0": [
+        "Bhekrai Nagar"
+      ],
+      "dir1": [
+        "Nda 10 No. Gate"
+      ]
+    },
+    "km": 20,
+    "tripsCount": 122,
+    "frequencyMinutes": 10
+  },
+  {
+    "routeId": "64M",
+    "busNumber": "64M",
+    "routeName": "Ganpati Matha ⇆ Hadapsar Gadital",
+    "routeNameMr": "",
+    "origin": "Ganpati Matha",
+    "dest": "Hadapsar Gadital",
+    "originCoords": {
+      "lat": 18.475765,
+      "lon": 73.795812
+    },
+    "destCoords": {
+      "lat": 18.500074,
+      "lon": 73.939214
+    },
+    "headsigns": {
+      "dir0": [
+        "Hadapsar Gadital"
+      ],
+      "dir1": [
+        "Ganpati Matha"
+      ]
+    },
+    "km": 15,
+    "tripsCount": 2,
+    "frequencyMinutes": 15
+  },
+  {
+    "routeId": "65A",
+    "busNumber": "65A",
+    "routeName": "Patas ⇆ Hadapsar Gadital Solapur Road",
+    "routeNameMr": "मार्केटयार्ड ते अप्पर डेपो",
+    "origin": "Patas",
+    "dest": "Hadapsar Gadital Solapur Road",
+    "originCoords": {
+      "lat": 18.43186,
+      "lon": 74.45855
+    },
+    "destCoords": {
+      "lat": 18.500904,
+      "lon": 73.939136
+    },
+    "headsigns": {
+      "dir0": [
+        "Hadapsar Gadital Solapur Road"
+      ],
+      "dir1": [
+        "Patas"
+      ]
+    },
+    "km": 4.8,
+    "tripsCount": 17,
+    "frequencyMinutes": 15
+  },
+  {
+    "routeId": "66",
+    "busNumber": "66",
+    "routeName": "Thakarwadi ⇆ Marketyard Depot",
+    "routeNameMr": "आगळंबे गांव ते मार्केटयार्ड",
+    "origin": "Thakarwadi",
+    "dest": "Marketyard Depot",
+    "originCoords": {
+      "lat": 18.438,
+      "lon": 73.695999
+    },
+    "destCoords": {
+      "lat": 18.483624,
+      "lon": 73.871501
+    },
+    "headsigns": {
+      "dir0": [
+        "Marketyard Depot"
+      ],
+      "dir1": [
+        "Thakarwadi"
+      ]
+    },
+    "km": 29.1,
+    "tripsCount": 6,
+    "frequencyMinutes": 15
+  },
+  {
+    "routeId": "67A",
+    "busNumber": "67A",
+    "routeName": "Uruli Kanchan ⇆ Swargate",
+    "routeNameMr": "",
+    "origin": "Uruli Kanchan",
+    "dest": "Swargate",
+    "originCoords": {
+      "lat": 18.487453,
+      "lon": 74.13066
+    },
+    "destCoords": {
+      "lat": 18.499524,
+      "lon": 73.858289
+    },
+    "headsigns": {
+      "dir0": [
+        "Swargate"
+      ],
+      "dir1": [
+        "Uruli Kanchan"
+      ]
+    },
+    "km": 15,
+    "tripsCount": 15,
+    "frequencyMinutes": 15
+  },
+  {
+    "routeId": "67",
+    "busNumber": "67",
+    "routeName": "Uruli Kanchan ⇆ Hadapsar Gadital Solapur Road",
+    "routeNameMr": "खराडी गाव ते स्वारगेट",
+    "origin": "Uruli Kanchan",
+    "dest": "Hadapsar Gadital Solapur Road",
+    "originCoords": {
+      "lat": 18.487453,
+      "lon": 74.13066
+    },
+    "destCoords": {
+      "lat": 18.500904,
+      "lon": 73.939136
+    },
+    "headsigns": {
+      "dir0": [
+        "Hadapsar Gadital Solapur Road"
+      ],
+      "dir1": [
+        "Uruli Kanchan"
+      ]
+    },
+    "km": 17.2,
+    "tripsCount": 66,
+    "frequencyMinutes": 10
+  },
+  {
+    "routeId": "68",
+    "busNumber": "68",
+    "routeName": "Upper Depot ⇆ Sutardara",
+    "routeNameMr": "",
+    "origin": "Upper Depot",
+    "dest": "Sutardara",
+    "originCoords": {
+      "lat": 18.4610450969899,
+      "lon": 73.8706265126975
+    },
+    "destCoords": {
+      "lat": 18.515459,
+      "lon": 73.807824
+    },
+    "headsigns": {
+      "dir0": [
+        "Sutardara"
+      ],
+      "dir1": [
+        "Upper Depot"
+      ]
+    },
+    "km": 15,
+    "tripsCount": 4,
+    "frequencyMinutes": 15
+  },
+  {
+    "routeId": "69",
+    "busNumber": "69",
+    "routeName": "Ghotawadegaon ⇆ Marketyard Depot",
+    "routeNameMr": "घोटावडे गांव ते मार्केटयार्ड",
+    "origin": "Ghotawadegaon",
+    "dest": "Marketyard Depot",
+    "originCoords": {
+      "lat": 18.548901,
+      "lon": 73.662903
+    },
+    "destCoords": {
+      "lat": 18.483624,
+      "lon": 73.871501
+    },
+    "headsigns": {
+      "dir0": [
+        "Marketyard Depot"
+      ],
+      "dir1": [
+        "Ghotawadegaon"
+      ]
+    },
+    "km": 31.3,
+    "tripsCount": 10,
+    "frequencyMinutes": 15
+  },
+  {
+    "routeId": "70",
+    "busNumber": "70",
+    "routeName": "Mulshi Gaon ⇆ Marketyard Depot",
+    "routeNameMr": "शेरेगांव ते डेक्कन जिमखाना",
+    "origin": "Mulshi Gaon",
+    "dest": "Marketyard Depot",
+    "originCoords": {
+      "lat": 18.498501,
+      "lon": 73.513702
+    },
+    "destCoords": {
+      "lat": 18.483624,
+      "lon": 73.871501
+    },
+    "headsigns": {
+      "dir0": [
+        "Marketyard Depot"
+      ],
+      "dir1": [
+        "Mulshi Gaon"
+      ]
+    },
+    "km": 33.3,
+    "tripsCount": 14,
+    "frequencyMinutes": 15
+  },
+  {
+    "routeId": "72",
+    "busNumber": "72",
+    "routeName": "Nda 10 No. Gate ⇆ Sukhsagar Nagar",
+    "routeNameMr": "कोंढवा गेट ते अप्पर डेपो",
+    "origin": "Nda 10 No. Gate",
+    "dest": "Sukhsagar Nagar",
+    "originCoords": {
+      "lat": 18.449328,
+      "lon": 73.763056
+    },
+    "destCoords": {
+      "lat": 18.4568,
+      "lon": 73.86945
+    },
+    "headsigns": {
+      "dir0": [
+        "Sukhsagar Nagar"
+      ],
+      "dir1": [
+        "Nda 10 No. Gate"
+      ]
+    },
+    "km": 20.9,
+    "tripsCount": 20,
+    "frequencyMinutes": 15
+  },
+  {
+    "routeId": "73",
+    "busNumber": "73",
+    "routeName": "Gada Modi Chowk Khamgaon ⇆ Hadapsar Gadital Solapur Road",
+    "routeNameMr": "कोथरुड डेपो ते हडपसर गाडीतळ",
+    "origin": "Gada Modi Chowk Khamgaon",
+    "dest": "Hadapsar Gadital Solapur Road",
+    "originCoords": {
+      "lat": 18.541466275587,
+      "lon": 74.2224767856742
+    },
+    "destCoords": {
+      "lat": 18.500904,
+      "lon": 73.939136
+    },
+    "headsigns": {
+      "dir0": [
+        "Hadapsar Gadital Solapur Road"
+      ],
+      "dir1": [
+        "Gada Modi Chowk Khamgaon"
+      ]
+    },
+    "km": 18.7,
+    "tripsCount": 8,
+    "frequencyMinutes": 15
+  },
+  {
+    "routeId": "74",
+    "busNumber": "74",
+    "routeName": "Paud Shashkiy Vishram Gruh ⇆ Chinchwadgaon",
+    "routeNameMr": "",
+    "origin": "Paud Shashkiy Vishram Gruh",
+    "dest": "Chinchwadgaon",
+    "originCoords": {
+      "lat": 18.5242,
+      "lon": 73.605401
+    },
+    "destCoords": {
+      "lat": 18.627678,
+      "lon": 73.782166
+    },
+    "headsigns": {
+      "dir0": [
+        "Chinchwadgaon"
+      ],
+      "dir1": [
+        "Paud Shashkiy Vishram Gruh"
+      ]
+    },
+    "km": 15,
+    "tripsCount": 8,
+    "frequencyMinutes": 15
+  },
+  {
+    "routeId": "77",
+    "busNumber": "77",
+    "routeName": "Hinjawadi Maan Phase 3 ⇆ Ganpati Matha",
+    "routeNameMr": "वारजे माळवाडी ते वारजे माळवाडी",
+    "origin": "Hinjawadi Maan Phase 3",
+    "dest": "Ganpati Matha",
+    "originCoords": {
+      "lat": 18.576699,
+      "lon": 73.688282
+    },
+    "destCoords": {
+      "lat": 18.475765,
+      "lon": 73.795812
+    },
+    "headsigns": {
+      "dir0": [
+        "Ganpati Matha"
+      ],
+      "dir1": [
+        "Hinjawadi Maan Phase 3"
+      ]
+    },
+    "km": 24.5,
+    "tripsCount": 4,
+    "frequencyMinutes": 15
+  },
+  {
+    "routeId": "78",
+    "busNumber": "78",
+    "routeName": "Nda 10 No. Gate ⇆ Marketyard Depot",
+    "routeNameMr": "कोंढवा गेट ते मार्केटयार्ड",
+    "origin": "Nda 10 No. Gate",
+    "dest": "Marketyard Depot",
+    "originCoords": {
+      "lat": 18.449328,
+      "lon": 73.763056
+    },
+    "destCoords": {
+      "lat": 18.483624,
+      "lon": 73.871501
+    },
+    "headsigns": {
+      "dir0": [
+        "Marketyard Depot"
+      ],
+      "dir1": [
+        "Nda 10 No. Gate"
+      ]
+    },
+    "km": 19.1,
+    "tripsCount": 4,
+    "frequencyMinutes": 15
+  },
+  {
+    "routeId": "81",
+    "busNumber": "81",
+    "routeName": "Pune Station Moledina Stand ⇆ Kumbare Park",
+    "routeNameMr": "पुणे स्टेशन ते कुंबरेपार्क",
+    "origin": "Pune Station Moledina Stand",
+    "dest": "Kumbare Park",
+    "originCoords": {
+      "lat": 18.5274938375007,
+      "lon": 73.8732022472692
+    },
+    "destCoords": {
+      "lat": 18.503201,
+      "lon": 73.798203
+    },
+    "headsigns": {
+      "dir0": [
+        "Kumbare Park"
+      ],
+      "dir1": [
+        "Pune Station Moledina Stand"
+      ]
+    },
+    "km": 12.9,
+    "tripsCount": 4,
+    "frequencyMinutes": 15
+  },
+  {
+    "routeId": "83",
+    "busNumber": "83",
+    "routeName": "Alandi ⇆ Nda 10 No. Gate",
+    "routeNameMr": "",
+    "origin": "Alandi",
+    "dest": "Nda 10 No. Gate",
+    "originCoords": {
+      "lat": 18.6748133205203,
+      "lon": 73.8971222018015
+    },
+    "destCoords": {
+      "lat": 18.449328,
+      "lon": 73.763056
+    },
+    "headsigns": {
+      "dir0": [
+        "Nda 10 No. Gate"
+      ],
+      "dir1": [
+        "Alandi"
+      ]
+    },
+    "km": 15,
+    "tripsCount": 8,
+    "frequencyMinutes": 15
+  },
+  {
+    "routeId": "84A",
+    "busNumber": "84A",
+    "routeName": "Sangrun ⇆ Deccan Gymkhana",
+    "routeNameMr": "कोंढूर फाटा ते डेक्कन जिमखाना",
+    "origin": "Sangrun",
+    "dest": "Deccan Gymkhana",
+    "originCoords": {
+      "lat": 18.400135,
+      "lon": 73.678425
+    },
+    "destCoords": {
+      "lat": 18.516006,
+      "lon": 73.842572
+    },
+    "headsigns": {
+      "dir0": [
+        "Deccan Gymkhana"
+      ],
+      "dir1": [
+        "Sangrun"
+      ]
+    },
+    "km": 37.4,
+    "tripsCount": 11,
+    "frequencyMinutes": 15
+  },
+  {
+    "routeId": "84",
+    "busNumber": "84",
+    "routeName": "Mutha Gaon ⇆ Deccan Gymkhana",
+    "routeNameMr": "सांगरुण ते डेक्कन जिमखाना",
+    "origin": "Mutha Gaon",
+    "dest": "Deccan Gymkhana",
+    "originCoords": {
+      "lat": 18.458463,
+      "lon": 73.623877
+    },
+    "destCoords": {
+      "lat": 18.516006,
+      "lon": 73.842572
+    },
+    "headsigns": {
+      "dir0": [
+        "Deccan Gymkhana"
+      ],
+      "dir1": [
+        "Mutha Gaon"
+      ]
+    },
+    "km": 28.4,
+    "tripsCount": 11,
+    "frequencyMinutes": 15
+  },
+  {
+    "routeId": "85",
+    "busNumber": "85",
+    "routeName": "Khadewadi ⇆ Ma Na Pa Congress Bhavan",
+    "routeNameMr": "मोहकरवाडी ते मनपा",
+    "origin": "Khadewadi",
+    "dest": "Ma Na Pa Congress Bhavan",
+    "originCoords": {
+      "lat": 18.457979,
+      "lon": 73.698738
+    },
+    "destCoords": {
+      "lat": 18.52227,
+      "lon": 73.852261
+    },
+    "headsigns": {
+      "dir0": [
+        "Ma Na Pa Congress Bhavan"
+      ],
+      "dir1": [
+        "Khadewadi"
+      ]
+    },
+    "km": 20.8,
+    "tripsCount": 3,
+    "frequencyMinutes": 15
+  },
+  {
+    "routeId": "86",
+    "busNumber": "86",
+    "routeName": "Paud St Stand ⇆ Deccan Gymkhana",
+    "routeNameMr": "कोथरुड डेपो ते कोथरुड डेपो",
+    "origin": "Paud St Stand",
+    "dest": "Deccan Gymkhana",
+    "originCoords": {
+      "lat": 18.523821,
+      "lon": 73.618895
+    },
+    "destCoords": {
+      "lat": 18.516006,
+      "lon": 73.842572
+    },
+    "headsigns": {
+      "dir0": [
+        "Deccan Gymkhana"
+      ],
+      "dir1": [
+        "Paud St Stand"
+      ]
+    },
+    "km": 16.9,
+    "tripsCount": 25,
+    "frequencyMinutes": 15
+  },
+  {
+    "routeId": "87A",
+    "busNumber": "87A",
+    "routeName": "Zilla Parishad School Chande ⇆ Deccan Gymkhana",
+    "routeNameMr": "सूसगांव ते डेक्कन जिमखाना",
+    "origin": "Zilla Parishad School Chande",
+    "dest": "Deccan Gymkhana",
+    "originCoords": {
+      "lat": 18.55473,
+      "lon": 73.698382
+    },
+    "destCoords": {
+      "lat": 18.516006,
+      "lon": 73.842572
+    },
+    "headsigns": {
+      "dir0": [
+        "Deccan Gymkhana"
+      ],
+      "dir1": [
+        "Zilla Parishad School Chande"
+      ]
+    },
+    "km": 15,
+    "tripsCount": 11,
+    "frequencyMinutes": 15
+  },
+  {
+    "routeId": "87",
+    "busNumber": "87",
+    "routeName": "Sutarwadi Depot ⇆ Deccan Gymkhana",
+    "routeNameMr": "सुतारवाडी ते डेक्कन जिमखाना (भाग्यवतीनगर)",
+    "origin": "Sutarwadi Depot",
+    "dest": "Deccan Gymkhana",
+    "originCoords": {
+      "lat": 18.541201,
+      "lon": 73.779404
+    },
+    "destCoords": {
+      "lat": 18.516006,
+      "lon": 73.842572
+    },
+    "headsigns": {
+      "dir0": [
+        "Deccan Gymkhana"
+      ],
+      "dir1": [
+        "Sutarwadi Depot"
+      ]
+    },
+    "km": 12,
+    "tripsCount": 17,
+    "frequencyMinutes": 15
+  },
+  {
+    "routeId": "90",
+    "busNumber": "90",
+    "routeName": "Gokhale Nagar Police Line ⇆ Katraj",
+    "routeNameMr": "गोखलेनगर ते स्वारगेट",
+    "origin": "Gokhale Nagar Police Line",
+    "dest": "Katraj",
+    "originCoords": {
+      "lat": 18.523701,
+      "lon": 73.824997
+    },
+    "destCoords": {
+      "lat": 18.447356,
+      "lon": 73.858652
+    },
+    "headsigns": {
+      "dir0": [
+        "Katraj"
+      ],
+      "dir1": [
+        "Gokhale Nagar Police Line"
+      ]
+    },
+    "km": 7.3,
+    "tripsCount": 19,
+    "frequencyMinutes": 15
+  },
+  {
+    "routeId": "94",
+    "busNumber": "94",
+    "routeName": "Pune Station Moledina Stand ⇆ Matalwadi Bhugaon",
+    "routeNameMr": "पुणे स्टेशन ते कोथरुड डेपो",
+    "origin": "Pune Station Moledina Stand",
+    "dest": "Matalwadi Bhugaon",
+    "originCoords": {
+      "lat": 18.5274938375007,
+      "lon": 73.8732022472692
+    },
+    "destCoords": {
+      "lat": 18.500501,
+      "lon": 73.740997
+    },
+    "headsigns": {
+      "dir0": [
+        "Matalwadi Bhugaon"
+      ],
+      "dir1": [
+        "Pune Station Moledina Stand"
+      ]
+    },
+    "km": 11.4,
+    "tripsCount": 63,
+    "frequencyMinutes": 10
+  },
+  {
+    "routeId": "95",
+    "busNumber": "95",
+    "routeName": "PVPIT College Bawdhan ⇆ Deccan Gymkhana",
+    "routeNameMr": "पिंपळे गुरव ते कोथरुड डेपो",
+    "origin": "PVPIT College Bawdhan",
+    "dest": "Deccan Gymkhana",
+    "originCoords": {
+      "lat": 18.5,
+      "lon": 73.7742
+    },
+    "destCoords": {
+      "lat": 18.516006,
+      "lon": 73.842572
+    },
+    "headsigns": {
+      "dir0": [
+        "Deccan Gymkhana"
+      ],
+      "dir1": [
+        "PVPIT College Bawdhan"
+      ]
+    },
+    "km": 21.1,
+    "tripsCount": 4,
+    "frequencyMinutes": 15
+  },
+  {
+    "routeId": "97",
+    "busNumber": "97",
+    "routeName": "Sahakar Nagar ⇆ Ganpati Matha",
+    "routeNameMr": "सहकारनगर ते वारजे माळवाडी",
+    "origin": "Sahakar Nagar",
+    "dest": "Ganpati Matha",
+    "originCoords": {
+      "lat": 18.48483,
+      "lon": 73.845268
+    },
+    "destCoords": {
+      "lat": 18.475765,
+      "lon": 73.795812
+    },
+    "headsigns": {
+      "dir0": [
+        "Ganpati Matha"
+      ],
+      "dir1": [
+        "Sahakar Nagar"
+      ]
+    },
+    "km": 12.5,
+    "tripsCount": 4,
+    "frequencyMinutes": 15
+  },
+  {
+    "routeId": "98",
+    "busNumber": "98",
+    "routeName": "Kesnand Phata Wagholi ⇆ Ganpati Matha",
+    "routeNameMr": "",
+    "origin": "Kesnand Phata Wagholi",
+    "dest": "Ganpati Matha",
+    "originCoords": {
+      "lat": 18.581075,
+      "lon": 73.987541
+    },
+    "destCoords": {
+      "lat": 18.475765,
+      "lon": 73.795812
+    },
+    "headsigns": {
+      "dir0": [
+        "Ganpati Matha"
+      ],
+      "dir1": [
+        "Wagholi Kesnand Phata"
+      ]
+    },
+    "km": 15,
+    "tripsCount": 148,
+    "frequencyMinutes": 10
+  },
+  {
+    "routeId": "99",
+    "busNumber": "99",
+    "routeName": "Kekan Gas ⇆ Kothrud Depot",
+    "routeNameMr": "",
+    "origin": "Kekan Gas",
+    "dest": "Kothrud Depot",
+    "originCoords": {
+      "lat": 18.574749,
+      "lon": 73.8955
+    },
+    "destCoords": {
+      "lat": 18.507899,
+      "lon": 73.794949
+    },
+    "headsigns": {
+      "dir0": [
+        "Kothrud Depot"
+      ],
+      "dir1": [
+        "Kekan Gas"
+      ]
+    },
+    "km": 15,
+    "tripsCount": 68,
+    "frequencyMinutes": 10
+  },
+  {
+    "routeId": "AP2",
+    "busNumber": "AP2",
+    "routeName": "Upper Depot ⇆ Katraj Kondhwa Road",
+    "routeNameMr": "",
+    "origin": "Upper Depot",
+    "dest": "Katraj Kondhwa Road",
+    "originCoords": {
+      "lat": 18.4610450969899,
+      "lon": 73.8706265126975
+    },
+    "destCoords": {
+      "lat": 18.4475,
+      "lon": 73.85905
+    },
+    "headsigns": {
+      "dir0": [
+        "Katraj Kondhwa Road"
+      ],
+      "dir1": [
+        "Upper Depot"
+      ]
+    },
+    "km": 15,
+    "tripsCount": 56,
+    "frequencyMinutes": 10
+  },
+  {
+    "routeId": "B2",
+    "busNumber": "B2",
+    "routeName": "DY Patil College Charholi ⇆ Alandi",
+    "routeNameMr": "",
+    "origin": "DY Patil College Charholi",
+    "dest": "Alandi",
+    "originCoords": {
+      "lat": 18.619523,
+      "lon": 73.91232
+    },
+    "destCoords": {
+      "lat": 18.6748133205203,
+      "lon": 73.8971222018015
+    },
+    "headsigns": {
+      "dir0": [
+        "Alandi"
+      ],
+      "dir1": [
+        "DY Patil College Charholi"
+      ]
+    },
+    "km": 15,
+    "tripsCount": 16,
+    "frequencyMinutes": 15
+  },
+  {
+    "routeId": "H11",
+    "busNumber": "H11",
+    "routeName": "Sanket Vihar Lane No 18 ⇆ Hadapsar Gadital",
+    "routeNameMr": "",
+    "origin": "Sanket Vihar Lane No 18",
+    "dest": "Hadapsar Gadital",
+    "originCoords": {
+      "lat": 18.475451,
+      "lon": 73.94965
+    },
+    "destCoords": {
+      "lat": 18.500074,
+      "lon": 73.939214
+    },
+    "headsigns": {
+      "dir0": [
+        "Hadapsar Gadital"
+      ],
+      "dir1": [
+        "Sanket Vihar Lane No 18"
+      ]
+    },
+    "km": 15,
+    "tripsCount": 24,
+    "frequencyMinutes": 15
+  },
+  {
+    "routeId": "H3",
+    "busNumber": "H3",
+    "routeName": "Saswad Road Railway Station ⇆ Mantri Market Hadapsar",
+    "routeNameMr": "",
+    "origin": "Saswad Road Railway Station",
+    "dest": "Mantri Market Hadapsar",
+    "originCoords": {
+      "lat": 18.480251,
+      "lon": 73.944397
+    },
+    "destCoords": {
+      "lat": 18.499575,
+      "lon": 73.939592
+    },
+    "headsigns": {
+      "dir0": [
+        "Mantri Market Hadapsar"
+      ],
+      "dir1": [
+        "Saswad Road Railway Station"
+      ]
+    },
+    "km": 15,
+    "tripsCount": 56,
+    "frequencyMinutes": 10
+  },
+  {
+    "routeId": "H8",
+    "busNumber": "H8",
+    "routeName": "Fursungi ⇆ Hadapsar Gadital",
+    "routeNameMr": "",
+    "origin": "Fursungi",
+    "dest": "Hadapsar Gadital",
+    "originCoords": {
+      "lat": 18.47345,
+      "lon": 73.974899
+    },
+    "destCoords": {
+      "lat": 18.500074,
+      "lon": 73.939214
+    },
+    "headsigns": {
+      "dir0": [
+        "Hadapsar Gadital"
+      ],
+      "dir1": [
+        "Fursungi"
+      ]
+    },
+    "km": 15,
+    "tripsCount": 160,
+    "frequencyMinutes": 10
+  },
+  {
+    "routeId": "H9",
+    "busNumber": "H9",
+    "routeName": "Manjari Budruk ⇆ Hadapsar Gadital Solapur Road",
+    "routeNameMr": "",
+    "origin": "Manjari Budruk",
+    "dest": "Hadapsar Gadital Solapur Road",
+    "originCoords": {
+      "lat": 18.522499,
+      "lon": 73.984348
+    },
+    "destCoords": {
+      "lat": 18.500904,
+      "lon": 73.939136
+    },
+    "headsigns": {
+      "dir0": [
+        "Hadapsar Gadital Solapur Road"
+      ],
+      "dir1": [
+        "Manjari Budruk"
+      ]
+    },
+    "km": 15,
+    "tripsCount": 129,
+    "frequencyMinutes": 10
+  },
+  {
+    "routeId": "K11",
+    "busNumber": "K11",
+    "routeName": "Katraj ⇆ Jambhulwadi",
+    "routeNameMr": "",
+    "origin": "Katraj",
+    "dest": "Jambhulwadi",
+    "originCoords": {
+      "lat": 18.447356,
+      "lon": 73.858652
+    },
+    "destCoords": {
+      "lat": 18.428449,
+      "lon": 73.838352
+    },
+    "headsigns": {
+      "dir0": [
+        "Jambhulwadi"
+      ],
+      "dir1": [
+        "Katraj"
+      ]
+    },
+    "km": 15,
+    "tripsCount": 30,
+    "frequencyMinutes": 15
+  },
+  {
+    "routeId": "K12A",
+    "busNumber": "K12A",
+    "routeName": "Katraj ⇆ Nandanvan City Narhe",
+    "routeNameMr": "",
+    "origin": "Katraj",
+    "dest": "Nandanvan City Narhe",
+    "originCoords": {
+      "lat": 18.447356,
+      "lon": 73.858652
+    },
+    "destCoords": {
+      "lat": 18.4311585545601,
+      "lon": 73.8282367621759
+    },
+    "headsigns": {
+      "dir0": [
+        "Nandanvan City Narhe"
+      ],
+      "dir1": [
+        "Katraj"
+      ]
+    },
+    "km": 15,
+    "tripsCount": 15,
+    "frequencyMinutes": 15
+  },
+  {
+    "routeId": "K12",
+    "busNumber": "K12",
+    "routeName": "Katraj ⇆ Abhinav Collage Narhe",
+    "routeNameMr": "",
+    "origin": "Katraj",
+    "dest": "Abhinav Collage Narhe",
+    "originCoords": {
+      "lat": 18.447356,
+      "lon": 73.858652
+    },
+    "destCoords": {
+      "lat": 18.438101,
+      "lon": 73.828102
+    },
+    "headsigns": {
+      "dir0": [
+        "Abhinav Collage Narhe"
+      ],
+      "dir1": [
+        "Katraj"
+      ]
+    },
+    "km": 15,
+    "tripsCount": 37,
+    "frequencyMinutes": 15
+  },
+  {
+    "routeId": "K14",
+    "busNumber": "K14",
+    "routeName": "Gujarwadi ⇆ Katraj",
+    "routeNameMr": "",
+    "origin": "Gujarwadi",
+    "dest": "Katraj",
+    "originCoords": {
+      "lat": 18.426701,
+      "lon": 73.875702
+    },
+    "destCoords": {
+      "lat": 18.447356,
+      "lon": 73.858652
+    },
+    "headsigns": {
+      "dir0": [
+        "Katraj"
+      ],
+      "dir1": [
+        "Gujarwadi"
+      ]
+    },
+    "km": 15,
+    "tripsCount": 64,
+    "frequencyMinutes": 10
+  },
+  {
+    "routeId": "K16",
+    "busNumber": "K16",
+    "routeName": "Yewalewadi ⇆ Katraj",
+    "routeNameMr": "",
+    "origin": "Yewalewadi",
+    "dest": "Katraj",
+    "originCoords": {
+      "lat": 18.43715,
+      "lon": 73.896103
+    },
+    "destCoords": {
+      "lat": 18.447356,
+      "lon": 73.858652
+    },
+    "headsigns": {
+      "dir0": [
+        "Katraj"
+      ],
+      "dir1": [
+        "Yewalewadi"
+      ]
+    },
+    "km": 15,
+    "tripsCount": 55,
+    "frequencyMinutes": 10
+  },
+  {
+    "routeId": "K18",
+    "busNumber": "K18",
+    "routeName": "Katraj ⇆ Waghjai Nagar Shivaji Chowk",
+    "routeNameMr": "",
+    "origin": "Katraj",
+    "dest": "Waghjai Nagar Shivaji Chowk",
+    "originCoords": {
+      "lat": 18.447356,
+      "lon": 73.858652
+    },
+    "destCoords": {
+      "lat": 18.431822,
+      "lon": 73.849803
+    },
+    "headsigns": {
+      "dir0": [
+        "Waghjai Nagar Shivaji Chowk"
+      ],
+      "dir1": [
+        "Katraj"
+      ]
+    },
+    "km": 15,
+    "tripsCount": 36,
+    "frequencyMinutes": 15
+  },
+  {
+    "routeId": "K7",
+    "busNumber": "K7",
+    "routeName": "Sneha Vihar Dangat Patil Nagar ⇆ Deccan Gymkhana",
+    "routeNameMr": "",
+    "origin": "Sneha Vihar Dangat Patil Nagar",
+    "dest": "Deccan Gymkhana",
+    "originCoords": {
+      "lat": 18.46616,
+      "lon": 73.79081
+    },
+    "destCoords": {
+      "lat": 18.516006,
+      "lon": 73.842572
+    },
+    "headsigns": {
+      "dir0": [
+        "Deccan Gymkhana"
+      ],
+      "dir1": [
+        "Sneha Vihar Dangat Patil Nagar"
+      ]
+    },
+    "km": 15,
+    "tripsCount": 5,
+    "frequencyMinutes": 15
+  },
+  {
+    "routeId": "METRO SHUTTLE 13",
+    "busNumber": "METRO SHUTTLE 13",
+    "routeName": "Swargate ⇆ Upper Depot",
+    "routeNameMr": "",
+    "origin": "Swargate",
+    "dest": "Upper Depot",
+    "originCoords": {
+      "lat": 18.499524,
+      "lon": 73.858289
+    },
+    "destCoords": {
+      "lat": 18.4610450969899,
+      "lon": 73.8706265126975
+    },
+    "headsigns": {
+      "dir0": [
+        "Upper Depot"
+      ],
+      "dir1": [
+        "Swargate"
+      ]
+    },
+    "km": 15,
+    "tripsCount": 19,
+    "frequencyMinutes": 15
+  },
+  {
+    "routeId": "METRO SHUTTLE 17",
+    "busNumber": "METRO SHUTTLE 17",
+    "routeName": "Shivaji Nagar Civil Court Metro Station ⇆ Hadapsar Gadital",
+    "routeNameMr": "",
+    "origin": "Shivaji Nagar Civil Court Metro Station",
+    "dest": "Hadapsar Gadital",
+    "originCoords": {
+      "lat": 18.5271,
+      "lon": 73.857803
+    },
+    "destCoords": {
+      "lat": 18.500074,
+      "lon": 73.939214
+    },
+    "headsigns": {
+      "dir0": [
+        "Hadapsar Gadital"
+      ],
+      "dir1": [
+        "Shivaji Nagar Civil Court Metro Station"
+      ]
+    },
+    "km": 15,
+    "tripsCount": 12,
+    "frequencyMinutes": 15
+  },
+  {
+    "routeId": "METRO SHUTTLE 2",
+    "busNumber": "METRO SHUTTLE 2",
+    "routeName": "Ganpati Matha ⇆ Deccan Gymkhana",
+    "routeNameMr": "",
+    "origin": "Ganpati Matha",
+    "dest": "Deccan Gymkhana",
+    "originCoords": {
+      "lat": 18.475765,
+      "lon": 73.795812
+    },
+    "destCoords": {
+      "lat": 18.516006,
+      "lon": 73.842572
+    },
+    "headsigns": {
+      "dir0": [
+        "Deccan Gymkhana"
+      ],
+      "dir1": [
+        "Ganpati Matha"
+      ]
+    },
+    "km": 15,
+    "tripsCount": 28,
+    "frequencyMinutes": 15
+  },
+  {
+    "routeId": "METRO SHUTTLE 31",
+    "busNumber": "METRO SHUTTLE 31",
+    "routeName": "Kalewadi Phata ⇆ Pimpri Chowk Metro Station",
+    "routeNameMr": "",
+    "origin": "Kalewadi Phata",
+    "dest": "Pimpri Chowk Metro Station",
+    "originCoords": {
+      "lat": 18.604051,
+      "lon": 73.776965
+    },
+    "destCoords": {
+      "lat": 18.629299,
+      "lon": 73.803299
+    },
+    "headsigns": {
+      "dir0": [
+        "Pimpri Chowk Metro Station"
+      ],
+      "dir1": [
+        "Kalewadi Phata"
+      ]
+    },
+    "km": 15,
+    "tripsCount": 20,
+    "frequencyMinutes": 15
+  },
+  {
+    "routeId": "METRO SHUTTLE 32",
+    "busNumber": "METRO SHUTTLE 32",
+    "routeName": "Nigdi Bhakti Shakti ⇆ Nashik Phata",
+    "routeNameMr": "",
+    "origin": "Nigdi Bhakti Shakti",
+    "dest": "Nashik Phata",
+    "originCoords": {
+      "lat": 18.66601,
+      "lon": 73.771041
+    },
+    "destCoords": {
+      "lat": 18.608292,
+      "lon": 73.821097
+    },
+    "headsigns": {
+      "dir0": [
+        "Nashik Phata"
+      ],
+      "dir1": [
+        "Nigdi Bhakti Shakti"
+      ]
+    },
+    "km": 15,
+    "tripsCount": 12,
+    "frequencyMinutes": 15
+  },
+  {
+    "routeId": "N15",
+    "busNumber": "N15",
+    "routeName": "Rupee Nagar ⇆ Nigdi Pawale Chowk",
+    "routeNameMr": "",
+    "origin": "Rupee Nagar",
+    "dest": "Nigdi Pawale Chowk",
+    "originCoords": {
+      "lat": 18.6766,
+      "lon": 73.782353
+    },
+    "destCoords": {
+      "lat": 18.659678,
+      "lon": 73.776964
+    },
+    "headsigns": {
+      "dir0": [
+        "Nigdi Pawale Chowk"
+      ],
+      "dir1": [
+        "Rupee Nagar"
+      ]
+    },
+    "km": 15,
+    "tripsCount": 43,
+    "frequencyMinutes": 10
+  },
+  {
+    "routeId": "N16",
+    "busNumber": "N16",
+    "routeName": "Nageshwar Vidyalaya Chikhli ⇆ Akurdi Khandoba Maal",
+    "routeNameMr": "",
+    "origin": "Nageshwar Vidyalaya Chikhli",
+    "dest": "Akurdi Khandoba Maal",
+    "originCoords": {
+      "lat": 18.690947,
+      "lon": 73.808123
+    },
+    "destCoords": {
+      "lat": 18.650951,
+      "lon": 73.786251
+    },
+    "headsigns": {
+      "dir0": [
+        "Akurdi Khandoba Maal"
+      ],
+      "dir1": [
+        "Nageshwar Vidyalaya Chikhli"
+      ]
+    },
+    "km": 15,
+    "tripsCount": 10,
+    "frequencyMinutes": 15
+  },
+  {
+    "routeId": "P13",
+    "busNumber": "P13",
+    "routeName": "Walhekarwadi ⇆ Pimpri Chowk Metro Station",
+    "routeNameMr": "",
+    "origin": "Walhekarwadi",
+    "dest": "Pimpri Chowk Metro Station",
+    "originCoords": {
+      "lat": 18.634991,
+      "lon": 73.762219
+    },
+    "destCoords": {
+      "lat": 18.629299,
+      "lon": 73.803299
+    },
+    "headsigns": {
+      "dir0": [
+        "Pimpri Chowk Metro Station"
+      ],
+      "dir1": [
+        "Walhekarwadi"
+      ]
+    },
+    "km": 15,
+    "tripsCount": 20,
+    "frequencyMinutes": 15
+  },
+  {
+    "routeId": "RATRANI 1",
+    "busNumber": "RATRANI 1",
+    "routeName": "Mariaai Gate Navin St Stand ⇆ Katraj",
+    "routeNameMr": "",
+    "origin": "Mariaai Gate Navin St Stand",
+    "dest": "Katraj",
+    "originCoords": {
+      "lat": 18.543133,
+      "lon": 73.851652
+    },
+    "destCoords": {
+      "lat": 18.447356,
+      "lon": 73.858652
+    },
+    "headsigns": {
+      "dir0": [
+        "Katraj"
+      ],
+      "dir1": [
+        "Mariaai Gate Navin St Stand"
+      ]
+    },
+    "km": 15,
+    "tripsCount": 15,
+    "frequencyMinutes": 15
+  },
+  {
+    "routeId": "RATRANI 2",
+    "busNumber": "RATRANI 2",
+    "routeName": "Pune Station Moledina Stand ⇆ Katraj",
+    "routeNameMr": "",
+    "origin": "Pune Station Moledina Stand",
+    "dest": "Katraj",
+    "originCoords": {
+      "lat": 18.5274938375007,
+      "lon": 73.8732022472692
+    },
+    "destCoords": {
+      "lat": 18.447356,
+      "lon": 73.858652
+    },
+    "headsigns": {
+      "dir0": [
+        "Katraj"
+      ],
+      "dir1": [
+        "Pune Station Moledina Stand"
+      ]
+    },
+    "km": 15,
+    "tripsCount": 15,
+    "frequencyMinutes": 15
+  },
+  {
+    "routeId": "RATRANI 3",
+    "busNumber": "RATRANI 3",
+    "routeName": "Hadapsar Gadital ⇆ Swargate",
+    "routeNameMr": "",
+    "origin": "Hadapsar Gadital",
+    "dest": "Swargate",
+    "originCoords": {
+      "lat": 18.500074,
+      "lon": 73.939214
+    },
+    "destCoords": {
+      "lat": 18.499524,
+      "lon": 73.858289
+    },
+    "headsigns": {
+      "dir0": [
+        "Swargate"
+      ],
+      "dir1": [
+        "Hadapsar Gadital"
+      ]
+    },
+    "km": 15,
+    "tripsCount": 15,
+    "frequencyMinutes": 15
+  },
+  {
+    "routeId": "RATRANI 4",
+    "busNumber": "RATRANI 4",
+    "routeName": "Pune Station St. Helena'S Stand ⇆ Hadapsar Gadital",
+    "routeNameMr": "",
+    "origin": "Pune Station St. Helena'S Stand",
+    "dest": "Hadapsar Gadital",
+    "originCoords": {
+      "lat": 18.5244,
+      "lon": 73.871952
+    },
+    "destCoords": {
+      "lat": 18.500074,
+      "lon": 73.939214
+    },
+    "headsigns": {
+      "dir0": [
+        "Hadapsar Gadital"
+      ],
+      "dir1": [
+        "Pune Station St. Helena'S Stand"
+      ]
+    },
+    "km": 15,
+    "tripsCount": 16,
+    "frequencyMinutes": 15
+  },
+  {
+    "routeId": "RATRANI 7",
+    "busNumber": "RATRANI 7",
+    "routeName": "Nda 10 No. Gate ⇆ Pune Station Moledina Stand",
+    "routeNameMr": "",
+    "origin": "Nda 10 No. Gate",
+    "dest": "Pune Station Moledina Stand",
+    "originCoords": {
+      "lat": 18.449328,
+      "lon": 73.763056
+    },
+    "destCoords": {
+      "lat": 18.5274938375007,
+      "lon": 73.8732022472692
+    },
+    "headsigns": {
+      "dir0": [
+        "Pune Station Moledina Stand"
+      ],
+      "dir1": [
+        "Nda 10 No. Gate"
+      ]
+    },
+    "km": 15,
+    "tripsCount": 15,
+    "frequencyMinutes": 15
+  }
+]
