@@ -1,18 +1,6 @@
 import { PMPMLBusRoute } from '../types';
-import pmpmlOfficialRoutesData from './pmpmlOfficialRoutes.json';
 import pmpmlGtfsRoutesData from './pmpmlGtfsRoutes.json';
 import pmpmlStopsData from './pmpmlStops.json';
-
-export interface OfficialPMPMLRouteRecord {
-  routeId: string;
-  busNumber: string;
-  direction: 'D' | 'U' | 'R' | 'other';
-  origin: string;
-  dest: string;
-  desc: string;
-  descMr: string;
-  km: number;
-}
 
 export interface PMPMLGtfsRouteRecord {
   routeId: string;
@@ -39,7 +27,6 @@ export interface PMPMLStopRecord {
   lon: number;
 }
 
-export const OFFICIAL_PMPML_ROUTES: OfficialPMPMLRouteRecord[] = pmpmlOfficialRoutesData as OfficialPMPMLRouteRecord[];
 export const PMPML_GTFS_ROUTES: PMPMLGtfsRouteRecord[] = pmpmlGtfsRoutesData as PMPMLGtfsRouteRecord[];
 export const PMPML_STOPS: PMPMLStopRecord[] = pmpmlStopsData as PMPMLStopRecord[];
 
@@ -1079,56 +1066,7 @@ export function findMatchingPMPMLBusRoute(
     };
   }
 
-  // 2. SECOND PRIORITY: Direct match from Official 1,030 PMPML Catalog
-  const directOfficial = OFFICIAL_PMPML_ROUTES.find(
-    (r) =>
-      terminalMatchesQuery(r.origin, originName, oKeys) &&
-      terminalMatchesQuery(r.dest, destName, dKeys)
-  );
-
-  if (directOfficial) {
-    const curatedMatch = PMPML_BUS_ROUTES.find(
-      (c) => c.busNumber.toLowerCase() === directOfficial.busNumber.toLowerCase()
-    );
-
-    const stopsSegment: string[] = curatedMatch
-      ? curatedMatch.viaStops
-      : getStopsAlongCorridor(
-          directOfficial.origin,
-          directOfficial.dest,
-          originCoords,
-          destCoords
-        );
-
-    const isNight = directOfficial.routeId.includes('NGT') || directOfficial.desc.toLowerCase().includes('night');
-    const isIntercity = directOfficial.km > 25 || directOfficial.desc.toLowerCase().includes('intercity');
-
-    const matchedRoute: PMPMLBusRoute = {
-      busNumber: directOfficial.busNumber,
-      routeName: directOfficial.desc,
-      routeNameMr: directOfficial.descMr,
-      originTerminal: directOfficial.origin,
-      destinationTerminal: directOfficial.dest,
-      viaStops: stopsSegment,
-      frequencyMinutes: directOfficial.km > 30 ? 15 : 12,
-      operatingHours: isNight ? '11:00 PM – 05:00 AM' : '05:30 AM – 11:15 PM',
-      isIntercity,
-      approxDistanceKm: directOfficial.km,
-      officialRouteId: directOfficial.routeId,
-    };
-
-    return {
-      matchedRoute,
-      boardingStop: directOfficial.origin,
-      exitStop: directOfficial.dest,
-      stopsSegment,
-      officialKm: directOfficial.km,
-      officialRouteId: directOfficial.routeId,
-      marathiDescription: directOfficial.descMr,
-    };
-  }
-
-  // 3. THIRD PRIORITY: Check curated corridor routes with viaStops scoring
+  // 2. SECOND PRIORITY: Check curated corridor routes with viaStops scoring
   let bestCuratedMatch: {
     matchedRoute: PMPMLBusRoute;
     boardingStop: string;
@@ -1193,36 +1131,24 @@ export function findMatchingPMPMLBusRoute(
     };
   }
 
-  // 4. FOURTH PRIORITY: 1-Transfer connection via Official PMPML Catalog
+  // 3. THIRD PRIORITY: 1-Transfer connection via Official GTFS Routes
   for (const hub of MAJOR_HUBS) {
     const hubKeys = extractLocalityKeys(hub.name);
-    const leg1 =
-      PMPML_GTFS_ROUTES.find(
-        (r) =>
-          terminalMatchesQuery(r.origin, originName, oKeys) &&
-          terminalMatchesQuery(r.dest, hub.name, hubKeys)
-      ) ||
-      OFFICIAL_PMPML_ROUTES.find(
-        (r) =>
-          terminalMatchesQuery(r.origin, originName, oKeys) &&
-          terminalMatchesQuery(r.dest, hub.name, hubKeys)
-      );
+    const leg1 = PMPML_GTFS_ROUTES.find(
+      (r) =>
+        terminalMatchesQuery(r.origin, originName, oKeys) &&
+        terminalMatchesQuery(r.dest, hub.name, hubKeys)
+    );
 
-    const leg2 =
-      PMPML_GTFS_ROUTES.find(
-        (r) =>
-          terminalMatchesQuery(r.origin, hub.name, hubKeys) &&
-          terminalMatchesQuery(r.dest, destName, dKeys)
-      ) ||
-      OFFICIAL_PMPML_ROUTES.find(
-        (r) =>
-          terminalMatchesQuery(r.origin, hub.name, hubKeys) &&
-          terminalMatchesQuery(r.dest, destName, dKeys)
-      );
+    const leg2 = PMPML_GTFS_ROUTES.find(
+      (r) =>
+        terminalMatchesQuery(r.origin, hub.name, hubKeys) &&
+        terminalMatchesQuery(r.dest, destName, dKeys)
+    );
 
     if (leg1 && leg2 && leg1.busNumber !== leg2.busNumber) {
-      const leg1Km = (leg1 as any).km || 10;
-      const leg2Km = (leg2 as any).km || 10;
+      const leg1Km = leg1.km || 10;
+      const leg2Km = leg2.km || 10;
       const totalKm = +(leg1Km + leg2Km).toFixed(1);
       const combinedStops = [
         leg1.origin,
@@ -1233,7 +1159,7 @@ export function findMatchingPMPMLBusRoute(
       const synthesizedRoute: PMPMLBusRoute = {
         busNumber: `${leg1.busNumber} ➔ ${leg2.busNumber}`,
         routeName: `${leg1.origin} ➔ ${leg2.dest} (via ${hub.name})`,
-        routeNameMr: `${(leg1 as any).descMr || ''} + ${(leg2 as any).descMr || ''}`,
+        routeNameMr: `${leg1.routeNameMr || ''} + ${leg2.routeNameMr || ''}`,
         originTerminal: leg1.origin,
         destinationTerminal: leg2.dest,
         viaStops: combinedStops,
@@ -1253,7 +1179,7 @@ export function findMatchingPMPMLBusRoute(
         firstBusNumber: leg1.busNumber,
         secondBusNumber: leg2.busNumber,
         officialKm: totalKm,
-        marathiDescription: `${(leg1 as any).descMr || ''} + ${(leg2 as any).descMr || ''}`,
+        marathiDescription: `${leg1.routeNameMr || ''} + ${leg2.routeNameMr || ''}`,
       };
     }
   }

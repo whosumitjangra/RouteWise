@@ -344,55 +344,49 @@ assert.strictEqual(expandedCard, null, "All cards must reset to wrapped up state
 assert.strictEqual(staticMapSide, 'left', "Map side must remain statically on the left");
 console.log("✔ New search state sync & card wrap reset verified");
 
-// Test 14: Official PMPML Routes Catalog Integrity & Corridor Accuracy
+// Test 14: Official PMPML GTFS Routes Catalog Integrity & Corridor Accuracy
 import fs from 'node:fs';
-const officialRoutes = JSON.parse(fs.readFileSync(new URL('../src/config/pmpmlOfficialRoutes.json', import.meta.url), 'utf-8'));
+const gtfsRoutes = JSON.parse(fs.readFileSync(new URL('../src/config/pmpmlGtfsRoutes.json', import.meta.url), 'utf-8'));
 
-assert.strictEqual(officialRoutes.length, 1030, "Official PMPML dataset must contain 1,030 routes");
+assert.strictEqual(gtfsRoutes.length, 309, "Official PMPML GTFS dataset must contain 309 routes");
 
 // Verify direct high-profile corridors
-const hinjawadiManapa = officialRoutes.find(r => r.routeId === '100-D');
-assert.ok(hinjawadiManapa, "Route 100-D must exist");
+const hinjawadiManapa = gtfsRoutes.find(r => r.busNumber === '100');
+assert.ok(hinjawadiManapa, "Route 100 must exist");
 assert.strictEqual(hinjawadiManapa.busNumber, '100');
-assert.strictEqual(hinjawadiManapa.km, 26.4);
+assert.strictEqual(hinjawadiManapa.origin, 'Hinjawadi Maan Phase 3');
+assert.strictEqual(hinjawadiManapa.dest, 'Ma Na Pa Dengle Pul Nadikathi');
 
-const hinjawadiStation = officialRoutes.find(r => r.routeId === '115P-D');
-assert.ok(hinjawadiStation, "Route 115P-D must exist");
-assert.strictEqual(hinjawadiStation.busNumber, '115P');
-assert.strictEqual(hinjawadiStation.km, 29);
+const hinjawadiStation = gtfsRoutes.find(r => r.busNumber === '115');
+assert.ok(hinjawadiStation, "Route 115 must exist");
+assert.strictEqual(hinjawadiStation.busNumber, '115');
+assert.strictEqual(hinjawadiStation.origin, 'Hinjawadi Maan Phase 3');
+assert.strictEqual(hinjawadiStation.dest, 'Pune Station Moledina Stand');
 
-const kothrudKatraj = officialRoutes.find(r => r.routeId === '103-D');
-assert.ok(kothrudKatraj, "Route 103-D must exist");
-assert.strictEqual(kothrudKatraj.km, 14.3);
+const kothrudKatraj = gtfsRoutes.find(r => r.busNumber === '103');
+assert.ok(kothrudKatraj, "Route 103 must exist");
+assert.strictEqual(kothrudKatraj.origin, 'Kothrud Depot');
+assert.strictEqual(kothrudKatraj.dest, 'Katraj');
 
-const swargateKatraj = officialRoutes.find(r => r.routeId === '103B-D');
-assert.ok(swargateKatraj, "Route 103B-D must exist");
-assert.strictEqual(swargateKatraj.km, 6.1);
+const niraHadapsar = gtfsRoutes.find(r => r.busNumber === '213');
+assert.ok(niraHadapsar, "Route 213 must exist");
+assert.strictEqual(niraHadapsar.dest, 'Hadapsar Gadital');
 
-const vjr1 = officialRoutes.find(r => r.routeId === 'VJR1-D');
-assert.ok(vjr1, "Route VJR1-D must exist");
-assert.strictEqual(vjr1.km, 21.7);
+const karegaonWagholi = gtfsRoutes.find(r => r.busNumber === '161');
+assert.ok(karegaonWagholi, "Route 161 must exist");
 
-const vimanKatraj = officialRoutes.find(r => r.routeId === '213-D');
-assert.ok(vimanKatraj, "Route 213-D must exist");
-assert.strictEqual(vimanKatraj.km, 21.9);
+console.log("✔ Official PMPML GTFS dataset corridor verification passed (100, 115, 103, 161, 213)");
 
-const vimanWarje = officialRoutes.find(r => r.routeId === '161-D');
-assert.ok(vimanWarje, "Route 161-D must exist");
-assert.strictEqual(vimanWarje.km, 23);
+// Test 15: Specialized Transit Fleets Verification (Metro Shuttles, Ratrani Night Fleets, Area Feeders)
+const metroShuttles = gtfsRoutes.filter(r => r.busNumber.startsWith('METRO SHUTTLE'));
+const ratraniFleet = gtfsRoutes.filter(r => r.busNumber.startsWith('RATRANI'));
+const feederRoutes = gtfsRoutes.filter(r => /^[A-Z]\d+/.test(r.busNumber));
 
-console.log("✔ Official PMPML dataset corridor verification passed (100, 115P, 103, 103B, VJR1, 213, 161)");
+assert.ok(metroShuttles.length >= 5, "Catalog must contain official Metro Shuttle feeder routes");
+assert.ok(ratraniFleet.length >= 5, "Catalog must contain official Ratrani night service routes");
+assert.ok(feederRoutes.length >= 10, "Catalog must contain feeder routes (AP, B, H, K, N, P)");
 
-// Test 15: Specialized Transit Fleets Verification (VJR, NGT, Ring)
-const vjrFleet = officialRoutes.filter(r => r.routeId.includes('VJR'));
-const ngtFleet = officialRoutes.filter(r => r.routeId.includes('NGT'));
-const ringRoutes = officialRoutes.filter(r => r.direction === 'R');
-
-assert.strictEqual(vjrFleet.length, 13, "Catalog must contain 13 VJR ring & express connector routes");
-assert.strictEqual(ngtFleet.length, 18, "Catalog must contain 18 NGT night service routes");
-assert.strictEqual(ringRoutes.length, 8, "Catalog must contain 8 circular ring routes");
-
-console.log("✔ Specialized fleets (13 VJR routes, 18 NGT routes, 8 Circular routes) verified");
+console.log("✔ Specialized fleets (Metro Shuttles, Ratrani night services, Area Feeders) verified");
 
 // Test 16: FC Road (Fergusson College), Deccan Corridor Resolution
 function getNearestMetroStationName(point) {
