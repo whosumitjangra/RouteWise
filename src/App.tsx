@@ -52,7 +52,7 @@ export default function App() {
   // Sidebar & Views
   const [activeSidebarTab, setActiveSidebarTab] = useState('home');
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [mobileView, setMobileView] = useState<'search' | 'map' | 'routes'>('routes');
+  const [mobileView, setMobileView] = useState<'search' | 'map' | 'routes'>('search');
   const [isSavedDrawerOpen, setIsSavedDrawerOpen] = useState(false);
   const [isHistoryDrawerOpen, setIsHistoryDrawerOpen] = useState(false);
 
@@ -220,7 +220,7 @@ export default function App() {
   };
 
   return (
-    <div className="h-screen w-screen overflow-hidden bg-[#f8fafc] text-zinc-900 flex flex-col font-sans">
+    <div className="h-[100dvh] w-full max-w-full overflow-hidden bg-[#f8fafc] text-zinc-900 flex flex-col font-sans">
       
       {/* Update Available Notification Banner */}
       <UpdateNotificationBanner updateInfo={updateInfo} />
@@ -230,7 +230,7 @@ export default function App() {
         <div className="flex items-center gap-2.5">
           <button
             onClick={() => setIsMobileMenuOpen(true)}
-            className="p-1 rounded-lg text-zinc-600 hover:text-zinc-900 hover:bg-zinc-100"
+            className="p-1.5 rounded-lg text-zinc-600 hover:text-zinc-900 hover:bg-zinc-100 cursor-pointer"
           >
             <Menu className="w-5 h-5" />
           </button>
@@ -238,7 +238,7 @@ export default function App() {
             <div className="w-7 h-7 rounded-full bg-[#0d5c46] flex items-center justify-center text-white">
               <MapPin className="w-4 h-4 fill-white/20" />
             </div>
-            <span className="font-extrabold text-base text-zinc-900 tracking-tight">PathWise</span>
+            <span className="font-extrabold text-base text-zinc-900 tracking-tight">BudWay</span>
           </div>
         </div>
 
@@ -246,24 +246,24 @@ export default function App() {
         <div className="flex items-center gap-1 p-1 bg-zinc-100 rounded-xl text-xs font-semibold">
           <button
             onClick={() => setMobileView('search')}
-            className={`px-2.5 py-1 rounded-lg transition-all ${
-              mobileView === 'search' ? 'bg-white text-zinc-950 shadow-2xs' : 'text-zinc-500'
+            className={`px-2.5 py-1 rounded-lg transition-all cursor-pointer ${
+              mobileView === 'search' ? 'bg-white text-zinc-950 shadow-2xs font-bold' : 'text-zinc-500'
             }`}
           >
             Search
           </button>
           <button
             onClick={() => setMobileView('map')}
-            className={`px-2.5 py-1 rounded-lg transition-all ${
-              mobileView === 'map' ? 'bg-white text-zinc-950 shadow-2xs' : 'text-zinc-500'
+            className={`px-2.5 py-1 rounded-lg transition-all cursor-pointer ${
+              mobileView === 'map' ? 'bg-white text-zinc-950 shadow-2xs font-bold' : 'text-zinc-500'
             }`}
           >
             Map
           </button>
           <button
             onClick={() => setMobileView('routes')}
-            className={`px-2.5 py-1 rounded-lg transition-all ${
-              mobileView === 'routes' ? 'bg-white text-zinc-950 shadow-2xs' : 'text-zinc-500'
+            className={`px-2.5 py-1 rounded-lg transition-all cursor-pointer ${
+              mobileView === 'routes' ? 'bg-white text-zinc-950 shadow-2xs font-bold' : 'text-zinc-500'
             }`}
           >
             Routes
@@ -331,6 +331,8 @@ export default function App() {
             selectedRouteId={selectedRouteId}
             onSelectRoute={(id) => setSelectedRouteId(id)}
             focusedLocation={focusedLocation}
+            isVisible={mobileView === 'map'}
+            onViewRoutesMobile={() => setMobileView('routes')}
             onSetOrigin={(loc) => {
               setOrigin(loc);
               setFocusedLocation(null);
@@ -363,10 +365,51 @@ export default function App() {
             onOpenFareDetails={(route) => setFareModalRoute(route)}
             onSwapLocations={handleSwap}
             onBackMobile={() => setMobileView('search')}
+            onViewOnMapMobile={() => setMobileView('map')}
           />
         </div>
 
       </div>
+
+      {/* Mobile Bottom Navigation Bar (Visible on < lg) */}
+      <nav className="lg:hidden bg-white/95 backdrop-blur-md border-t border-zinc-200/90 py-2.5 px-6 flex items-center justify-around shrink-0 z-30 shadow-lg">
+        <button
+          onClick={() => setMobileView('search')}
+          className={`flex flex-col items-center gap-1 transition-all cursor-pointer ${
+            mobileView === 'search' ? 'text-[#0d5c46] font-bold scale-105' : 'text-zinc-400 font-medium'
+          }`}
+        >
+          <Search className="w-5 h-5" />
+          <span className="text-[10px]">Find Places</span>
+        </button>
+
+        <button
+          onClick={() => setMobileView('map')}
+          className={`flex flex-col items-center gap-1 transition-all cursor-pointer ${
+            mobileView === 'map' ? 'text-[#0d5c46] font-bold scale-105' : 'text-zinc-400 font-medium'
+          }`}
+        >
+          <MapIcon className="w-5 h-5" />
+          <span className="text-[10px]">Map View</span>
+        </button>
+
+        <button
+          onClick={() => setMobileView('routes')}
+          className={`flex flex-col items-center gap-1 relative transition-all cursor-pointer ${
+            mobileView === 'routes' ? 'text-[#0d5c46] font-bold scale-105' : 'text-zinc-400 font-medium'
+          }`}
+        >
+          <div className="relative">
+            <ListFilter className="w-5 h-5" />
+            {routes.length > 0 && (
+              <span className="absolute -top-1 -right-2 w-4 h-4 rounded-full bg-[#10b981] text-white text-[9px] font-bold flex items-center justify-center">
+                {routes.filter((r) => r.isFeasible).length}
+              </span>
+            )}
+          </div>
+          <span className="text-[10px]">Route Options</span>
+        </button>
+      </nav>
 
       {/* Fare Calculation Breakdown Modal */}
       <FareModal

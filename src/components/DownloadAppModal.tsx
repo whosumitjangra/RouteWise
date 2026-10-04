@@ -26,7 +26,7 @@ export const DownloadAppModal: React.FC<DownloadAppModalProps> = ({ isOpen, onCl
               <Smartphone className="w-4 h-4" />
             </div>
             <div>
-              <h3 className="text-sm font-bold text-zinc-900 tracking-tight">RouteWise Android APK</h3>
+              <h3 className="text-sm font-bold text-zinc-900 tracking-tight">BudWay Android APK</h3>
               <p className="text-[11px] text-zinc-500">Standalone offline-capable mobile build</p>
             </div>
           </div>
@@ -60,11 +60,11 @@ export const DownloadAppModal: React.FC<DownloadAppModalProps> = ({ isOpen, onCl
             <div className="flex flex-col sm:flex-row items-center gap-3 pt-1">
               <a
                 href={apkDownloadUrl}
-                download="RouteWise.apk"
+                download="BudWay.apk"
                 className="w-full sm:w-auto flex-1 inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-zinc-900 hover:bg-zinc-800 text-white rounded-lg text-xs font-semibold shadow-sm transition-colors"
               >
                 <Download className="w-4 h-4 text-emerald-400" />
-                <span>Download RouteWise.apk</span>
+                <span>Download BudWay.apk</span>
               </a>
 
               <a
@@ -84,7 +84,7 @@ export const DownloadAppModal: React.FC<DownloadAppModalProps> = ({ isOpen, onCl
             <div className="flex flex-col items-center justify-center p-2 bg-white rounded-lg border border-zinc-200/80 shadow-2xs">
               <img 
                 src={qrCodeUrl} 
-                alt="QR Code to download RouteWise.apk" 
+                alt="QR Code to download BudWay.apk" 
                 className="w-24 h-24 rounded"
                 loading="lazy"
               />
@@ -107,7 +107,7 @@ export const DownloadAppModal: React.FC<DownloadAppModalProps> = ({ isOpen, onCl
                 </li>
                 <li className="flex items-start gap-1.5">
                   <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0 mt-0.5" />
-                  <span><strong>3. Run:</strong> Tap Install & enjoy RouteWise right on your home screen!</span>
+                  <span><strong>3. Run:</strong> Tap Install & enjoy BudWay right on your home screen!</span>
                 </li>
               </ul>
             </div>

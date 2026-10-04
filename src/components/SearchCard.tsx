@@ -818,7 +818,7 @@ export const SearchCard: React.FC<SearchCardProps> = ({
               </span>
             </div>
             <p className="text-[11px] text-amber-900/90 leading-relaxed">
-              RouteWise multimodal transit is currently operational across Pune. We are reaching {activeOutOfTownCity} soon!
+              BudWay multimodal transit is currently operational across Pune. We are reaching {activeOutOfTownCity} soon!
             </p>
           </div>
         )}

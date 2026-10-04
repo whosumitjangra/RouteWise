@@ -19,14 +19,14 @@ export const UpdateNotificationBanner: React.FC<UpdateNotificationBannerProps> =
         <div className="flex items-center gap-2 min-w-0">
           <ArrowUpCircle className="w-4 h-4 text-emerald-200 shrink-0 animate-pulse" />
           <span className="font-medium truncate">
-            <strong>Update Available:</strong> RouteWise {updateInfo.latestVersion} is out!
+            <strong>Update Available:</strong> BudWay {updateInfo.latestVersion} is out!
           </span>
         </div>
 
         <div className="flex items-center gap-2 shrink-0">
           <a
             href={updateInfo.downloadUrl}
-            download="RouteWise.apk"
+            download="BudWay.apk"
             className="inline-flex items-center gap-1 px-2.5 py-1 bg-white text-emerald-950 font-bold rounded-md hover:bg-emerald-50 transition-colors shadow-2xs text-[11px]"
           >
             <Download className="w-3 h-3 text-emerald-700" />

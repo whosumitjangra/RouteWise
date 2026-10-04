@@ -24,6 +24,7 @@ interface RouteOptionsPanelProps {
   onOpenFareDetails?: (route: RouteOption) => void;
   onSwapLocations?: () => void;
   onBackMobile?: () => void;
+  onViewOnMapMobile?: () => void;
 }
 
 export const RouteOptionsPanel: React.FC<RouteOptionsPanelProps> = ({
@@ -35,6 +36,7 @@ export const RouteOptionsPanel: React.FC<RouteOptionsPanelProps> = ({
   onOpenFareDetails,
   onSwapLocations,
   onBackMobile,
+  onViewOnMapMobile,
 }) => {
   // Derive key stats across routes
   const feasibleRoutes = routes.filter((r) => r.isFeasible);
@@ -55,20 +57,33 @@ export const RouteOptionsPanel: React.FC<RouteOptionsPanelProps> = ({
   const cabRoute = routes.find((r) => r.mode === 'cab') || routes[3];
 
   return (
-    <div className="w-full lg:w-[380px] shrink-0 bg-white border-l border-zinc-200/80 flex flex-col h-full overflow-y-auto p-5 space-y-4">
+    <div className="w-full lg:w-[380px] shrink-0 bg-white border-l border-zinc-200/80 flex flex-col h-full overflow-y-auto p-5 pb-32 sm:pb-6 space-y-4">
       
       {/* 1. Top Header with Back Arrow and Title */}
-      <div className="flex items-center gap-3">
-        <button
-          type="button"
-          onClick={onBackMobile}
-          className="p-1 rounded-lg text-zinc-500 hover:text-zinc-900 hover:bg-zinc-100 transition-colors cursor-pointer"
-        >
-          <ArrowLeft className="w-5 h-5" />
-        </button>
-        <h2 className="text-base font-bold text-zinc-900 tracking-tight">
-          Route Options
-        </h2>
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-3">
+          <button
+            type="button"
+            onClick={onBackMobile}
+            className="p-1 rounded-lg text-zinc-500 hover:text-zinc-900 hover:bg-zinc-100 transition-colors cursor-pointer"
+            title="Back to search"
+          >
+            <ArrowLeft className="w-5 h-5" />
+          </button>
+          <h2 className="text-base font-bold text-zinc-900 tracking-tight">
+            Route Options
+          </h2>
+        </div>
+        {onViewOnMapMobile && (
+          <button
+            type="button"
+            onClick={onViewOnMapMobile}
+            className="lg:hidden px-3 py-1.5 rounded-lg bg-[#0d5c46] text-white text-xs font-bold flex items-center gap-1.5 shadow-2xs hover:bg-[#094232] transition-colors"
+          >
+            <span>🗺️</span>
+            <span>View Map</span>
+          </button>
+        )}
       </div>
 
       {/* 2. Origin & Destination Corridor Bar with Swap */}

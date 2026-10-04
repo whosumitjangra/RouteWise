@@ -16,6 +16,8 @@ interface MapViewProps {
   onSetOrigin?: (loc: LocationPoint) => void;
   onSetDestination?: (loc: LocationPoint) => void;
   onSelectSearchLocation?: (loc: LocationPoint) => void;
+  isVisible?: boolean;
+  onViewRoutesMobile?: () => void;
 }
 
 export const MapView: React.FC<MapViewProps> = ({
@@ -28,6 +30,8 @@ export const MapView: React.FC<MapViewProps> = ({
   onSetOrigin,
   onSetDestination,
   onSelectSearchLocation,
+  isVisible,
+  onViewRoutesMobile,
 }) => {
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const mapInstanceRef = useRef<L.Map | null>(null);
@@ -59,7 +63,7 @@ export const MapView: React.FC<MapViewProps> = ({
       mapInstanceRef.current?.invalidateSize();
     }, 150);
     return () => clearTimeout(timer);
-  }, [selectedRouteId]);
+  }, [selectedRouteId, isVisible]);
 
   // Center and fly to focused location when selected from search
   useEffect(() => {
@@ -481,8 +485,12 @@ export const MapView: React.FC<MapViewProps> = ({
       </div>
 
       {/* 2. Floating Bottom-Left Trip Summary Card matching screenshot */}
-      <div className="absolute bottom-5 left-5 z-20 pointer-events-auto">
-        <div className="bg-white rounded-xl shadow-lg border border-zinc-200/80 p-3 min-w-[210px] flex items-center justify-between gap-4">
+      <div 
+        onClick={onViewRoutesMobile}
+        className="absolute bottom-5 left-5 z-20 pointer-events-auto cursor-pointer group"
+        title="Tap to view route details"
+      >
+        <div className="bg-white rounded-xl shadow-lg border border-zinc-200/80 p-3 min-w-[210px] flex items-center justify-between gap-4 group-hover:border-[#0d5c46] transition-all">
           <div className="space-y-1">
             <div className="flex items-center gap-2 text-xs font-bold text-zinc-900">
               <span className="w-2 h-2 rounded-full bg-emerald-600 shrink-0" />
@@ -499,6 +507,20 @@ export const MapView: React.FC<MapViewProps> = ({
           </div>
         </div>
       </div>
+
+      {/* Mobile Floating "View Routes" Center Pill */}
+      {onViewRoutesMobile && (
+        <div className="lg:hidden absolute bottom-5 left-1/2 -translate-x-1/2 z-30 pointer-events-auto">
+          <button
+            type="button"
+            onClick={onViewRoutesMobile}
+            className="px-4 py-2.5 rounded-full bg-[#0d5c46] hover:bg-[#094232] text-white shadow-xl text-xs font-bold flex items-center gap-1.5 transition-transform active:scale-95"
+          >
+            <span>📋</span>
+            <span>View Routes</span>
+          </button>
+        </div>
+      )}
 
       {/* 3. Floating Bottom-Right Map Controls matching screenshot */}
       <div className="absolute bottom-5 right-5 z-20 pointer-events-auto flex flex-col gap-2">

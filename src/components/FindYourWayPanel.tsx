@@ -257,7 +257,7 @@ export const FindYourWayPanel: React.FC<FindYourWayPanelProps> = ({
     : budgetOptions.find((b) => b.value === budget)?.label || `₹${budget}`;
 
   return (
-    <div className="w-full lg:w-[350px] shrink-0 bg-white border-r border-zinc-200/80 flex flex-col h-full overflow-y-auto p-5 space-y-6">
+    <div className="w-full lg:w-[350px] shrink-0 bg-white border-r border-zinc-200/80 flex flex-col h-full overflow-y-auto p-5 pb-32 sm:pb-8 space-y-6">
       
       {/* 1. Header */}
       <div className="space-y-1">

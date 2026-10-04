@@ -39,7 +39,7 @@ export async function checkForAppUpdate(): Promise<UpdateInfo> {
         latestVersion: latestTag,
         downloadUrl:
           apkAsset?.browser_download_url ||
-          `https://github.com/whosumitjangra/RouteWise/releases/download/${latestTag}/RouteWise.apk`,
+          `https://github.com/whosumitjangra/RouteWise/releases/download/${latestTag}/BudWay.apk`,
         releaseNotes: data.name || 'New transit improvements and bug fixes',
       };
     }

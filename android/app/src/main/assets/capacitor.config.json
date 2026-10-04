@@ -1,6 +1,6 @@
 {
-	"appId": "com.routewise.pune",
-	"appName": "RouteWise",
+	"appId": "com.budway.pune",
+	"appName": "BudWay",
 	"webDir": "dist",
 	"server": {
 		"androidScheme": "https"

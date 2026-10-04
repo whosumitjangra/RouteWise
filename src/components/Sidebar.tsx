@@ -53,7 +53,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2.5">
               <div className="w-9 h-9 rounded-full bg-[#0d5c46] flex items-center justify-center text-white shadow-xs">
-                {/* PathWise pin icon with dot inside */}
+                {/* BudWay pin icon with dot inside */}
                 <div className="relative flex items-center justify-center">
                   <MapPin className="w-5 h-5 text-white fill-white/20" />
                   <div className="w-1.5 h-1.5 rounded-full bg-white absolute top-1.5"></div>
@@ -61,7 +61,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
               </div>
               <div>
                 <h1 className="font-extrabold text-lg text-zinc-900 tracking-tight leading-tight">
-                  PathWise
+                  BudWay
                 </h1>
                 <p className="text-[10px] text-zinc-400 font-medium tracking-tight">
                   Better Routes. Smarter Choices.

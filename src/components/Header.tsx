@@ -17,7 +17,7 @@ export const Header: React.FC = () => {
             </div>
             <div className="flex items-baseline gap-1.5">
               <span className="font-bold text-base tracking-tight text-zinc-950">
-                RouteWise
+                BudWay
               </span>
               <span className="text-[11px] font-medium text-zinc-400">
                 Pune
